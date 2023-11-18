@@ -1,0 +1,12 @@
+{
+  "name": "metasave",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "start": "yarn workspace metasave-fe start",
+    "build": "yarn workspace metasave-fe build",
+    "build-be": "yarn workspace metasave-be build",
+    "start-be": "yarn workspace metasave-be start:dev"
+  },
+  "workspaces": ["metasave-fe", "metasave-be", "contracts", "circuits"]
+}
