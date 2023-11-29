@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.glass-effect {
+    -webkit-backdrop-filter: blur(40px);
+    backdrop-filter: blur(40px);
+    background-color: rgba(0,0,0,.2);
+    opacity: 1;
+}
