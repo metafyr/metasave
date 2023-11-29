@@ -44,7 +44,7 @@
         color: #E27396;
     }
     80% {
-        color: #FFF;
+        color: #0e929e;
     }
     100% {
         color: #FFF;
@@ -52,11 +52,11 @@
 }
 
 .gradient-changing-bg {
-  background-color: #E27396;
+  background-color: #B3DEE2;
   /* animation: bgAnimation 120s infinite; */
 }
 
 .gradient-changing-text{
-    color: #FFF;
+    color: #0e929e;
     /* animation: textAnimation 120s infinite; */
 }

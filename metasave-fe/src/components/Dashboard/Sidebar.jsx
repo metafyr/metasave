@@ -1,9 +1,13 @@
 import React from 'react'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const Sidebar = () => {
+    const { path } = useParams()
+    React.useEffect(() => {
+        console.log(path)
+    })
   return (
     <>
         <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" className="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
@@ -17,13 +21,13 @@ const Sidebar = () => {
             <div className="h-full px-3 py-4 overflow-y-auto gradient-changing-bg">
                 <ul className="space-y-2 font-medium">
                 <li>
-                    <Link to='/dashboard/profile' href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                    <Link to='/dashboard/profile' className={`flex items-center p-2 rounded-lg group ${path == 'profile' ? 'bg-[#0e929e] text-white' : 'gradient-changing-text'} text-xl hover:bg-[#0e929e] hover:text-white`}>
                         <AccountCircleIcon />
                         <span className="flex-1 ms-3 whitespace-nowrap">Profile</span>
                     </Link>
                 </li>
                 <li>
-                    <Link to='/dashboard/profile' href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                    <Link to='/login' className="flex items-center p-2 rounded-lg group gradient-changing-text text-xl hover:bg-[#0e929e] hover:text-white">
                         <LogoutIcon />
                         <span className="flex-1 ms-3 whitespace-nowrap">Log out</span>
                     </Link>
