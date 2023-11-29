@@ -8,3 +8,55 @@
     background-color: rgba(0,0,0,.2);
     opacity: 1;
 }
+
+@keyframes bgAnimation {
+    0% {
+        background-color: #E27396;
+    }
+    20% {
+        background-color: #EA9AB2;
+    }
+    40% {
+        background-color: #EFCFE3;
+    }
+    60% {
+        background-color: #EAF2D7;
+    }
+    80% {
+        background-color: #B3DEE2;
+    }
+    100% {
+        background-color: #E27396;
+    }
+}
+
+@keyframes textAnimation {
+    0% {
+        color: #FFF;
+    }
+    20% {
+        color: #E27396;
+    }
+    40% {
+        color: #E27396;
+    }
+    60% {
+        color: #E27396;
+    }
+    80% {
+        color: #FFF;
+    }
+    100% {
+        color: #FFF;
+    }
+}
+
+.gradient-changing-bg {
+  background-color: #E27396;
+  /* animation: bgAnimation 120s infinite; */
+}
+
+.gradient-changing-text{
+    color: #FFF;
+    /* animation: textAnimation 120s infinite; */
+}
