@@ -18,20 +18,26 @@ const Sidebar = () => {
         </button>
 
         <aside id="default-sidebar" className="fixed top-18 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
-            <div className="h-full px-3 py-4 overflow-y-auto gradient-changing-bg">
+            <div className="h-full px-3 py-4 overflow-y-auto bg-[#E27396]">
                 <ul className="space-y-2 font-medium">
-                <li>
-                    <Link to='/dashboard/profile' className={`flex items-center p-2 rounded-lg group ${path == 'profile' ? 'bg-[#0e929e] text-white' : 'gradient-changing-text'} text-xl hover:bg-[#0e929e] hover:text-white`}>
-                        <AccountCircleIcon />
-                        <span className="flex-1 ms-3 whitespace-nowrap">Profile</span>
-                    </Link>
-                </li>
-                <li>
-                    <Link to='/login' className="flex items-center p-2 rounded-lg group gradient-changing-text text-xl hover:bg-[#0e929e] hover:text-white">
-                        <LogoutIcon />
-                        <span className="flex-1 ms-3 whitespace-nowrap">Log out</span>
-                    </Link>
-                </li>
+                    <li className='!my-10'>
+                        <Link to='/dashboard' className={`pl-3 flex items-center p-2 rounded-[20px] group ${!path && 'bg-[#000] shadow-lg'} text-[#e7e7e7] text-xl hover:bg-[#000] hover:shadow-lg`}>
+                            <AccountCircleIcon />
+                            <span className="flex-1 ms-3 whitespace-nowrap">Dashboard</span>
+                        </Link>
+                    </li>
+                    <li className='!my-10'>
+                        <Link to='/dashboard/profile' className={`pl-3 flex items-center p-2 rounded-[20px] group ${path == 'profile' && 'bg-[#000] shadow-lg'} text-[#e7e7e7] text-xl hover:bg-[#000] hover:shadow-lg`}>
+                            <AccountCircleIcon />
+                            <span className="flex-1 ms-3 whitespace-nowrap">Profile</span>
+                        </Link>
+                    </li>
+                    <li className='!my-10'>
+                        <Link to='/login' className="pl-3 flex items-center p-2 rounded-[20px] group text-xl hover:bg-[#ff7878] text-[#e7e7e7] hover:shadow-lg">
+                            <LogoutIcon />
+                            <span className="flex-1 ms-3 whitespace-nowrap">Log out</span>
+                        </Link>
+                    </li>
                 </ul>
             </div>
         </aside>

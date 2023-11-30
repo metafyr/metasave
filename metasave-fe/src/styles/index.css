@@ -52,11 +52,11 @@
 }
 
 .gradient-changing-bg {
-  background-color: #B3DEE2;
+  background-color: #FFEBFC;
   /* animation: bgAnimation 120s infinite; */
 }
 
 .gradient-changing-text{
-    color: #0e929e;
+    color: #3A3A3A;
     /* animation: textAnimation 120s infinite; */
 }

@@ -8,7 +8,7 @@ import Sidebar from '../components/Dashboard/Sidebar'
 const Dashboard = () => {
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
 
       <Sidebar />
       <div className="p-4 sm:ml-64">
