@@ -3,7 +3,7 @@ import numpy as np
 from ultralytics import YOLO
 
 model = YOLO("Pose-Estimation\yolov8s-pose.pt")
-urmompussy = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)
 body_index = {
     "nose": 0,
     "left_eye": 1,
@@ -24,15 +24,15 @@ body_index = {
     "right_ankle": 16,
 }
 
-def calculate_angle(me, urmom, urdad):
-    u = me - urmom
-    uagain = urdad - urmom
-    cosine_angle = np.dot(u, uagain) / (np.linalg.norm(u) * np.linalg.norm(uagain))
-    urass = np.arccos(cosine_angle) * 180 / np.pi
-    return urass
+def calculate_angle(a, b, c):
+    u = a - b
+    d = c - b
+    cosine_angle = np.dot(u, d) / (np.linalg.norm(u) * np.linalg.norm(d))
+    e = np.arccos(cosine_angle) * 180 / np.pi
+    return e
 
-while urmompussy.isOpened():
-    success, frame = urmompussy.read()
+while cap.isOpened():
+    success, frame = cap.read()
 
     if success:
         results = model(frame, verbose=False, conf=0.5)
@@ -67,11 +67,11 @@ while urmompussy.isOpened():
             # cv2.putText(annotated_frame, "Right Bicep Angle: " + str(right_bicep_angle), (10, 90), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
             # cv2.putText(annotated_frame, "Right Pit Angle: " + str(right_pit_angle), (10, 120), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
 
-            cv2.imshow("This Is What She Looked Like", annotated_frame)
+            cv2.imshow("Detected Pose", annotated_frame)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
 # Release the webcam and close all windows
-urmompussy.release()
+cap.release()
 cv2.destroyAllWindows()
