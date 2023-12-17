@@ -1,7 +1,23 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
+import axios from 'axios'
 
 const RightSide = () => {
+    const [email, setEmail] = React.useState('')
+    const [password, setPass] = React.useState('')
+
+    const handleLogin = async() => {
+        try {
+            const data = {
+                email,
+                password
+            }
+            const res = await axios.post('https://91ln5ijl3i.execute-api.eu-north-1.amazonaws.com/new/login', data)
+            console.log(res)
+        } catch (error) {
+            console.log(error)
+        }
+    }
   return (
     <div className='glass-effect rounded-tr-[15px] rounded-br-[15px] md:rounded-tl-[0px] md:rounded-bl-[0px] rounded-tl-[15px] rounded-bl-[15px] h-full w-full py-10 px-10'>
         <h1 className='text-center text-[#D01987] poppins font-medium text-2xl'>Login</h1>
@@ -9,6 +25,7 @@ const RightSide = () => {
         <div className='mb-5'>
             <label className='text-[#505050] poppins'>Email</label>
             <input
+            onChange={(e) => setEmail(e.target.value)}
             type="text" 
             name="" 
             className='mt-3 bg-[#DEDEDE] rounded-[10px] pl-4 py-2 w-full focus:!outline-none text-[#A7A7A7] focus:!scale-105 transition duration-300 ease-in-out' id="" />
@@ -16,6 +33,7 @@ const RightSide = () => {
         <div className='mb-5'>
             <label className='text-[#505050] poppins'>Password</label>
             <input
+            onChange={(e) => setPass(e.target.value)}
             type="password" 
             name="" 
             className='mt-3 bg-[#DEDEDE] rounded-[10px] pl-4 py-2 w-full focus:!outline-none text-[#A7A7A7] focus:!scale-105 transition duration-300 ease-in-out' id="" />
@@ -24,6 +42,7 @@ const RightSide = () => {
         </div>
         <div className='flex flex-col justify-center items-center'>
         <button
+        onClick={handleLogin}
         className='bg-[#75ACFF] text-[#EFEFEF] text-center px-10 py-2 rounded-[10px] poppins hover:bg-[#5C8BFF] transition duration-300 ease-in-out'
         > 
             Login
