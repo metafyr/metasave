@@ -1,39 +1,31 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useSignupContext } from '../../pages/Signup';
 
 const RightSide3 = ({ onPrev }) => {
+  const {medications, setMedications, disease, setDisease, duration, setDuration, problemsFaced, setProblemsFaced, addProblemFaced, removeProblemFaced, removeMedication, addMedication, name, password, age, email, gender, phone, address, contacts } = useSignupContext()
   const [loading, setLoading] = useState(false);
-  const [disease, setDisease] = useState('');
-  const [duration, setDuration] = useState('');
-  const [medications, setMedications] = useState(['']);
-  const [problemsFaced, setProblemsFaced] = useState(['']);
-
-  const addMedication = () => {
-    setMedications([...medications, '']);
-  };
-
-  const removeMedication = (index) => {
-    const updatedMedications = [...medications];
-    updatedMedications.splice(index, 1);
-    setMedications(updatedMedications);
-  };
-
-  const addProblemFaced = () => {
-    setProblemsFaced([...problemsFaced, '']);
-  };
-
-  const removeProblemFaced = (index) => {
-    const updatedProblemsFaced = [...problemsFaced];
-    updatedProblemsFaced.splice(index, 1);
-    setProblemsFaced(updatedProblemsFaced);
-  };
 
   const handleFinish = () => {
+    const data = {
+      name,
+      email,
+      password,
+      age,
+      gender,
+      phone,
+      medications,
+      address,
+      contacts,
+      disease,
+      duration
+    }
+    console.log(data)
      setLoading(true);
-  setTimeout(() => {
-          console.log('Redirecting to the home screen...');
-    setLoading(false);
-    }, 9000); 
+  // setTimeout(() => {
+  //         console.log('Redirecting to the home screen...');
+  //   setLoading(false);
+  //   }, 9000); 
   };
   return (
     <div className='glass-effect rounded-tr-[15px] rounded-br-[15px] md:rounded-tl-[0px] md:rounded-bl-[0px] rounded-tl-[15px] rounded-bl-[15px] h-full w-full py-10 px-10 flex flex-col justify-between'>

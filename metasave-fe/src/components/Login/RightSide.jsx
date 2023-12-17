@@ -5,6 +5,7 @@ import axios from 'axios'
 const RightSide = () => {
     const [email, setEmail] = React.useState('')
     const [password, setPass] = React.useState('')
+    const [error, setError] = React.useState(false)
 
     const handleLogin = async() => {
         try {
@@ -13,7 +14,11 @@ const RightSide = () => {
                 password
             }
             const res = await axios.post('https://91ln5ijl3i.execute-api.eu-north-1.amazonaws.com/new/login', data)
-            console.log(res)
+            if(res.data.success){
+                window.location.href = '/dashboard'
+            }else{
+                setError(true)
+            }
         } catch (error) {
             console.log(error)
         }
@@ -21,6 +26,7 @@ const RightSide = () => {
   return (
     <div className='glass-effect rounded-tr-[15px] rounded-br-[15px] md:rounded-tl-[0px] md:rounded-bl-[0px] rounded-tl-[15px] rounded-bl-[15px] h-full w-full py-10 px-10'>
         <h1 className='text-center text-[#D01987] poppins font-medium text-2xl'>Login</h1>
+        {error && <p className='text-center text-red-600 my-5'>Wrong email or password. Please enter again</p>}
         <div className='my-10'>
         <div className='mb-5'>
             <label className='text-[#505050] poppins'>Email</label>
