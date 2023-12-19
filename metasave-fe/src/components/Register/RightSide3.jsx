@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSignupContext } from '../../pages/Signup';
+import axios from 'axios'
 
 const RightSide3 = ({ onPrev }) => {
   const {medications, setMedications, disease, setDisease, duration, setDuration, problemsFaced, setProblemsFaced, addProblemFaced, removeProblemFaced, removeMedication, addMedication, name, password, age, email, gender, phone, address, contacts } = useSignupContext()
   const [loading, setLoading] = useState(false);
 
-  const handleFinish = () => {
+  const handleFinish = async() => {
     const data = {
-      name,
+      username: name,
       email,
       password,
       age,
@@ -21,7 +22,9 @@ const RightSide3 = ({ onPrev }) => {
       duration
     }
     console.log(data)
-     setLoading(true);
+    setLoading(true)
+    const res = await axios.post('https://91ln5ijl3i.execute-api.eu-north-1.amazonaws.com/new/register', data);
+    console.log(res)
   // setTimeout(() => {
   //         console.log('Redirecting to the home screen...');
   //   setLoading(false);
