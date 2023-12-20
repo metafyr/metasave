@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 import math
+import encryption as me
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
@@ -15,10 +16,10 @@ def predict_fall(pose_landmarks):
     hip_landmark = pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP.value]
     knee_landmark = pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_KNEE.value]
     ankle_landmark = pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ANKLE.value]
-    nose_landmark = pose_landmarks.landmark[mp_pose.PoseLandmark.NOSE.value]
-
+    
     # Check if the person is leaning forward or backward
     torso_angle = calculate_torso_angle(pose_landmarks)
+    print(torso_angle)
     if torso_angle < 30 or torso_angle > 150:
         return True
 
@@ -29,8 +30,9 @@ def predict_fall(pose_landmarks):
 
     # Check if the person's legs are not firmly planted on the ground
     leg_angle = calculate_leg_angle(pose_landmarks)
-    if leg_angle < 120:
-        return True
+    print(leg_angle)
+    # if leg_angle < 120:
+    #     return True
 
     return False
 
@@ -89,8 +91,13 @@ def calculate_torso_angle(pose_landmarks):
 def main():
     i = 0
     cap = cv2.VideoCapture(0)
-    with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
+    fall_predicted = False
+    fall_detected = False
 
+    t = "23:11:30"
+    d = "12/12/2023"
+    
+    with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
         while cap.isOpened():
             ret, frame = cap.read()
             if not ret:
@@ -104,14 +111,19 @@ def main():
                 mp_drawing.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
 
                 # Predict fall
-                fall_predict = predict_fall(results.pose_landmarks)
-                if fall_predict:
-                    print("Fall predicted!")
+                if not fall_predicted:
+                    fall_predicted = predict_fall(results.pose_landmarks)
 
                 # Detect fall
-                _, fall_detected = is_fallen(results.pose_landmarks)
-                if fall_detected:
-                    return 1
+                if not fall_detected:
+                    _, fall_detected = is_fallen(results.pose_landmarks)
+
+                if fall_predicted and fall_detected:
+                    import base64
+                    jpg_img = cv2.imencode('.jpg', frame)
+                    b64_string = base64.b64encode(jpg_img[1]).decode('utf-8')
+                    print(b64_string)
+                    me.homoenc(1,1,b64_string)
 
             cv2.imshow('Pose Estimation', frame)
 

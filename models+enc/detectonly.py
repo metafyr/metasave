@@ -70,8 +70,8 @@ def main():
 
                 # Check if the person has fallen
                 if is_fallen(results.pose_landmarks):
-                    i=i+1
-                    print("Fall detected: ", i)
+                    print("Fall detected!")
+                    return 1
 
             cv2.imshow('Pose Estimation', frame)
 
