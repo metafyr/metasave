@@ -2,7 +2,7 @@ import React from 'react';
 import { useSignupContext } from '../../pages/Signup';
 
 const RightSide1 = ({ onNext }) => {
-    const {email, setEmail, password, setPass, confirmpass, setConfirmPass, error, setError} = useSignupContext()
+    const { email, setEmail, password, setPass, confirmpass, setConfirmPass, error, setError } = useSignupContext()
     const handleButton = () => {
       if(!email){
         setError({status: true, message: 'Email is required'})

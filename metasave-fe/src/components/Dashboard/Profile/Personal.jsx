@@ -1,12 +1,22 @@
 import React from 'react'
 import EditIcon from '@mui/icons-material/Edit';
 import DoneIcon from '@mui/icons-material/Done';
+import axios from 'axios'
+import { useMainContext } from '../../../context/MainContext';
 
 const Personal = () => {
+    const { serverUrl, userDetails, setUserDetails } = useMainContext()
     const [editMode, setEditMode] = React.useState({
         mode: '',
         edit: false
     })
+    React.useEffect(() => {
+        const fetchUserDetails = async() => {
+            const res = await axios.get(`${serverUrl}/userdetails`)
+            setUserDetails(userDetails)
+        }
+        fetchUserDetails()
+    }, [])
   return (
     <div className='grid my-10'>
         <div className='pl-10 pr-5 py-5 bg-[#B3DEE2] rounded-[12px] flex flex-col'>

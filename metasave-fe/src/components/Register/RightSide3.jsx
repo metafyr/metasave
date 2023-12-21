@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSignupContext } from '../../pages/Signup';
 import axios from 'axios'
+import { useMainContext } from '../../context/MainContext';
 
 const RightSide3 = ({ onPrev }) => {
   const {medications, setMedications, disease, setDisease, duration, setDuration, problemsFaced, setProblemsFaced, addProblemFaced, removeProblemFaced, removeMedication, addMedication, name, password, age, email, gender, phone, address, contacts } = useSignupContext()
+
+  const {serverUrl} = useMainContext()
   const [loading, setLoading] = useState(false);
 
   const handleFinish = async() => {
@@ -22,13 +25,14 @@ const RightSide3 = ({ onPrev }) => {
       duration
     }
     console.log(data)
-    setLoading(true)
-    const res = await axios.post('https://91ln5ijl3i.execute-api.eu-north-1.amazonaws.com/new/register', data);
+    const res = await axios.post(`${serverUrl}/register`, data);
     console.log(res)
-  // setTimeout(() => {
-  //         console.log('Redirecting to the home screen...');
-  //   setLoading(false);
-  //   }, 9000); 
+    setLoading(true)
+    if(res.status == 200){
+      setLoading(false)
+      localStorage.setItem('username', name)
+      window.location.replace('/dashboard')
+    }
   };
   return (
     <div className='glass-effect rounded-tr-[15px] rounded-br-[15px] md:rounded-tl-[0px] md:rounded-bl-[0px] rounded-tl-[15px] rounded-bl-[15px] h-full w-full py-10 px-10 flex flex-col justify-between'>
