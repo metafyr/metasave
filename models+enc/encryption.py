@@ -6,6 +6,7 @@ context = ts.context(ts.SCHEME_TYPE.BFV,
                       plain_modulus=1032193)
 context.generate_galois_keys()
 context.global_scale = 2**40
+secret_context = context.serialize(save_secret_key = True)
 
 def homoenc(a, b, s):
 
