@@ -1,3 +1,6 @@
+!pip install ultralytics
+!pip install numpy
+!pip install opencv-contrib-python
 import cv2
 import numpy as np
 from ultralytics import YOLO
