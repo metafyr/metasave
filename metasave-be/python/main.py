@@ -23,7 +23,11 @@ async def generate_keys(user: User):
     context.global_scale = 2**40
 
     secretkey = context.serialize(save_secret_key=True)
-    utils.writedata('key-secret.txt',secretkey)
+    utils.writedata('metasave-be/python/key/secret.txt', secretkey)
+
+    context.make_context_public()
+    publkey = context.serialize()
+    utils.writedata('metasave-be/python/key/public.txt', publkey)
 
     return {"oky": "doky"}
 
