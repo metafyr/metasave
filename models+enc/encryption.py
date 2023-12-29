@@ -10,7 +10,7 @@ secret_context = context.serialize(save_secret_key = True)
 
 def homoenc(a, b, s):
 
-  a=[a]  #inputs
+  a=[a]
   b=[b]
 
   enc_v1 =ts.bfv_vector(context, a)
@@ -79,5 +79,5 @@ def homoenc(a, b, s):
   except requests.exceptions.RequestException as e:
       print('Error sending data to server:', e)
 
-  print(f"fell at {formatted_time} on {formatted_date}")
+  print(f"Fell at {formatted_time} on {formatted_date}")
   print(s)

@@ -68,7 +68,7 @@ def is_fallen(pose_landmarks):
     # Checking if the person is in supine position (ie laying on belly or on back)
     fall_detected = hip_y < knee_y < ankle_y and torso_angle >= 90
 
-    return False, fall_detected
+    return fall_detected
 
 def calculate_torso_angle(pose_landmarks):
     nose_landmark = pose_landmarks.landmark[mp_pose.PoseLandmark.NOSE.value]
@@ -88,13 +88,7 @@ def calculate_torso_angle(pose_landmarks):
     return angle
 
 def main():
-    i = 0
     cap = cv2.VideoCapture(0)
-    fall_predicted = False
-    fall_detected = False
-
-    t = "23:11:30"
-    d = "12/12/2023"
     
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
         while cap.isOpened():
@@ -109,15 +103,7 @@ def main():
             if results.pose_landmarks:
                 mp_drawing.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
 
-                # Predict fall
-                if not fall_predicted:
-                    fall_predicted = predict_fall(results.pose_landmarks)
-
-                # Detect fall
-                if not fall_detected:
-                    _, fall_detected = is_fallen(results.pose_landmarks)
-
-                if fall_predicted and fall_detected:
+                if predict_fall(results.pose_landmarks) and is_fallen(results.pose_landmarks):
                     import base64
                     jpg_img = cv2.imencode('.jpg', frame)
                     b64_string = base64.b64encode(jpg_img[1]).decode('utf-8')
