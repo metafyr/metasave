@@ -80,16 +80,22 @@ def is_fallen(pose_landmarks):
     if not pose_landmarks.landmark:
         return False
 
-    hip_y = pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP.value].y
-    knee_y = pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_KNEE.value].y
-    ankle_y = pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ANKLE.value].y
+    hip_landmark = pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_HIP.value]
+    knee_landmark = pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_KNEE.value]
+    ankle_landmark = pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_ANKLE.value]
+    if hip_landmark.visibility > 0.5 and knee_landmark.visibility > 0.5 and ankle_landmark.visibility > 0.5:
+        hip_y =hip_landmark.y
+        knee_y = knee_landmark.y
+        ankle_y = ankle_landmark.y
 
-    torso_angle = calculate_torso_angle(pose_landmarks)
+        torso_angle = calculate_torso_angle(pose_landmarks)
 
-    # Checking if the person is in supine position (ie laying on belly or on back)
-    fall_detected = hip_y < knee_y < ankle_y and torso_angle >= 90
+        # Checking if the person is in supine position (ie laying on belly or on back)
+        fall_detected = hip_y < knee_y < ankle_y and torso_angle >= 90
 
-    return fall_detected
+        return fall_detected
+    else:
+        return False
 
 def main():
     cap = cv2.VideoCapture(0)
