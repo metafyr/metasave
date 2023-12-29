@@ -28,7 +28,7 @@ def read_data(file_name):
         file_content = f.read()
     return base64.b64decode(file_content) # base64 to bytes
 
-image_dir = "C:/Users/alosh/Downloads/test/"
+image_dir = ""
 
 image_paths = [os.path.join(image_dir, filename) for filename in os.listdir(image_dir) if filename.endswith(('.jpg', '.jpeg', '.png'))]
 image_pairs = combinations(image_paths, 2)
