@@ -104,15 +104,14 @@ def main():
                 mp_drawing.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
 
                 # Predict fall
-                fall_predict, _ = predict_fall(results.pose_landmarks)
+                fall_predict = predict_fall(results.pose_landmarks)
                 if fall_predict:
                     print("Fall predicted!")
 
                 # Detect fall
                 _, fall_detected = is_fallen(results.pose_landmarks)
                 if fall_detected:
-                    i += 1
-                    print("Fall detected: ", i)
+                    return 1
 
             cv2.imshow('Pose Estimation', frame)
 
