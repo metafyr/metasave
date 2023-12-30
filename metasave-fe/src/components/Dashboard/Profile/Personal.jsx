@@ -3,6 +3,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DoneIcon from '@mui/icons-material/Done';
 import axios from 'axios'
 import { useMainContext } from '../../../context/MainContext';
+import '../../../styles/Personal.css'
 
 const Personal = () => {
     const { serverUrl, userDetails, setUserDetails } = useMainContext()
@@ -18,7 +19,7 @@ const Personal = () => {
         fetchUserDetails()
     }, [])
   return (
-    <div className='grid my-10'>
+    <div className='my-10'>
         <div className='pl-10 pr-5 py-5 bg-[#B3DEE2] rounded-[12px] flex flex-col'>
             <div className='flex justify-between items-center'>
                 {editMode.edit && editMode.mode == 'name' ? 
@@ -32,7 +33,7 @@ const Personal = () => {
                         <span className='ml-3 poppins font-semibold'>Save</span>
                     </div>
                 :
-                    <div onClick={() => setEditMode({mode: 'name', edit: true})} className='flex items-center text-[#4A9DFF] cursor-pointer'>
+                    <div onClick={() => setEditMode({mode: 'name', edit: true})} className=' items-center text-[#4A9DFF] cursor-pointer md:flex hidden'>
                         <EditIcon />
                         <span className='ml-3 poppins font-semibold'>Edit</span>
                     </div>
@@ -50,7 +51,7 @@ const Personal = () => {
                         <span className='ml-3 poppins font-semibold'>Save</span>
                     </div>
                 :
-                    <div onClick={() => setEditMode({mode: 'email', edit: true})} className='flex items-center text-[#4A9DFF] cursor-pointer'>
+                    <div onClick={() => setEditMode({mode: 'email', edit: true})} className='flex items-center text-[#4A9DFF] cursor-pointer md:flex hidden'>
                         <EditIcon />
                         <span className='ml-3 poppins font-semibold'>Edit</span>
                     </div>
@@ -68,7 +69,7 @@ const Personal = () => {
                         <span className='ml-3 poppins font-semibold'>Save</span>
                     </div>
                 :
-                    <div onClick={() => setEditMode({mode: 'phone', edit: true})} className='flex items-center text-[#4A9DFF] cursor-pointer'>
+                    <div onClick={() => setEditMode({mode: 'phone', edit: true})} className='flex items-center text-[#4A9DFF] cursor-pointer md:flex hidden'>
                         <EditIcon />
                         <span className='ml-3 poppins font-semibold'>Edit</span>
                     </div>
@@ -78,8 +79,8 @@ const Personal = () => {
         <div className='my-16'>
             <h2 className='text-lg text-[#3a3a3a] font-semibold poppins'>Additional Details</h2>
             <div className='mt-5 pl-10 pr-5 py-5 bg-[#B3DEE2] rounded-[12px] flex flex-col'>
-                <div className='my-3 flex justify-between items-center'>
-                    <h3 className='poppins font-semibold text-ld flex text-[#3a3a3a]'>Gender: 
+                <div className='my-3 flex justify-between'>
+                    <h3 className='poppins font-semibold text-ld  text-[#3a3a3a]'>Gender: 
                         {editMode.edit && editMode.mode == 'gender' ? 
                         <select className='bg-transparent ml-5 font-medium poppins !outline-none'>
                             <option value="male" selected>Male</option>
@@ -94,7 +95,7 @@ const Personal = () => {
                             <span className='ml-3 poppins font-semibold'>Save</span>
                         </div>
                     :
-                        <div onClick={() => setEditMode({mode: 'gender', edit: true})} className='flex items-center text-[#4A9DFF] cursor-pointer'>
+                        <div onClick={() => setEditMode({mode: 'gender', edit: true})} className='flex items-center text-[#4A9DFF] cursor-pointer md:flex hidden'>
                             <EditIcon />
                             <span className='ml-3 poppins font-semibold'>Edit</span>
                         </div>
@@ -116,7 +117,7 @@ const Personal = () => {
                             <span className='ml-3 poppins font-semibold'>Save</span>
                         </div>
                     :
-                        <div onClick={() => setEditMode({mode: 'address', edit: true})} className='flex items-center text-[#4A9DFF] cursor-pointer'>
+                        <div onClick={() => setEditMode({mode: 'address', edit: true})} className='flex items-center text-[#4A9DFF] cursor-pointer md:flex hidden'>
                             <EditIcon />
                             <span className='ml-3 poppins font-semibold'>Edit</span>
                         </div>

@@ -1,11 +1,12 @@
-import React from 'react'
+import React from 'react';
 import TimelineIcon from '@mui/icons-material/Timeline';
 
 const Vitals = () => {
   return (
-    <div className='my-10 grid grid-cols-4 gap-5'>
-        <div className='col-span-3'>
-            <div className='grid grid-cols-3 gap-5'>
+    
+    <div className='my-10 grid grid-cols-1 md:grid-cols-4 gap-5'>
+        <div className='col-span-1 md:col-span-3'>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-5'>
                 <div className='bg-[#FFEBFC] rounded-[15px] px-5 py-5 flex flex-col'>
                     <h1 className='text-[#3a3a3a] text-xl font-semibold poppins'>Body Weight</h1>
                     <div className='flex mt-10 items-baseline'>
@@ -14,7 +15,7 @@ const Vitals = () => {
                     </div>
                 </div>
                 <div className='bg-[#E27396] rounded-[15px] px-5 py-5 flex flex-col'>
-                <h1 className='text-white text-xl font-semibold poppins'>Body Mass Index</h1>
+                    <h1 className='text-white text-xl font-semibold poppins'>Body Mass Index</h1>
                     <div className='flex mt-10 items-baseline'>
                         <span className='poppins text-7xl text-white'>31</span>
                     </div>
@@ -25,7 +26,7 @@ const Vitals = () => {
                         <span className='poppins text-7xl'>69</span>
                     </div>
                 </div>
-                <div className='col-span-2 bg-[#FFEBFC] rounded-[15px] px-5 py-5 flex justify-between'>
+                <div className='md:col-span-2 bg-[#FFEBFC] rounded-[15px] px-5 py-5 flex justify-between'>
                     <div className='flex flex-col justify-between'>
                         <h1 className='text-[#3a3a3a] text-xl font-semibold poppins'>Blood Glucose Level</h1>
                         <TimelineIcon className='text-[#3a3a3a] !text-9xl' />
@@ -55,4 +56,4 @@ const Vitals = () => {
   )
 }
 
-export default Vitals
+export default Vitals;
