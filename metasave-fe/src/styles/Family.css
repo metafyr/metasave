@@ -1,0 +1,66 @@
+
+.grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 10px;
+}
+
+.family-card {
+    background: #B3DEE2;
+    padding-top: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 15px;
+}
+
+.family-card h3 {
+    color: #3a3a3a;
+    text-align: center;
+    margin: 5px 0;
+}
+
+.family-card button {
+    padding: 10px;
+    text-align: center;
+    width: 50%;
+    color: white;
+}
+
+.family-card .edit-button {
+    background: #3A3A3A;
+    border-bottom-left-radius: 15px;
+    
+}
+
+.family-card .delete-button {
+    background: #CE576D;
+    border-bottom-right-radius: 15px;
+}
+
+.add-icon {
+    color: #3a3a3a;
+    font-size: 6rem;
+}
+
+
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+    .family-card {
+        margin-bottom: 20px;
+     
+    }
+    .family-card .edit-button {
+        border:none;
+        border-radius: 0px;
+        
+    }
+    
+    .family-card .delete-button {
+        border-bottom-right-radius: 0px;
+    }
+}
+
+
