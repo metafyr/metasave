@@ -16,6 +16,8 @@ const Sidebar = () => {
 
         <aside id="default-sidebar" className="fixed top-18 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
             <div className="h-full px-3 py-4 overflow-y-auto bg-[#E27396]">
+                {/* ZK Logo */}
+                
                 <ul className="space-y-2 font-medium">
                     <li className='!my-10'>
                         <Link to='/dashboard' className={`pl-3 flex items-center p-2 rounded-[20px] group ${!path && 'bg-[#000] shadow-lg'} text-[#e7e7e7] text-xl hover:bg-[#000] hover:shadow-lg`}>
