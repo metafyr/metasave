@@ -12,12 +12,22 @@ const Personal = () => {
         edit: false
     })
     React.useEffect(() => {
-        const fetchUserDetails = async() => {
-            const res = await axios.get(`${serverUrl}/userdetails`)
-            setUserDetails(userDetails)
-        }
-        fetchUserDetails()
-    }, [])
+        const fetchUserDetails = async () => {
+          try {
+            const username = userDetails?.username || localStorage.getItem('username');
+            const response = await axios.get(`https://91ln5ijl3i.execute-api.eu-north-1.amazonaws.com/new/getuserdetails?username=${username}`);
+            if (response.data && response.data['status code'] === 200) {
+              const userDetails = JSON.parse(response.data.details);
+              setUserDetails(userDetails);
+            }
+          } catch (error) {
+            console.error('Error fetching user details:', error);
+          }
+        };
+      
+        fetchUserDetails();
+      }, [setUserDetails]);
+      
   return (
     <div className='my-10'>
         <div className='pl-10 pr-5 py-5 bg-[#B3DEE2] rounded-[12px] flex flex-col'>
@@ -25,7 +35,7 @@ const Personal = () => {
                 {editMode.edit && editMode.mode == 'name' ? 
                     <input type="text" name="" className='text-[#3a3a3a] font-semibold poppins text-2xl my-5 bg-transparent focus:!outline-none border-b border-gray-400 border-b-2 pl-3' defaultValue="Abhinav C V" id="" />
                 :
-                    <h1 className='text-[#3a3a3a] font-semibold poppins text-2xl my-5'>Abhinav C V</h1>
+                    <h1 className='text-[#3a3a3a] font-semibold poppins text-2xl my-5'> {userDetails?.username || 'Username'}</h1>
                 }
                 {editMode.edit && editMode.mode == 'name' ?
                     <div onClick={() => setEditMode({edit: false})} className='flex items-center text-white bg-green-700 hover:bg-green-600 rounded-[10px] px-3 py-2 cursor-pointer'>
@@ -43,7 +53,7 @@ const Personal = () => {
                 {editMode.edit && editMode.mode == 'email' ? 
                     <input type="email" name="" className='text-[#3a3a3a] font-medium min-w-[30%] poppins text-xl my-5 bg-transparent focus:!outline-none border-b border-gray-400 border-b-2 pl-3' defaultValue="abhinavcv007@gmail.com" id="" />
                 :
-                    <h4 className='text-[#3a3a3a] font-medium poppins text-xl my-5'>abhinavcv007@gmail.com</h4>
+                    <h4 className='text-[#3a3a3a] font-medium poppins text-xl my-5'>{userDetails?.email || 'N/A'}</h4>
                 }
                 {editMode.edit && editMode.mode == 'email' ?
                     <div onClick={() => setEditMode({edit: false})} className='flex items-center text-white bg-green-700 hover:bg-green-600 rounded-[10px] px-3 py-2 cursor-pointer'>
@@ -61,7 +71,7 @@ const Personal = () => {
             {editMode.edit && editMode.mode == 'phone' ? 
                     <input type="text" name="" className='text-[#3a3a3a] font-medium min-w-[30%] poppins text-xl my-5 bg-transparent focus:!outline-none border-b border-gray-400 border-b-2 pl-3' defaultValue="+91 97783 93558" id="" />
                 :
-                    <h4 className='text-[#3a3a3a] font-medium poppins text-xl my-5'>+91 97783 93558</h4>
+                    <h4 className='text-[#3a3a3a] font-medium poppins text-xl my-5'>{userDetails?.phone || 'N/A'}</h4>
                 }
                 {editMode.edit && editMode.mode == 'phone' ?
                     <div onClick={() => setEditMode({edit: false})} className='flex items-center text-white bg-green-700 hover:bg-green-600 rounded-[10px] px-3 py-2 cursor-pointer'>
@@ -87,7 +97,7 @@ const Personal = () => {
                             <option value="female">Female</option>
                         </select>
                         :
-                        <span className='ml-5 font-medium'>Male</span>}
+                        <span className='ml-5 font-medium'>{userDetails?.gender || 'N/A'}</span>}
                     </h3>
                     {editMode.edit && editMode.mode == 'gender' ?
                         <div onClick={() => setEditMode({edit: false})} className='flex items-center text-white bg-green-700 hover:bg-green-600 rounded-[10px] px-3 py-2 cursor-pointer'>
@@ -109,7 +119,7 @@ const Personal = () => {
                             Surabhi House, Ottathengu Road, Kannur, 670008
                         </textarea>
                         :
-                        <p className='mt-2 font-medium poppins'>Surabhi House, Ottathengu Road, Kannur, 670008</p>}
+                        <p className='mt-2 font-medium poppins'>{userDetails?.address || 'N/A'}</p>}
                     </div>
                     {editMode.edit && editMode.mode == 'address' ?
                         <div onClick={() => setEditMode({edit: false})} className='flex items-center text-white bg-green-700 hover:bg-green-600 rounded-[10px] px-3 py-2 cursor-pointer'>
