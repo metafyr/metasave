@@ -6,7 +6,7 @@ import RightSide3 from '../components/Register/RightSide3';
 
 const SignupContext = React.createContext();
 
-const SignupProvider = ({ children }) => {
+export const SignupProvider = ({ children }) => {
 
   // Step 1 inputs 
   const [email, setEmail] = useState('');
@@ -122,11 +122,11 @@ const Signup = () => {
       <div className='md:px-16 px-8 py-16 w-full grid md:grid-cols-2 justify-center items-center' >
         <LeftSide />
         <div className=''>
-          <SignupProvider>
+          {/* <SignupProvider> */}
             {step === 1 && <RightSide1 onNext={handleNext} />}
             {step === 2 && <RightSide2 onNext={handleNext} onPrev={handlePrev} />}
             {step === 3 && <RightSide3 onPrev={handlePrev} />}
-          </SignupProvider>
+          {/* </SignupProvider> */}
         </div>
       </div>
     </div>

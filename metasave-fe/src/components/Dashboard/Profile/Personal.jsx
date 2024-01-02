@@ -18,6 +18,8 @@ const Personal = () => {
             const response = await axios.get(`https://91ln5ijl3i.execute-api.eu-north-1.amazonaws.com/new/getuserdetails?username=${username}`);
             if (response.data && response.data['status code'] === 200) {
               const userDetails = JSON.parse(response.data.details);
+              const captures = JSON.parse(response.data.captures)
+              console.log(userDetails, captures)
               setUserDetails(userDetails);
             }
           } catch (error) {
