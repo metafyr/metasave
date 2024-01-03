@@ -7,7 +7,7 @@ const Dashboard = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState('');
   const [fallData, setFallData] = useState({});
-  const [selectedDate, setSelectedDate] = useState('2023-11-30');
+  const [selectedDate, setSelectedDate] = useState(Date);
 
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const Dashboard = () => {
             Available doctors: <span>32</span>
           </h4>
         </div>
-        <img src={dashImg} alt='doctor image' className='md:w-1/3' />
+        <img src={dashImg} alt='doctor image' className='md:w-1/3 hidden lg:block' />
       </div>
       <div className='my-10'>
         <div className='flex flex-col md:flex-row justify-between items-center'>

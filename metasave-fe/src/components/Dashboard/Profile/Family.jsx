@@ -36,9 +36,9 @@ const NewCard = ({index, handleContactChange, contacts, userDetails, setUserDeta
     }
     return (
         <div key={index} className='family-card'>
-            <input onChange={(e) => handleContactChange(index, 'phoneNumber', e.target.value)} className='text-[#3a3a3a] poppins text-center my-5 !font-bold bg-transparent focus:!outline-none border-b border-gray-400 border-b-2 pl-3 w-full'  />
+            <input onChange={(e) => handleContactChange(index, 'phoneNumber', e.target.value)} className='text-[#3a3a3a] poppins text-center !font-bold border-b-2 border-gray-400 bg-transparent focus:!outline-none'  />
             
-            <input onChange={(e) => handleContactChange(index, 'name', e.target.value)} className='text-[#3a3a3a] poppins text-center my-5 !font-bold bg-transparent focus:!outline-none border-b border-gray-400 border-b-2 pl-3 w-full'  />
+            <input onChange={(e) => handleContactChange(index, 'name', e.target.value)} className='text-[#3a3a3a] poppins text-center border-b-2 !font-bold border-gray-400 bg-transparent focus:!outline-none'  />
             
             <div className='mt-5'>
                 {
@@ -111,7 +111,7 @@ const Card = ({index, user, userDetails, setUserDetails}) => {
             :
                 <h3 className='text-[#3a3a3a] poppins text-center my-5 font-semibold'>{user.name}</h3>
             }
-            <div className='mt-5'>
+            <div className='mt-5 button-container'>
                 {
                 deleteThis ?
                 <>
