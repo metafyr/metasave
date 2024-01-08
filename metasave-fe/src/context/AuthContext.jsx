@@ -3,6 +3,9 @@ import { Web3Auth } from "@web3auth/modal";
 import { WALLET_ADAPTERS } from "@web3auth/base";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+import RPC from '../helpers/EthereumRPC'
+import { identityCreation } from "../helpers/PolygonID";
+import axios from 'axios'
 
 
 const AuthContext = React.createContext()
@@ -12,6 +15,7 @@ export const AuthContextProvider = ({children}) => {
     const [web3auth, setWeb3Auth] = React.useState(null)
     const [loggedIn, setLoggedIn] = React.useState(false)
     const [web3AuthProvider, setWeb3AuthProvider] = React.useState(null)
+    const [pid, setPID] = React.useState(null)
     const initWeb3Auth = async() => {
         const privateKeyProvider = new EthereumPrivateKeyProvider({
             config: {
@@ -68,6 +72,29 @@ export const AuthContextProvider = ({children}) => {
         });
         setWeb3AuthProvider(web3authProvider)
         setLoggedIn(web3auth?.status === "connected" ? true : false)
+        getCFAddress(web3authProvider)
+        // getPID(web3authProvider)
+        // window.location.replace('/dashboard')
+    }
+
+    const getCFAddress = async(web3authProvider) => {
+        if(web3authProvider){
+            const res = await axios.post('http://localhost:3000/aa', web3authProvider, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            console.log(res)
+        }
+    }
+
+    const getPID = async(web3authProvider) => {
+        if(web3authProvider){
+            const rpc = new RPC(web3authProvider)
+            const pKey = await rpc.getPrivateKey()
+            const res = await identityCreation(pKey);
+            setPID(res.did.string())
+        }
     }
 
     const Logout = async() => {
@@ -79,8 +106,8 @@ export const AuthContextProvider = ({children}) => {
     }
 
     const checkLoggedIn = async(web3auth) => {
-        console.log(web3auth)
         if(web3auth?.status === "connected"){
+            getCFAddress(web3AuthProvider)
             setLoggedIn(true)
         }
     }

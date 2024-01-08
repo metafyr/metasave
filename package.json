@@ -8,5 +8,13 @@
     "build-be": "yarn workspace metasave-be build",
     "start-be": "yarn workspace metasave-be start:dev"
   },
-  "workspaces": ["metasave-fe", "metasave-be", "metasave-contracts", "circuits"]
+  "workspaces": [
+    "metasave-fe",
+    "metasave-be",
+    "metasave-contracts",
+    "circuits"
+  ],
+  "dependencies": {
+    "truffle": "^5.11.5"
+  }
 }

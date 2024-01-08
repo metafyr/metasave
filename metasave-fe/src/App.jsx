@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard'
 import Signup from './pages/Signup'
 import React from 'react'
 import { useAuthContext } from './context/AuthContext.jsx'
+import PleaseLogin from './pages/PleaseLogin.jsx'
+import AlreadyLoggedIn from './pages/AlreadyLoggedIn.jsx'
 
 function App() {
   const {loggedIn, web3auth, initWeb3Auth} = useAuthContext()
@@ -16,12 +18,12 @@ function App() {
     <>
       {web3auth && <BrowserRouter>
         <Routes>
-          <Route path="/" element={!loggedIn ? <Login /> : <Dashboard />} />
-          <Route path="/login" element={!loggedIn ? <Login /> : <Dashboard />} />
-          <Route path="/signup" element={!loggedIn ? <Signup /> : <Dashboard />} />
-          <Route path="/register" element={!loggedIn ? <Signup /> : <Dashboard />} />
-          <Route path="/dashboard" element={loggedIn ? <Dashboard /> : <Login />} />
-          <Route path="/dashboard/*" element={loggedIn ? <Dashboard /> : <Login />} />
+          <Route path="/" element={!loggedIn ? <Login /> : <AlreadyLoggedIn />} />
+          <Route path="/login" element={!loggedIn ? <Login /> : <AlreadyLoggedIn />} />
+          <Route path="/signup" element={!loggedIn ? <Signup /> : <AlreadyLoggedIn />} />
+          <Route path="/register" element={!loggedIn ? <Signup /> : <AlreadyLoggedIn />} />
+          <Route path="/dashboard" element={loggedIn ? <Dashboard /> : <PleaseLogin />} />
+          <Route path="/dashboard/*" element={loggedIn ? <Dashboard /> : <PleaseLogin />} />
         </Routes>
       </BrowserRouter>}
     </>
