@@ -13,4 +13,10 @@ export class AAController {
         console.log(request)
         return this.aaService.helloWorld();
     }
+
+    @Post('/getCFaddress')
+    async getCFaddress() {
+        return await this.aaService.createProvider();
+    }
+
 }
