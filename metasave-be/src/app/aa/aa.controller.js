@@ -9,8 +9,7 @@ export class AAController {
     }
 
     @Post()
-    runFunction(@Req() request) {
-        console.log(request)
+    runFunction() {
         return this.aaService.helloWorld();
     }
 }
