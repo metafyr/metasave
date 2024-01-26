@@ -149,7 +149,7 @@ def calculate_torso_angle(pose_landmarks):
     return angle
 
 def main():
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture("C:/Users/alosh/Downloads/tester1.mp4")
     with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
 
         while cap.isOpened():
@@ -164,10 +164,9 @@ def main():
             if results.pose_landmarks:
                 
                 encrypted_landmarks = encrypt_landmarks(results.pose_landmarks.landmark)
-                
+
                 # Predict fall
                 if predict_fall(encrypted_landmarks) and is_fallen(encrypted_landmarks):
-                    print("Fall!")
                     jpg_img = cv2.imencode('.jpg', frame)
                     b64_string = base64.b64encode(jpg_img[1]).decode('utf-8')
                     print("Fallen!")
