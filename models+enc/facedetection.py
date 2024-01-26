@@ -45,31 +45,31 @@ for img1, img2 in image_pairs:
     context.global_scale = 2**40
     secret_context = context.serialize(save_secret_key = True)
 
-    write_data('./secret.txt', secret_context)
+    write_data('./facedetkeys/secret.txt', secret_context)
 
     context.make_context_public()
     public_context = context.serialize()
-    write_data('./public.txt', public_context)
+    write_data('./facedetkeys/public.txt', public_context)
 
     del context, secret_context, public_context
 
     # Encryption: Moving from Client Side to Cloud
 
-    context = ts.context_from(read_data("./secret.txt"))
+    context = ts.context_from(read_data("./facedetkeys/secret.txt"))
     enc_v1 = ts.ckks_vector(context, img1_embed)
     enc_v2 = ts.ckks_vector(context, img2_embed)
 
-    write_data('./enc_v1.txt', enc_v1.serialize())
-    write_data('./enc_v2.txt', enc_v2.serialize())
+    write_data('./facedetkeys/enc_v1.txt', enc_v1.serialize())
+    write_data('./facedetkeys/enc_v2.txt', enc_v2.serialize())
 
     del context, enc_v1, enc_v2
 
     # Cloud Side Processing
 
-    context = ts.context_from(read_data('./public.txt'))
+    context = ts.context_from(read_data('./facedetkeys/public.txt'))
 
-    enc_v1 = ts.lazy_ckks_vector_from(read_data('./enc_v1.txt'))
-    enc_v2 = ts.lazy_ckks_vector_from(read_data('./enc_v2.txt'))
+    enc_v1 = ts.lazy_ckks_vector_from(read_data('./facedetkeys/enc_v1.txt'))
+    enc_v2 = ts.lazy_ckks_vector_from(read_data('./facedetkeys/enc_v2.txt'))
 
     enc_v1.link_context(context)
     enc_v2.link_context(context)
@@ -77,14 +77,14 @@ for img1, img2 in image_pairs:
     euclidean_squared = enc_v1 - enc_v2
     euclidean_squared = euclidean_squared.dot(euclidean_squared)
 
-    write_data ('./euclidean_squared.txt', euclidean_squared.serialize())
+    write_data ('./facedetkeys/euclidean_squared.txt', euclidean_squared.serialize())
 
     del context, enc_v1, enc_v2, euclidean_squared
 
     # Decryption on client side
 
-    context = ts.context_from(read_data('./secret.txt'))
-    euclidean_squared = ts.lazy_ckks_vector_from(read_data('./euclidean_squared.txt'))
+    context = ts.context_from(read_data('./facedetkeys/secret.txt'))
+    euclidean_squared = ts.lazy_ckks_vector_from(read_data('./facedetkeys/euclidean_squared.txt'))
     euclidean_squared.link_context(context)
 
     euclidean_distance = math.sqrt(euclidean_squared.decrypt()[0])
