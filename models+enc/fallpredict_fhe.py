@@ -164,7 +164,7 @@ def main():
             if results.pose_landmarks:
                 
                 encrypted_landmarks = encrypt_landmarks(results.pose_landmarks.landmark)
-
+                
                 # Predict fall
                 if predict_fall(encrypted_landmarks) and is_fallen(encrypted_landmarks):
                     print("Fall!")
