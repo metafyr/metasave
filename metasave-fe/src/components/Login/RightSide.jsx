@@ -1,12 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { useAuthContext } from '../../context/AuthContext'
 
 const RightSide = () => {
     const [email, setEmail] = React.useState('')
     const [password, setPass] = React.useState('')
     const [error, setError] = React.useState(false)
-
+    const { login, web3auth } = useAuthContext()
     const handleLogin = async() => {
         try {
             const data = {
@@ -61,6 +62,17 @@ const RightSide = () => {
             Sign up
             </button>
         </Link>
+        {web3auth && 
+        <>
+            <span className='text-center text-[#505050] poppins text-2xl my-5'>OR</span>
+            <button
+            onClick={login}
+            className='bg-[#383838] text-[#EFEFEF] text-center px-10 py-2 rounded-[10px] poppins hover:bg-[#2A2A2A] transition duration-300 ease-in-out'
+            > 
+                Sign in with google
+            </button>
+        </>
+        }
         </div>
     </div>
   )

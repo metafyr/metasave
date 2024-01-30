@@ -17,6 +17,7 @@ const Dashboard = () => {
             const response = await axios.get(`https://91ln5ijl3i.execute-api.eu-north-1.amazonaws.com/new/getuserdetails?username=${username}`);
             if (response.data && response.data['status code'] === 200) {
           const captures = JSON.parse(response.data.captures);
+          console.log(captures)
           setFallData(captures);
         }
       } catch (error) {

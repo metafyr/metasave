@@ -4,6 +4,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded';
 import { Link, useParams } from 'react-router-dom';
+import { useAuthContext } from '../../context/AuthContext';
 
 const Sidebar = () => {
     const path = window.location.href.split("/")[4]
@@ -12,6 +13,8 @@ const Sidebar = () => {
     const toggleMobileNav = () => {
         setIsMobileNavVisible(!isMobileNavVisible);
     };
+
+    const { web3auth, Logout } = useAuthContext()
 
   return (
     <>
@@ -39,12 +42,12 @@ const Sidebar = () => {
                                     <span>Profile</span>
                                 </Link>
                             </li>
-                            <li>
-                                <Link to='/login' className="flex items-center p-2 rounded-lg text-gray-700 text-xl" onClick={toggleMobileNav}>
+                            {web3auth && <li>
+                                <button onClick={Logout} className="flex items-center p-2 rounded-lg text-gray-700 text-xl">
                                     <LogoutIcon />
                                     <span>Log out</span>
-                                </Link>
-                            </li>
+                                </button>
+                            </li>}
                             {/* close button */}
                             <li>
                                 <Link onClick={toggleMobileNav} className="flex items-center p-2 rounded-lg text-gray-700 text-xl">
@@ -74,12 +77,12 @@ const Sidebar = () => {
                             <span className="flex-1 ms-3 whitespace-nowrap">Profile</span>
                         </Link>
                     </li>
-                    <li className='!my-10'>
-                        <Link to='/login' className="pl-3 flex items-center p-2 rounded-[20px] group text-xl hover:bg-[#ff7878] text-[#e7e7e7] hover:shadow-lg">
+                    {web3auth && <li className='!my-10'>
+                        <button onClick={Logout} className="pl-3 flex items-center p-2 rounded-[20px] group text-xl hover:bg-[#ff7878] text-[#e7e7e7] hover:shadow-lg">
                             <LogoutIcon />
                             <span className="flex-1 ms-3 whitespace-nowrap">Log out</span>
-                        </Link>
-                    </li>
+                        </button>
+                    </li>}
                 </ul>
             </div>
         </aside>
