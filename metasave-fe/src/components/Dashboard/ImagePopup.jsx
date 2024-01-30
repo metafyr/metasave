@@ -7,7 +7,9 @@ const ImagePopup = ({ src, alt, onClose }) => {
   return (
     <div className='image-popup-overlay'>
       <div className='image-popup-container'>
-        <img src={src} alt={alt || 'Image'} className='image-popup-image' />
+        <video loop autoPlay>
+          <source src="/fall.mp4" alt={alt || 'Image'} className='image-popup-image' />
+        </video>
         <button 
           onClick={onClose} 
           className='image-popup-close-btn'>

@@ -74,7 +74,7 @@ export const AuthContextProvider = ({children}) => {
         setLoggedIn(web3auth?.status === "connected" ? true : false)
         getCFAddress(web3authProvider)
         // getPID(web3authProvider)
-        // window.location.replace('/dashboard')
+        window.location.replace('/dashboard')
     }
 
     const getCFAddress = async(web3authProvider) => {
