@@ -1,1 +1,0 @@
-write_data(file_name='secret.txt', file_content=secret_context)
