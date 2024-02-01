@@ -1,50 +1,22 @@
 {
-  "name": "nest-babel-starter",
+  "name": "metasave-be",
   "version": "1.0.0",
-  "description": "Nest Babel starter repository",
-  "license": "MIT",
+  "type": "module",
+  "main": "index.js",
   "scripts": {
-    "format": "prettier --write \"**/*.js\"",
-    "start": "babel-node index.js",
-    "start:dev": "nodemon",
-    "test": "jest",
-    "test:cov": "jest --coverage",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js",
+    "start": "node index.js"
   },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "@alchemy/aa-accounts": "^1.2.4",
-    "@alchemy/aa-alchemy": "^1.2.4",
-    "@alchemy/aa-core": "^1.2.4",
-    "@nestjs/common": "^10.0.0",
-    "@nestjs/core": "^10.0.0",
-    "@nestjs/platform-express": "^10.0.0",
+    "@openzeppelin/merkle-tree": "^1.0.6",
+    "cors": "^2.8.5",
     "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.5.5",
-    "viem": "^2.0.3"
+    "express": "^4.18.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.18.6",
-    "@babel/node": "^7.18.6",
-    "@babel/plugin-proposal-decorators": "^7.18.6",
-    "@babel/plugin-transform-runtime": "^7.18.6",
-    "@babel/preset-env": "^7.18.6",
-    "@babel/register": "^7.18.6",
-    "@babel/runtime": "^7.18.6",
-    "@nestjs/testing": "^10.0.0",
-    "jest": "^28.1.2",
-    "nodemon": "^2.0.19",
-    "prettier": "^2.7.1",
-    "supertest": "^6.2.4"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json"
-    ],
-    "rootDir": "src",
-    "testRegex": ".spec.js$",
-    "coverageDirectory": "../coverage"
+    "nodemon": "^2.0.22"
   }
 }
