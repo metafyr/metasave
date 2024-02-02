@@ -8,10 +8,10 @@ contract ZKProof {
     function verify(
         bytes32 root,
         bytes32[] memory proof,
-        address addr,
+        address hxsh,
         uint256 message
-    ) public pure returns (bool) {
-        bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(addr, message))));
+    ) public view returns (bool) {
+        bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(hxsh, message))));
         return MerkleProof.verify(proof, root, leaf);
     }
 
