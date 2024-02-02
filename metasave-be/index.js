@@ -23,9 +23,10 @@ const corsOptions = {
     credentials: true,
 };
 
-app.use(express.urlencoded({ extended: true }))
 app.use(cors(corsOptions));
 app.options('*', cors())
+app.use(express.json({extended: true}))
+app.use(express.urlencoded({ extended: true }))
 app.get('/', (req, res) => {
     res.send('Metasave server')
 })
