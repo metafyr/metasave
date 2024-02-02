@@ -24,9 +24,9 @@ if (cap.isOpened() == False):
     print('Error while trying to read video. Please check path again')
 
 frame_width = int(cap.get(3))
-
+print(frame_width)
 frame_height = int(cap.get(4))
-
+print(frame_height)
 frame_count = 0
 
 while(cap.isOpened):
