@@ -6,6 +6,8 @@ import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { identityCreation } from "../helpers/PolygonID";
 import axios from 'axios'
 import { getWalletProvider } from "../helpers/walletProvider.js";
+import { addresses } from "../constants/addresses.js";
+import { abi } from "../abi/index.js";
 
 
 const AuthContext = React.createContext()
@@ -68,20 +70,56 @@ export const AuthContextProvider = ({children}) => {
         await checkLoggedIn(web3auth)
     }
 
+    const verifyProof = async(walletAddress, walletProvider) => {
+        try{
+            console.log(walletAddress)
+            const res = await axios.post('http://localhost:5000/api/merkletree', {
+                walletAddress,
+                msg: 5000000000000000000
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if(res.data.newUser){
+                console.log("New User")
+                return true
+            }else{
+                const proof = res.data.proof
+                console.log(res.data)
+                const root = res.data.root
+                const msg = "5000000000000000000"
+                const ZKProof = await walletProvider.getContract(addresses.ZKProof, abi.ZKProof)
+                const verify = await ZKProof.verify(root, proof, walletAddress, msg)
+                console.log(verify)
+                return true
+            }
+        }catch(err){
+            console.log(err)
+        }
+    }
+
     const login = async() => {
         const web3authProvider = await web3auth?.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
             loginProvider: "google",
         });
         const walletProvider = getWalletProvider(web3authProvider)
         const walletAddress = await walletProvider.getAddress()
-        console.log(walletAddress)
         setWalletProvider(walletProvider)
         setWalletAddress(walletAddress)
         setWeb3AuthProvider(web3authProvider)
-        setLoggedIn(web3auth?.status === "connected" ? true : false)
-        getCFAddress(web3authProvider)
-        // getPID(web3authProvider)
-        window.location.replace('/dashboard')
+
+        const verify = await verifyProof(walletAddress, walletProvider)
+
+        console.log(verify)
+
+        if(verify == "true" || verify == true){
+            setLoggedIn(web3auth?.status === "connected" ? true : false)
+            getCFAddress(web3authProvider)
+            // getPID(web3authProvider)
+            window.location.replace('/dashboard')
+        }
     }
 
     const getCFAddress = async(web3authProvider) => {
