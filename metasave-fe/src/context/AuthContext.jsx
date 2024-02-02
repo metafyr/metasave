@@ -3,9 +3,9 @@ import { Web3Auth } from "@web3auth/modal";
 import { WALLET_ADAPTERS } from "@web3auth/base";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
-import RPC from '../helpers/EthereumRPC'
 import { identityCreation } from "../helpers/PolygonID";
 import axios from 'axios'
+import { getWalletProvider } from "../helpers/walletProvider.js";
 
 
 const AuthContext = React.createContext()
@@ -16,6 +16,8 @@ export const AuthContextProvider = ({children}) => {
     const [loggedIn, setLoggedIn] = React.useState(false)
     const [web3AuthProvider, setWeb3AuthProvider] = React.useState(null)
     const [pid, setPID] = React.useState(null)
+    const [walletAddress, setWalletAddress] = React.useState(null)
+    const [walletProvider, setWalletProvider] = React.useState(null)
     const initWeb3Auth = async() => {
         const privateKeyProvider = new EthereumPrivateKeyProvider({
             config: {
@@ -70,6 +72,11 @@ export const AuthContextProvider = ({children}) => {
         const web3authProvider = await web3auth?.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
             loginProvider: "google",
         });
+        const walletProvider = getWalletProvider(web3authProvider)
+        const walletAddress = await walletProvider.getAddress()
+        console.log(walletAddress)
+        setWalletProvider(walletProvider)
+        setWalletAddress(walletAddress)
         setWeb3AuthProvider(web3authProvider)
         setLoggedIn(web3auth?.status === "connected" ? true : false)
         getCFAddress(web3authProvider)
@@ -90,8 +97,7 @@ export const AuthContextProvider = ({children}) => {
 
     const getPID = async(web3authProvider) => {
         if(web3authProvider){
-            const rpc = new RPC(web3authProvider)
-            const pKey = await rpc.getPrivateKey()
+            const pKey = await walletProvider.getPrivateKey()
             const res = await identityCreation(pKey);
             setPID(res.did.string())
         }
@@ -117,6 +123,8 @@ export const AuthContextProvider = ({children}) => {
             web3auth,
             loggedIn,
             web3AuthProvider,
+            walletAddress,
+            walletProvider,
             Logout,
             checkLoggedIn,
             setWeb3AuthProvider,
