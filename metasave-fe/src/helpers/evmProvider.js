@@ -59,11 +59,7 @@ const ethersWeb3Provider = (provider) => {
 
             const signer = await ethersProvider.getSigner()
 
-            console.log('signer: ', signer)
-
             const contract = new ethers.Contract(contractAddress, JSON.parse(JSON.stringify(contractABI)), signer)
-
-            console.log('contract', contract)
 
             return contract
         } catch (error) {

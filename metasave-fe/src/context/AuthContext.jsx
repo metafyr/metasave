@@ -65,7 +65,11 @@ export const AuthContextProvider = ({children}) => {
 
     const verifyProof = async(walletAddress, walletProvider) => {
         try{
-            console.log(walletAddress)
+            let status = {
+                status: "not verified",
+                proceed: false,
+                newUser: false
+            }
             const res = await axios.post('http://localhost:5000/api/merkletree', {
                 walletAddress,
                 msg: 5000000000000000000
@@ -76,8 +80,12 @@ export const AuthContextProvider = ({children}) => {
                 }
             })
             if(res.data.newUser){
-                console.log("New User")
-                return true
+                status = {
+                    status: "new user",
+                    proceed: true,
+                    newUser: false
+                }
+                return status
             }else{
                 const proof = res.data.proof
                 console.log(res.data)
@@ -85,8 +93,20 @@ export const AuthContextProvider = ({children}) => {
                 const msg = "5000000000000000000"
                 const ZKProof = await walletProvider.getContract(addresses.ZKProof, abi.ZKProof)
                 const verify = await ZKProof.verify(root, proof, walletAddress, msg)
-                console.log(verify)
-                return true
+                if(verify == true || verify == 'true'){
+                    status = {
+                        status: "verified",
+                        proceed: true,
+                        newUser: false
+                    }
+                }else{
+                    status = {
+                        status: "not verified",
+                        proceed: false,
+                        newUser: false
+                    }
+                }
+                return status
             }
         }catch(err){
             console.log(err)
@@ -105,13 +125,14 @@ export const AuthContextProvider = ({children}) => {
 
         const verify = await verifyProof(walletAddress, walletProvider)
 
-        console.log(verify)
-
-        if(verify == "true" || verify == true){
-            setLoggedIn(web3auth?.status === "connected" ? true : false)
-            getCFAddress(web3authProvider)
-            // getPID(web3authProvider)
-            window.location.replace('/dashboard')
+        if(verify.proceed == true){
+            if(verify.newUser == true){
+                window.location.replace('/register')
+            }else{
+                setLoggedIn(web3auth?.status === "connected" ? true : false)
+                getCFAddress(web3authProvider)
+                window.location.replace('/dashboard')
+            }
         }
     }
 
