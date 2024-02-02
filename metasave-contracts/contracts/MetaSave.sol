@@ -2,18 +2,18 @@
 pragma solidity ^0.8.13;
 
 contract MetaSave {
-	mapping(uint256 => string) public userIPFSMapping;
+	mapping(address => string) public userIPFSMapping;
 
-    function setIPFSFileName(uint256 user_id, string memory ipfsFileName) public {
-        userIPFSMapping[user_id] = ipfsFileName;
+    function setIPFSFileName(address user_addr, string memory ipfsFileName) public {
+        userIPFSMapping[user_addr] = ipfsFileName;
     }
 
-    function getIPFSFileName(uint256 user_id) public view returns (string memory) {
-        require(userExists(user_id), "User not found");
-        return userIPFSMapping[user_id];
+    function getIPFSFileName(address user_addr) public view returns (string memory) {
+        require(userExists(user_addr), "User not found");
+        return userIPFSMapping[user_addr];
     }
 
-    function userExists(uint256 user_id) internal view returns (bool) {
-        return bytes(userIPFSMapping[user_id]).length > 0;
+    function userExists(address user_addr) internal view returns (bool) {
+        return bytes(userIPFSMapping[user_addr]).length > 0;
     }
 }
