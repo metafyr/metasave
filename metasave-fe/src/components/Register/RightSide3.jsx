@@ -3,11 +3,19 @@ import { Link } from 'react-router-dom';
 import { useSignupContext } from '../../pages/Signup';
 import axios from 'axios'
 import { useMainContext } from '../../context/MainContext';
+import { createHelia } from 'helia'
+import { dagJson } from '@helia/dag-json'
+import { abi } from '../../abi';
+import { addresses } from '../../constants/addresses.js';
+import { useAuthContext } from '../../context/AuthContext.jsx';
+
+const helia = await createHelia()
+const d = dagJson(helia)
 
 const RightSide3 = ({ onPrev }) => {
   const {medications, setMedications, disease, setDisease, duration, setDuration, problemsFaced, setProblemsFaced, addProblemFaced, removeProblemFaced, removeMedication, addMedication, name, password, age, email, gender, phone, address, contacts } = useSignupContext()
 
-  const {serverUrl} = useMainContext()
+  const {walletProvider, walletAddress} = useAuthContext()
   const [loading, setLoading] = useState(false);
 
   const handleFinish = async() => {
@@ -25,12 +33,17 @@ const RightSide3 = ({ onPrev }) => {
       duration
     }
     console.log(data)
-    const res = await axios.post(`${serverUrl}/register`, data);
-    console.log(res)
-    setLoading(true)
-    if(res.status == 200){
-      setLoading(false)
-      localStorage.setItem('username', name)
+    const AddObject = await d.add(data)
+
+    const data2 = { link: AddObject }
+    const AddObject2 = await d.add(data2)
+    
+    const retrievedObject = await d.get(AddObject2)
+    const IPFSid = retrievedObject.link.toString()
+
+    const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
+    const tx = await MetaSave.setIPFSFileName(walletAddress, IPFSid)
+    if(tx){
       window.location.replace('/dashboard')
     }
   };

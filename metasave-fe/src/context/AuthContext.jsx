@@ -8,6 +8,11 @@ import axios from 'axios'
 import { getWalletProvider } from "../helpers/walletProvider.js";
 import { addresses } from "../constants/addresses.js";
 import { abi } from "../abi/index.js";
+import { createHelia } from 'helia'
+import { dagJson } from '@helia/dag-json'
+
+const helia = await createHelia()
+const d = dagJson(helia)
 
 
 const AuthContext = React.createContext()
@@ -20,6 +25,7 @@ export const AuthContextProvider = ({children}) => {
     const [pid, setPID] = React.useState(null)
     const [walletAddress, setWalletAddress] = React.useState(null)
     const [walletProvider, setWalletProvider] = React.useState(null)
+    const [userDetails, setUserDetails] = React.useState()
     const mumbaiChainConfig = {
         chainNamespace: "eip155",
         chainId: "0x13881",
@@ -72,7 +78,7 @@ export const AuthContextProvider = ({children}) => {
             }
             const res = await axios.post('http://localhost:5000/api/merkletree', {
                 walletAddress,
-                msg: 5000000000000000000
+                msg: 5000
             },
             {
                 headers: {
@@ -90,7 +96,7 @@ export const AuthContextProvider = ({children}) => {
                 const proof = res.data.proof
                 console.log(res.data)
                 const root = res.data.root
-                const msg = "5000000000000000000"
+                const msg = 5000
                 const ZKProof = await walletProvider.getContract(addresses.ZKProof, abi.ZKProof)
                 const verify = await ZKProof.verify(root, proof, walletAddress, msg)
                 if(verify == true || verify == 'true'){
@@ -131,8 +137,18 @@ export const AuthContextProvider = ({children}) => {
             }else{
                 setLoggedIn(web3auth?.status === "connected" ? true : false)
                 getCFAddress(web3authProvider)
+                const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
+                const IPFSid = await MetaSave.getIPFSFileName(walletAddress)
+                const IPFScid = new CID(IPFSid)
+                
+                const IPFSdata = await d.get(IPFScid)
+                setUserDetails(IPFSdata)
+                console.log(IPFSdata)
                 window.location.replace('/dashboard')
             }
+        }else if (verify.proceed == false){
+            console.log('verification failed')
+            await web3auth.logout()
         }
     }
 
