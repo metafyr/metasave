@@ -20,32 +20,25 @@ export const AuthContextProvider = ({children}) => {
     const [pid, setPID] = React.useState(null)
     const [walletAddress, setWalletAddress] = React.useState(null)
     const [walletProvider, setWalletProvider] = React.useState(null)
+    const mumbaiChainConfig = {
+        chainNamespace: "eip155",
+        chainId: "0x13881",
+        rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
+        displayName: "Polygon Mumbai",
+        blockExplorer: "https://mumbai.polygonscan.com",
+        ticker: "MATIC",
+        tickerName: "Polygon",
+    }
     const initWeb3Auth = async() => {
         const privateKeyProvider = new EthereumPrivateKeyProvider({
             config: {
-                chainConfig: {
-                    chainNamespace: "eip155",
-                    chainId: "0x13881",
-                    rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
-                    displayName: "Polygon Mumbai",
-                    blockExplorer: "https://mumbai.polygonscan.com",
-                    ticker: "MATIC",
-                    tickerName: "Polygon",
-                },
+                chainConfig: mumbaiChainConfig,
             },
         });
         const web3auth = new Web3Auth({
             clientId: "BJGWO2abSqntJyXgPZwpAZH9-BdnaoY_w6VFpeo-OVzyZaVMIt8F8lxodXXGU0wCmtARzvgsTbP6cdEGOiBznxI",
             web3AuthNetwork: "sapphire_devnet",
-            chainConfig: {
-                chainNamespace: "eip155",
-                chainId: "0x13381",
-                rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
-                displayName: "Polygon Mumbai",
-                blockExplorer: "https://mumbai.polygonscan.com",
-                ticker: "ETH",
-                tickerName: "Ethereum",
-            },
+            chainConfig: mumbaiChainConfig,
         });
         const openloginAdapter = new OpenloginAdapter({
             adapterSettings: {

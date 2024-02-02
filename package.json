@@ -6,7 +6,8 @@
     "start": "yarn workspace metasave-fe start",
     "build": "yarn workspace metasave-fe build",
     "build-be": "yarn workspace metasave-be build",
-    "start-be": "yarn workspace metasave-be start:dev"
+    "start-be": "yarn workspace metasave-be start:dev",
+    "start-fe": "yarn workspace metasave-fe dev"
   },
   "workspaces": [
     "metasave-fe",
@@ -15,6 +16,7 @@
     "circuits"
   ],
   "dependencies": {
-    "truffle": "^5.11.5"
+    "cors": "^2.8.5",
+    "express": "^4.18.2"
   }
 }
