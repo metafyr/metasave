@@ -25,7 +25,9 @@ export const AuthContextProvider = ({children}) => {
     const [pid, setPID] = React.useState(null)
     const [walletAddress, setWalletAddress] = React.useState(null)
     const [walletProvider, setWalletProvider] = React.useState(null)
-    const [userDetails, setUserDetails] = React.useState()
+    const [AAProvider, setAAProvider] = React.useState(null)
+    const [CFAddress, setCFAddress] = React.useState(null)
+    const [privKey, setPrivKey] = React.useState(null)
     const mumbaiChainConfig = {
         chainNamespace: "eip155",
         chainId: "0x13881",
@@ -89,7 +91,7 @@ export const AuthContextProvider = ({children}) => {
                 status = {
                     status: "new user",
                     proceed: true,
-                    newUser: false
+                    newUser: true
                 }
                 return status
             }else{
@@ -123,11 +125,15 @@ export const AuthContextProvider = ({children}) => {
         const web3authProvider = await web3auth?.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
             loginProvider: "google",
         });
+        console.log('web3authprovider', web3authProvider)
         const walletProvider = getWalletProvider(web3authProvider)
         const walletAddress = await walletProvider.getAddress()
+        const priv_key = await walletProvider.getPrivateKey()
+        console.log('priv_key', priv_key)
         setWalletProvider(walletProvider)
         setWalletAddress(walletAddress)
         setWeb3AuthProvider(web3authProvider)
+        setPrivKey(priv_key)
 
         const verify = await verifyProof(walletAddress, walletProvider)
 
@@ -136,15 +142,19 @@ export const AuthContextProvider = ({children}) => {
                 window.location.replace('/register')
             }else{
                 setLoggedIn(web3auth?.status === "connected" ? true : false)
-                getCFAddress(web3authProvider)
+                getCFAddress(priv_key)
+
                 const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
                 const IPFSid = await MetaSave.getIPFSFileName(walletAddress)
                 const IPFScid = new CID(IPFSid)
                 
                 const IPFSdata = await d.get(IPFScid)
-                setUserDetails(IPFSdata)
-                console.log(IPFSdata)
-                window.location.replace('/dashboard')
+                if(!IPFSdata){
+                    window.location.replace('/register')
+                }else{
+                    console.log(IPFSdata)
+                    window.location.replace('/dashboard')
+                }
             }
         }else if (verify.proceed == false){
             console.log('verification failed')
@@ -152,14 +162,19 @@ export const AuthContextProvider = ({children}) => {
         }
     }
 
-    const getCFAddress = async(web3authProvider) => {
-        if(web3authProvider){
-            const res = await axios.post('http://localhost:3000/aa', web3authProvider, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            console.log(res)
+    const getCFAddress = async(PRIV_KEY) => {
+        const res = await axios.post('http://localhost:5000/api/aa', {PRIV_KEY: 'b22b52cadf5b8a828472b2b3356ce4b7c3ec5092b5ed2a868ed51db3ac620c1c'}, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        if(res.data){
+            console.log(res.data)
+            const cfAddress = res.data.CFaddress
+            const aaProvider = res.data.AAprovider
+
+            setCFAddress(cfAddress)
+            setAAProvider(aaProvider)
         }
     }
 
@@ -180,8 +195,21 @@ export const AuthContextProvider = ({children}) => {
     }
 
     const checkLoggedIn = async(web3auth) => {
+        console.log('checking logged in')
         if(web3auth?.status === "connected"){
-            getCFAddress(web3AuthProvider)
+            const web3AuthProvider = web3auth.provider
+            const walletProvider = getWalletProvider(web3AuthProvider)
+            const walletAddress = await walletProvider.getAddress()
+            const priv_key = await walletProvider.getPrivateKey()
+            console.log('priv_key', priv_key)
+
+            setPrivKey(priv_key)
+            setWalletProvider(walletProvider)
+            setWalletAddress(walletAddress)
+            setWeb3AuthProvider(web3AuthProvider)
+
+            getCFAddress(priv_key)
+
             setLoggedIn(true)
         }
     }
@@ -193,6 +221,8 @@ export const AuthContextProvider = ({children}) => {
             web3AuthProvider,
             walletAddress,
             walletProvider,
+            AAProvider,
+            CFAddress,
             Logout,
             checkLoggedIn,
             setWeb3AuthProvider,

@@ -20,8 +20,8 @@ function App() {
         <Routes>
           <Route path="/" element={!loggedIn ? <Login /> : <AlreadyLoggedIn />} />
           <Route path="/login" element={!loggedIn ? <Login /> : <AlreadyLoggedIn />} />
-          <Route path="/signup" element={!loggedIn ? <Signup /> : <AlreadyLoggedIn />} />
-          <Route path="/register" element={!loggedIn ? <Signup /> : <AlreadyLoggedIn />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/register" element={<Signup />} />
           <Route path="/dashboard" element={loggedIn ? <Dashboard /> : <PleaseLogin />} />
           <Route path="/dashboard/*" element={loggedIn ? <Dashboard /> : <PleaseLogin />} />
         </Routes>

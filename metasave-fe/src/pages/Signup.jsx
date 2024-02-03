@@ -106,7 +106,7 @@ export const SignupProvider = ({ children }) => {
 export const useSignupContext = () => React.useContext(SignupContext);
 
 const Signup = () => {
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(3);
 
   const handleNext = () => {
     setStep((prevStep) => prevStep + 1);
