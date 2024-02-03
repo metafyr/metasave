@@ -11,10 +11,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@alchemy/aa-accounts": "^2.4.0",
+    "@alchemy/aa-alchemy": "^2.4.0",
+    "@alchemy/aa-core": "^2.3.1",
     "@openzeppelin/merkle-tree": "^1.0.6",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "viem": "^2.7.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
