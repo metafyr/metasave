@@ -3,17 +3,12 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "start": "yarn workspace metasave-fe start",
-    "build": "yarn workspace metasave-fe build",
-    "build-be": "yarn workspace metasave-be build",
-    "start-be": "yarn workspace metasave-be start:dev",
-    "start-fe": "yarn workspace metasave-fe dev"
+    "start": "npm run --workspaces --parallel start-frontend start-backend",
+    "start-frontend": "npm --prefix packages/metasave-fe run dev",
+    "start-backend": "npm --prefix packages/metasave-be run dev"
   },
   "workspaces": [
-    "metasave-fe",
-    "metasave-be",
-    "metasave-contracts",
-    "circuits"
+    "packages/*"
   ],
   "dependencies": {
     "cors": "^2.8.5",

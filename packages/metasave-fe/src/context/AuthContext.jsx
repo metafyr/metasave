@@ -163,7 +163,7 @@ export const AuthContextProvider = ({children}) => {
     }
 
     const getCFAddress = async(PRIV_KEY) => {
-        const res = await axios.post('http://localhost:5000/api/aa', {PRIV_KEY: 'b22b52cadf5b8a828472b2b3356ce4b7c3ec5092b5ed2a868ed51db3ac620c1c'}, {
+        const res = await axios.post('http://localhost:5000/api/aa', {PRIV_KEY}, {
             headers: {
                 'Content-Type': 'application/json'
             }
