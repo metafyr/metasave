@@ -10,6 +10,7 @@ import { addresses } from "../constants/addresses.js";
 import { abi } from "../abi/index.js";
 import { createHelia } from 'helia'
 import { dagJson } from '@helia/dag-json'
+import { CID } from 'multiformats/cid'
 import {
     LightSmartContractAccount,
     getDefaultLightAccountFactoryAddress,
@@ -152,7 +153,7 @@ export const AuthContextProvider = ({children}) => {
                 getCFAddress(priv_key)
 
                 const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
-                const IPFSid = await MetaSave.getIPFSFileName(walletAddress)
+                const IPFSid = await MetaSave.getIPFSFileName(CFAddress)
                 const IPFScid = new CID(IPFSid)
                 
                 const IPFSdata = await d.get(IPFScid)
@@ -169,7 +170,7 @@ export const AuthContextProvider = ({children}) => {
         }
     }
 
-    const getCFAddress = async(PRIV_KEY) => {
+    const getCFAddress = async(walletProvider, PRIV_KEY) => {
         // const res = await axios.post('http://localhost:5000/api/aa', {PRIV_KEY}, {
         //     headers: {
         //         'Content-Type': 'application/json'
@@ -241,6 +242,15 @@ export const AuthContextProvider = ({children}) => {
 
         const CFAddress = await AAProvider.getAddress()
 
+        const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
+        const IPFSid = await MetaSave.getIPFSFileName(CFAddress)
+        console.log(IPFSid)
+        const IPFScid = CID.create(IPFSid)
+        
+        const IPFSdata = await d.get(IPFScid)
+
+        console.log(IPFSdata)
+
         console.log(CFAddress, AAProvider)
 
         setCFAddress(CFAddress)
@@ -278,7 +288,7 @@ export const AuthContextProvider = ({children}) => {
             setWalletAddress(walletAddress)
             setWeb3AuthProvider(web3AuthProvider)
 
-            getCFAddress(priv_key)
+            getCFAddress(walletProvider, priv_key)
 
             setLoggedIn(true)
         }
