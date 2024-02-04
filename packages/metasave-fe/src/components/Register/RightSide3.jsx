@@ -8,6 +8,7 @@ import { dagJson } from '@helia/dag-json'
 import { abi } from '../../abi';
 import { addresses } from '../../constants/addresses.js';
 import { useAuthContext } from '../../context/AuthContext.jsx';
+import {encodeFunctionData} from 'viem'
 
 const helia = await createHelia()
 const d = dagJson(helia)
@@ -15,45 +16,44 @@ const d = dagJson(helia)
 const RightSide3 = ({ onPrev }) => {
   const {medications, setMedications, disease, setDisease, duration, setDuration, problemsFaced, setProblemsFaced, addProblemFaced, removeProblemFaced, removeMedication, addMedication, name, password, age, email, gender, phone, address, contacts } = useSignupContext()
 
-  const { AAProvider } = useAuthContext()
+  const { CFAddress, AAProvider } = useAuthContext()
   const [loading, setLoading] = useState(false);
 
   const handleFinish = async() => {
     const data = {
-      age: 20,
-      gender: 'Male',
-      phone: '+91 9778393558',
-      medications: "none",
-      address: 'Kannur',
-      contacts: 'none',
-      disease: 'none',
-      duration: 'none'
+      age,
+      gender,
+      phone,
+      medications,
+      address,
+      contacts,
+      disease,
+      duration
     }
     console.log(data)
-    // const AddObject = await d.add(data)
+    const AddObject = await d.add(data)
 
-    // const data2 = { link: AddObject }
-    // const AddObject2 = await d.add(data2)
+    const data2 = { link: AddObject }
+    const AddObject2 = await d.add(data2)
     
-    // const retrievedObject = await d.get(AddObject2)
-    // const IPFSid = retrievedObject.link.toString()
+    const retrievedObject = await d.get(AddObject2)
+    const IPFSid = retrievedObject.link.toString()
 
-    // console.log(IPFSid)
+    const uoCallData = encodeFunctionData({
+      abi: abi.MetaSave,
+      functionName: "setIPFSFileName",
+      args: [CFAddress, 'baguqeerafjupvhbr3rofy273gy5ghnjjao7opru72ufu5okizxmuh72epfcq'],
+    });
+    console.log(uoCallData)
+    const uo = await AAProvider.sendUserOperation({
+      target: addresses.MetaSave,
+      data: uoCallData,
+    });
 
-    // const iface = new ethers.utils.Interface(abi.MetaSave);
-
-    // const uoCallData = iface.encodeFunctionData("setIPFSFileName", [IPFSid]);
-
-    // const uo = await AAprovider.sendUserOperation({
-    //   target: addresses.MetaSave,
-    //   data: `0x${uoCallData.slice(2)}`,
-    // });
-
-    // const txHash = await AAprovider.waitForUserOperationTransaction(uo.hash);
-    // console.log(txHash)
-    // if(txHash){
-    //   window.location.replace('/dashboard')
-    // }
+    const txHash = await AAProvider.waitForUserOperationTransaction(uo.hash)
+    if(txHash){
+      window.location.replace('/dashboard')
+    }
   };
   return (
     <div className='glass-effect rounded-tr-[15px] rounded-br-[15px] md:rounded-tl-[0px] md:rounded-bl-[0px] rounded-tl-[15px] rounded-bl-[15px] h-full w-full py-10 px-10 flex flex-col justify-between'>
@@ -154,7 +154,7 @@ const RightSide3 = ({ onPrev }) => {
         >
           Previous
         </button>
-        <Link to='/'>
+        {/* <Link to='/'> */}
           <button
             onClick={handleFinish}
             className={`bg-[#75ACFF] text-[#EFEFEF] text-center px-10 py-2 rounded-[10px] poppins hover:bg-[#2A2A2A] transition duration-300 ease-in-out ${
@@ -164,7 +164,7 @@ const RightSide3 = ({ onPrev }) => {
           >
             {loading ? 'Finishing...' : 'Finish'}
           </button>
-        </Link>
+        {/* </Link> */}
 
         </div>
         </div>
