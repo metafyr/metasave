@@ -1,5 +1,5 @@
 {
-  "name": "metasave-contracts",
+  "name": "@metasave/metasave-contracts",
   "version": "1.0.0",
   "description": "",
   "main": "truffle-config.js",

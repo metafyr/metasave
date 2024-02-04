@@ -1,5 +1,5 @@
 {
-  "name": "zk-frontend",
+  "name": "@metasave/metasave-fe",
   "private": true,
   "version": "0.0.0",
   "type": "module",
