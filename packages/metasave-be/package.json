@@ -3,13 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "main": "index.js",
-  "engines": {
-    "node": "20.x"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx -p node@20.10.0 nodemon index.js",
-    "start": "node index.js"
+    "start": "npx -p node@20.10.0 node index.js"
   },
   "author": "",
   "license": "ISC",
