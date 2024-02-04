@@ -3,9 +3,9 @@ import cv2
 import math
 from torchvision import transforms
 import numpy as np
-from utils.datasets import letterbox
-from utils.general import non_max_suppression
-from utils.plots import output_to_target, plot_skeleton_kpts
+from yoloutils.datasets import letterbox
+from yoloutils.general import non_max_suppression
+from yoloutils.plots import output_to_target, plot_skeleton_kpts
 import requests
 from datetime import datetime
 import base64
