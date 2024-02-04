@@ -25,14 +25,15 @@ const polygonMumbai = /*#__PURE__*/ defineChain({
     },
     blockExplorers: {
         default: {
-            name: 'PolygonScan',
-            url: 'https://mumbai.polygonscan.com',
+          name: 'PolygonScan',
+          url: 'https://mumbai.polygonscan.com',
+          apiUrl: 'https://mumbai.polygonscan.com/api',
         },
     },
     contracts: {
         multicall3: {
-            address: '0xca11bde05977b3631167028862be2a173976ca11',
-            blockCreated: 25770160,
+          address: '0xca11bde05977b3631167028862be2a173976ca11',
+          blockCreated: 25770160,
         },
     },
     testnet: true,
@@ -63,8 +64,11 @@ const AA = async(req, res) => {
                 entryPointAddress: ENTRY_POINT_ADDRESS,
                 factoryAddress: getDefaultLightAccountFactoryAddress(chain),
             })
-        );
+        )
+
         const CFaddress = await AAprovider.getAddress()
+
+        console.log(CFaddress)
 
         AAprovider.withAlchemyGasManager({
             policyId: process.env.GAS_MANAGER_POLICY_ID,
@@ -75,5 +79,7 @@ const AA = async(req, res) => {
         console.log(error)
     }
 }
+
+// AA()
 
 export default AA
