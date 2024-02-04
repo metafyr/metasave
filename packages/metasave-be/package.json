@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx -p node@20.10.0 nodemon index.js",
-    "start": "npx -p node@20.10.0 node index.js"
+    "dev": "npx -p node@18.16.0 nodemon index.js",
+    "start": "npx -p node@18.16.0 node index.js"
   },
   "author": "",
   "license": "ISC",
