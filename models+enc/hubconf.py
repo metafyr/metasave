@@ -3,9 +3,9 @@ from pathlib import Path
 import torch
 
 from models.yolo import Model, attempt_load
-from utils.general import check_requirements, set_logging
-from utils.google_utils import attempt_download
-from utils.torch_utils import select_device
+from yoloutils.general import check_requirements, set_logging
+from yoloutils.google_utils import attempt_download
+from yoloutils.torch_utils import select_device
 
 dependencies = ['torch', 'yaml']
 check_requirements(Path(__file__).parent / 'requirements.txt', exclude=('tensorboard', 'pycocotools', 'thop'))
