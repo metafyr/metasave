@@ -18,6 +18,7 @@ import {
 import { AlchemyProvider } from "@alchemy/aa-alchemy";
 import { LocalAccountSigner } from "@alchemy/aa-core";
 import { defineChain } from 'viem'
+import { useMainContext } from "./MainContext.jsx";
 
 const helia = await createHelia()
 const d = dagJson(helia)
@@ -36,6 +37,7 @@ export const AuthContextProvider = ({children}) => {
     const [AAProvider, setAAProvider] = React.useState(null)
     const [CFAddress, setCFAddress] = React.useState(null)
     const [privKey, setPrivKey] = React.useState(null)
+    const {setUserDetails, userDetails, serverUrl, fetchUserDetails, IPFSid, setIPFSid} = useMainContext()
     const mumbaiChainConfig = {
         chainNamespace: "eip155",
         chainId: "0x13881",
@@ -86,7 +88,7 @@ export const AuthContextProvider = ({children}) => {
                 proceed: false,
                 newUser: false
             }
-            const res = await axios.post('http://localhost:5000/api/merkletree', {
+            const res = await axios.post(`${serverUrl}/merkletree`, {
                 walletAddress,
                 msg: 5000
             },
@@ -150,17 +152,14 @@ export const AuthContextProvider = ({children}) => {
                 window.location.replace('/register')
             }else{
                 setLoggedIn(web3auth?.status === "connected" ? true : false)
-                getCFAddress(priv_key)
-
+                const CF = getCFAddress(walletProvider, priv_key)
                 const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
-                const IPFSid = await MetaSave.getIPFSFileName(CFAddress)
-                const IPFScid = new CID(IPFSid)
-                
-                const IPFSdata = await d.get(IPFScid)
-                if(!IPFSdata){
+                const IPFSid = await MetaSave.getIPFSFileName(CF)
+                console.log('ipfs iddd worksssss', IPFSid)
+                if(!IPFSid){
                     window.location.replace('/register')
                 }else{
-                    console.log(IPFSdata)
+                    console.log(IPFSid)
                     window.location.replace('/dashboard')
                 }
             }
@@ -242,20 +241,14 @@ export const AuthContextProvider = ({children}) => {
 
         const CFAddress = await AAProvider.getAddress()
 
-        const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
-        const IPFSid = await MetaSave.getIPFSFileName(CFAddress)
-        console.log(IPFSid)
-        const IPFScid = CID.create(IPFSid)
         
-        const IPFSdata = await d.get(IPFScid)
-
-        console.log(IPFSdata)
-
+        
         console.log(CFAddress, AAProvider)
 
         setCFAddress(CFAddress)
         setAAProvider(AAProvider)
 
+        return CFAddress
     }
 
     const getPID = async(web3authProvider) => {

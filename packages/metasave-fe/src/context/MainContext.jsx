@@ -1,18 +1,27 @@
 import React from "react";
+import { addresses } from "../constants/addresses";
+import { abi } from "../abi/index.js" 
 
 
 const MainContext = React.createContext()
 
 
 export const MainContextProvider = ({children}) => {
-    const serverUrl = 'https://91ln5ijl3i.execute-api.eu-north-1.amazonaws.com/new'
+    const serverUrl = 'http://localhost:5000/api'
     const [userDetails, setUserDetails] = React.useState()
+
+    const fetchUserDetails = async (walletProvider, CFAddress) => {
+        const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
+        const IPFSid = await MetaSave.getIPFSFileName(CFAddress)
+        console.log(IPFSid)
+    }
     
     return(
         <MainContext.Provider value={{
             serverUrl,
             userDetails,
-            setUserDetails  
+            setUserDetails,
+            fetchUserDetails
         }}>
             {children}
         </MainContext.Provider>
