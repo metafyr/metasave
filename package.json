@@ -3,9 +3,9 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "dev": "npm run --workspaces --parallel start-frontend start-backend",
-    "start-frontend": "npm --prefix packages/metasave-fe run dev",
-    "start-backend": "npm --prefix packages/metasave-be run dev"
+    "dev": "npm run --workspaces --parallel dev-fe dev-be",
+    "dev-fe": "npm --prefix packages/metasave-fe run dev",
+    "dev-be": "npm --prefix packages/metasave-be run dev"
   },
   "workspaces": [
     "packages/*"
