@@ -3,6 +3,7 @@ pragma solidity ^0.8.13;
 
 contract MetaSave {
 	mapping(address => string) public userIPFSMapping;
+	mapping(address => string) public userFallIPFSMapping;
 
     function setIPFSFileName(address user_addr, string memory ipfsFileName) public {
         userIPFSMapping[user_addr] = ipfsFileName;
@@ -15,5 +16,9 @@ contract MetaSave {
 
     function userExists(address user_addr) internal view returns (bool) {
         return bytes(userIPFSMapping[user_addr]).length > 0;
+    }
+
+    function ssetFallData(address user_addr, string memory ipfsFileName) public {
+        userFallIPFSMapping[user_addr] = ipfsFileName;
     }
 }

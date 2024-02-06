@@ -42,7 +42,7 @@ const RightSide3 = ({ onPrev }) => {
     const uoCallData = encodeFunctionData({
       abi: abi.MetaSave,
       functionName: "setIPFSFileName",
-      args: [CFAddress, 'baguqeerafjupvhbr3rofy273gy5ghnjjao7opru72ufu5okizxmuh72epfcq'],
+      args: [CFAddress, IPFSid],
     });
     console.log(uoCallData)
     const uo = await AAProvider.sendUserOperation({

@@ -14,6 +14,8 @@ export const MainContextProvider = ({children}) => {
         const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
         const IPFSid = await MetaSave.getIPFSFileName(CFAddress)
         console.log(IPFSid)
+
+        //fetch user details from ipfs id and store it in userDetails
     }
     
     return(

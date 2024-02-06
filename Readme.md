@@ -6,5 +6,5 @@ A collaborative project between CUSAT and Homomorphic Software Pvt Ltd with a gr
 
 The project is created as a monorepo, so - 
 
-npm dev-fe
-npm dev-be
+npm run dev-fe
+npm run dev-be
