@@ -9,6 +9,10 @@ from yoloutils.plots import output_to_target, plot_skeleton_kpts
 import requests
 from datetime import datetime
 import base64
+import requests
+import json
+
+url = 'http://localhost:5000/api/fall'  
 
 # scheduled to run on GPU by default
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -103,6 +107,15 @@ while(cap.isOpened):
                     print("Success:", response.json())
               else:
                     print("Error:", response.text)
+
+              file_name = 'prediction_data.json'
+              with open(file_name, 'w') as json_file:
+                  json.dump(prediction_data, json_file)
+
+              files = {'file': open(file_name, 'rb')}
+              response = requests.post(url, files=files)
+              print(response.text)
+
         
         cv2.imshow('image', im0)
         cv2.waitKey(1)
