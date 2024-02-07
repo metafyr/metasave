@@ -6,13 +6,12 @@ import numpy as np
 from yoloutils.datasets import letterbox
 from yoloutils.general import non_max_suppression
 from yoloutils.plots import output_to_target, plot_skeleton_kpts
-import requests
 from datetime import datetime
 import base64
 import requests
 import json
 
-url = 'http://localhost:5000/api/fall'  
+url = 'http://localhost:5500/api/fall'  
 
 # scheduled to run on GPU by default
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -39,24 +38,19 @@ while(cap.isOpened):
     ret, frame = cap.read()
     if ret:
         
-        #store frame
         orig_image = frame
         
-        #convert frame to RGB
         image = cv2.cvtColor(orig_image, cv2.COLOR_BGR2RGB)
         image = letterbox(image, (frame_width), stride=64, auto=True)[0]
         image_ = image.copy()
         image = transforms.ToTensor()(image)
         image = torch.tensor(np.array([image.numpy()]))
         
-        #convert image data to device
         image = image.half().to(device)  
         
-        #get predictions
         with torch.no_grad():
             output, _ = model(image)
 
-        #Apply non max suppression
         output = non_max_suppression(output, 0.25, 0.65, nc=model.yaml['nc'], nkpt=model.yaml['nkpt'], kpt_label=True)
         output = output_to_target(output)
         im0 = image[0].permute(1, 2, 0) * 255
@@ -91,31 +85,22 @@ while(cap.isOpened):
               timestamp = str(int(now.timestamp()))
               date = now.strftime('%d/%m/%Y')
               _, buffer = cv2.imencode('.jpg', im0)
-              im0_base64 = base64.b64encode(buffer).decode('utf-8')
               prediction_data = {
                     'username': 'TERRYMON',
                     'timestamp': timestamp,
                     'date': date,
-                    'imagedata': im0_base64,
                     'status': 'fallen'
                 }
-              response = requests.post(
-                    'https://91ln5ijl3i.execute-api.eu-north-1.amazonaws.com/new/alert',
-                    json=prediction_data
-                )
-              if response.ok:
-                    print("Success:", response.json())
-              else:
-                    print("Error:", response.text)
 
               file_name = 'prediction_data.json'
-              with open(file_name, 'w') as json_file:
-                  json.dump(prediction_data, json_file)
+              with open(file_name, 'rb') as f:
+                files = {'file': (file_name, f)}
+                response = requests.post(url, files=files)
 
-              files = {'file': open(file_name, 'rb')}
-              response = requests.post(url, files=files)
-              print(response.text)
-
+              if response.status_code == 200:
+                print("Success:", response.json())
+              else:
+                print("Error:", response.status_code, response.text)
         
         cv2.imshow('image', im0)
         cv2.waitKey(1)
