@@ -11,7 +11,7 @@ import requests
 import json
 from io import BytesIO
 
-url = 'http://localhost:5500/api/fall'  
+url = 'http://localhost:5000/api/fall'  
 
 # scheduled to run on GPU by default
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
