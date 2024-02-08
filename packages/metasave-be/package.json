@@ -15,6 +15,7 @@
     "@alchemy/aa-alchemy": "^2.4.0",
     "@alchemy/aa-core": "^2.3.1",
     "@helia/unixfs": "^3.0.0",
+    "@helia/dag-json": "^3.0.0",
     "@openzeppelin/merkle-tree": "^1.0.6",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
