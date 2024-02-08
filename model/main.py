@@ -7,11 +7,11 @@ from yoloutils.datasets import letterbox
 from yoloutils.general import non_max_suppression
 from yoloutils.plots import output_to_target, plot_skeleton_kpts
 from datetime import datetime
-import base64
 import requests
 import json
+from io import BytesIO
 
-url = 'http://localhost:5500/api/fall'  
+url = 'http://localhost:5000/api/fall'  
 
 # scheduled to run on GPU by default
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -92,16 +92,17 @@ while(cap.isOpened):
                 'status': 'fallen'
               }
               prediction_data_json = json.dumps(prediction_data)
+
+              in_memory_file = BytesIO(buffer)
               
-              file_name = 'model/fall.jpg'
-              with open(file_name, 'rb') as f:
-                files = {'file': (file_name, f)}
-                data = {
-                  'prediction_data': prediction_data_json,
-                  'username': 'ab7zz',
-                  'PRIV_KEY': '123456' # will later be used to create account abstraction
-                }
-                response = requests.post(url, files=files, data=data)
+              files = {'file': ('current_frame.jpg', in_memory_file, 'image/jpeg')}
+              data = {
+              'prediction_data': prediction_data_json,
+              'username': 'ab7zz',
+              'PRIV_KEY': '123456'
+              }
+
+              response = requests.post(url, files=files, data=data)
 
               if response.status_code == 200:
                 res = json.loads(response.text)
