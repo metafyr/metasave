@@ -106,7 +106,7 @@ while(cap.isOpened):
 
               if response.status_code == 200:
                 res = json.loads(response.text)
-                print(res['dataIPFSid'])
+                print(res['dataIPFSid'], data['imgIPFSid'])
               else:
                 print("Error:", response.status_code, response.text)
         

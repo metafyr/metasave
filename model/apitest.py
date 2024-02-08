@@ -26,6 +26,6 @@ response = requests.post(url, files=files, data=data)
 if response.status_code == 200:
     print("Request sent successfully.")
     res = json.loads(response.text)
-    print(res['dataIPFSid'])
+    print(res['dataIPFSid'], res['imgIPFSid'])
 else:
     print("Error:", response.status_code)
