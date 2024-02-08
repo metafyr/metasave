@@ -99,7 +99,7 @@ while(cap.isOpened):
                 data = {
                   'prediction_data': prediction_data_json,
                   'username': 'ab7zz',
-                  'PRIV_KEY': '123456'
+                  'PRIV_KEY': '123456' # will later be used to create account abstraction
                 }
                 response = requests.post(url, files=files, data=data)
 
