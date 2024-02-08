@@ -86,19 +86,26 @@ while(cap.isOpened):
               date = now.strftime('%d/%m/%Y')
               _, buffer = cv2.imencode('.jpg', im0)
               prediction_data = {
-                    'username': 'TERRYMON',
-                    'timestamp': timestamp,
-                    'date': date,
-                    'status': 'fallen'
-                }
-
-              file_name = 'prediction_data.json'
+                'username': 'TERRYMON',
+                'timestamp': timestamp,
+                'date': date,
+                'status': 'fallen'
+              }
+              prediction_data_json = json.dumps(prediction_data)
+              
+              file_name = 'model/fall.jpg'
               with open(file_name, 'rb') as f:
                 files = {'file': (file_name, f)}
-                response = requests.post(url, files=files)
+                data = {
+                  'prediction_data': prediction_data_json,
+                  'username': 'ab7zz',
+                  'PRIV_KEY': '123456'
+                }
+                response = requests.post(url, files=files, data=data)
 
               if response.status_code == 200:
-                print("Success:", response.json())
+                res = json.loads(response.text)
+                print(res['dataIPFSid'])
               else:
                 print("Error:", response.status_code, response.text)
         
