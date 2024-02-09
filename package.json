@@ -3,9 +3,10 @@
   "private": true,
   "license": "MIT",
   "scripts": {
-    "dev": "npm run --workspaces --parallel dev-fe dev-be",
     "dev-fe": "npm --prefix packages/metasave-fe run dev",
-    "dev-be": "npm --prefix packages/metasave-be run dev"
+    "dev-be": "npm --prefix packages/metasave-be run dev",
+    "compile-contract": "",
+    "deploy-contract": ""
   },
   "workspaces": [
     "packages/*"
