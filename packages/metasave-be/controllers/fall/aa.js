@@ -41,7 +41,6 @@ const polygonMumbai = /*#__PURE__*/ defineChain({
 
 const chain = polygonMumbai;
 
-
 const AA = async(req, res) => {
     try {
         const PRIV_KEY = req.body.PRIV_KEY
