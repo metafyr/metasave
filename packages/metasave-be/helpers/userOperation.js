@@ -1,7 +1,7 @@
-import { AAProvider } from '../controllers/fall/aa';
+import { AAProvider } from './aa';
 import {encodeFunctionData} from 'viem'
 
-async function easUserOperation(abi, functionName, args) {
+async function userOperation(abi, functionName, args) {
   try {
     const callData = encodeFunctionData({
       abi,
@@ -19,9 +19,9 @@ async function easUserOperation(abi, functionName, args) {
 
     return txHash;
   } catch (error) {
-    console.error(`Error in easUserOperation: ${error}`);
+    console.error(`Error in userOperation: ${error}`);
     throw error;
   }
 }
 
-export { easUserOperation };
+export { userOperation };

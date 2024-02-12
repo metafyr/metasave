@@ -3,6 +3,8 @@ import { unixfs } from '@helia/unixfs'
 import multer from 'multer'
 import { dagJson } from '@helia/dag-json'
 import { promises as fsPromises } from 'fs';
+import { userOperation } from '../../helpers/userOperation';
+import { abi } from '../../abi';
 
 const helia = await createHelia()
 const fs = unixfs(helia)
@@ -26,7 +28,12 @@ const fall = async (req, res) => {
     const retrievedObject = await d.get(AddObject2)
     const dataIPFSid = retrievedObject.link.toString()
     console.log({ImgIPFSID: imgIPFSid.toString(), DataIPFSID: dataIPFSid});
-    res.send({ imgIPFSid: imgIPFSid.toString(),dataIPFSid })
+
+    functionName = "saveFallData";
+    args = [CFAddress, imgIPFSid, dataIPFSid];
+    
+    const txHash = await userOperation(abi.MetaSave, functionName, args);
+    res.send({ imgIPFSid: imgIPFSid.toString(), dataIPFSid, txHash })
   } catch (err) {
     res.status(500).send({ error: err.message })
   }
