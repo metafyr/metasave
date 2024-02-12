@@ -1,13 +1,15 @@
-import { AAProvider } from './aa';
+import { AA } from './aa';
 import {encodeFunctionData} from 'viem'
 
-async function userOperation(abi, functionName, args) {
+async function userOperation(abi, functionName, args, PRIV_KEY) {
   try {
     const callData = encodeFunctionData({
       abi,
       functionName,
       args,
     });
+
+    const AAProvider = await AA(PRIV_KEY)
 
     const userOperation = await AAProvider.sendUserOperation({
       target: abi.address, 

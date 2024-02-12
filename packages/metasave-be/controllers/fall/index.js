@@ -1,6 +1,5 @@
 import { createHelia } from 'helia'
 import { unixfs } from '@helia/unixfs'
-import multer from 'multer'
 import { dagJson } from '@helia/dag-json'
 import { promises as fsPromises } from 'fs';
 import { userOperation } from '../../helpers/userOperation';
@@ -12,6 +11,11 @@ const d = dagJson(helia)
 
 const fall = async (req, res) => {
   try {
+
+
+    const PRIV_KEY = req.body.PRIV_KEY
+
+    // IPFS part
     console.log(req.body)
     const predictionData = JSON.parse(req.body.prediction_data)
     const privKey = req.body.PRIV_KEY
@@ -29,10 +33,12 @@ const fall = async (req, res) => {
     const dataIPFSid = retrievedObject.link.toString()
     console.log({ImgIPFSID: imgIPFSid.toString(), DataIPFSID: dataIPFSid});
 
+
+    // Blockchain part 
     functionName = "saveFallData";
     args = [CFAddress, imgIPFSid, dataIPFSid];
     
-    const txHash = await userOperation(abi.MetaSave, functionName, args);
+    const txHash = await userOperation(abi.MetaSave, functionName, args, PRIV_KEY);
     res.send({ imgIPFSid: imgIPFSid.toString(), dataIPFSid, txHash })
   } catch (err) {
     res.status(500).send({ error: err.message })
