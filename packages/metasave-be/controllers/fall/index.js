@@ -35,7 +35,7 @@ const fall = async (req, res) => {
 
 
     // Blockchain part 
-    functionName = "saveFallData";
+    functionName = "setFallData";
     args = [CFAddress, imgIPFSid.toString(), dataIPFSid];
     
     const txHash = await userOperation(abi.MetaSave, functionName, args, PRIV_KEY);
