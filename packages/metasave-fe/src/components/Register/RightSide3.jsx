@@ -15,6 +15,7 @@ const RightSide3 = ({ onPrev }) => {
 
   const handleFinish = async() => {
     const data = {
+      cf: CFAddress,
       age,
       gender,
       phone,
