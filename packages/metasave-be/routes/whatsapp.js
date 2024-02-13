@@ -1,6 +1,6 @@
 import express from 'express'
-import whatsappVerify from '../controllers/whastsapp/verify.js'
-import whatsappNotification from '../controllers/whastsapp/notification.js'
+import whatsappVerify from '../controllers/whatsapp/verify.js'
+import whatsappNotification from '../controllers/whatsapp/notification.js'
 
 const router = express.Router()
 

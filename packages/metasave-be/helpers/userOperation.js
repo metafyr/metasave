@@ -1,4 +1,4 @@
-import { AA } from './aa.js';
+import AA from './aa.js';
 import {encodeFunctionData} from 'viem'
 
 async function userOperation(abi, functionName, args, PRIV_KEY) {

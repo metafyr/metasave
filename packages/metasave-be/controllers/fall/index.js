@@ -2,7 +2,7 @@ import { createHelia } from 'helia'
 import { unixfs } from '@helia/unixfs'
 import { dagJson } from '@helia/dag-json'
 import { promises as fsPromises } from 'fs';
-import { userOperation } from '../../helpers/userOperation';
+import { userOperation } from '../../helpers/userOperation.js';
 import { abi } from '../../abi/index.js';
 
 const helia = await createHelia()
