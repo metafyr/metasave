@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useSignupContext } from '../../pages/Signup';
 import axios from 'axios'
-import { useMainContext } from '../../context/MainContext';
-import { createHelia } from 'helia'
-import { dagJson } from '@helia/dag-json'
 import { abi } from '../../abi';
 import { addresses } from '../../constants/addresses.js';
 import { useAuthContext } from '../../context/AuthContext.jsx';
 import {encodeFunctionData} from 'viem'
 
-const helia = await createHelia()
-const d = dagJson(helia)
 
 const RightSide3 = ({ onPrev }) => {
   const {medications, setMedications, disease, setDisease, duration, setDuration, problemsFaced, setProblemsFaced, addProblemFaced, removeProblemFaced, removeMedication, addMedication, name, password, age, email, gender, phone, address, contacts } = useSignupContext()
@@ -31,13 +25,10 @@ const RightSide3 = ({ onPrev }) => {
       duration
     }
     console.log(data)
-    const AddObject = await d.add(data)
 
-    const data2 = { link: AddObject }
-    const AddObject2 = await d.add(data2)
-    
-    const retrievedObject = await d.get(AddObject2)
-    const IPFSid = retrievedObject.link.toString()
+    const res = await axios.post('http://localhost:5000/api/user', {data})
+
+    const IPFSid = res.data.CID
 
     const uoCallData = encodeFunctionData({
       abi: abi.MetaSave,
