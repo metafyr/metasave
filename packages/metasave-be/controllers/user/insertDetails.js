@@ -1,22 +1,44 @@
-import { createHelia } from 'helia'
-import { json } from '@helia/json'
+import axios from 'axios'
+import { FormData } from "formdata-node"
+import dotenv from 'dotenv'
 
-const helia = await createHelia()
-export const j = json(helia)
+dotenv.config()
 
-export let hashMap = new Map()
+const PINATA_API_KEY = process.env.PINATA_API_KEY
 
-const insertDetails = async(req, res) => {
+const insertDetails = async() => {
     try{
-        const data = req.body.data 
-        const myImmutableAddress = await j.add(data)
-        console.log(myImmutableAddress)
-        console.log(await j.get(myImmutableAddress))
-        hashMap.set(data.CF, myImmutableAddress)
-        res.json({CID: myImmutableAddress.toString()})
+        const formData = new FormData()
+        const data = req.body.data
+        const pinataMetadata = JSON.stringify(data)
+        
+        const jsonFile = new Blob([pinataMetadata], { type: 'application/json' })
+        formData.set('file', jsonFile)
+
+        formData.set('pinataMetadata', pinataMetadata);
+    
+        const pinataOptions = JSON.stringify({
+            cidVersion: 0,
+        })
+        formData.set('pinataOptions', pinataOptions);
+
+        try{
+            const response = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+                maxBodyLength: "Infinity",
+                headers: {
+                    'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+                    'Authorization': `Bearer ${PINATA_API_KEY}`
+                }
+            });
+            res.json({CID: response.data.IpfsHash})
+        } catch (error) {
+            console.log(error);
+        }
     }catch(err){
         console.log(err)
     }
 }
+
+insertDetails()
 
 export default insertDetails
