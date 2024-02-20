@@ -56,12 +56,11 @@ while(cap.isOpened):
         im0 = image[0].permute(1, 2, 0) * 255
         im0 = im0.cpu().numpy().astype(np.uint8)
         
-        #reshape image format to (BGR)
         im0 = cv2.cvtColor(im0, cv2.COLOR_RGB2BGR)
         for idx in range(output.shape[0]):
-            plot_skeleton_kpts(im0, output[idx, 7:].T, 3)
-            xmin, ymin = (output[idx, 2]-output[idx, 4]/2), (output[idx, 3]-output[idx, 5]/2)
-            xmax, ymax = (output[idx, 2]+output[idx, 4]/2), (output[idx, 3]+output[idx, 5]/2)
+            # plot_skeleton_kpts(im0, output[idx, 7:].T, 3)
+            # xmin, ymin = (output[idx, 2]-output[idx, 4]/2), (output[idx, 3]-output[idx, 5]/2)
+            # xmax, ymax = (output[idx, 2]+output[idx, 4]/2), (output[idx, 3]+output[idx, 5]/2)
 
             left_shoulder_y= output[idx][23]
             left_shoulder_x= output[idx][22]
@@ -77,10 +76,7 @@ while(cap.isOpened):
             right_foot_y = output[idx][56]
             
             if left_shoulder_y > left_foot_y - len_factor and left_body_y > left_foot_y - (len_factor / 2) and left_shoulder_y > left_body_y - (len_factor / 2):
-            # Plotting key points and text on frame
-              cv2.rectangle(im0,(int(xmin), int(ymin)),(int(xmax), int(ymax)),color=(0, 0, 255),
-                  thickness=5,lineType=cv2.LINE_AA)
-              cv2.putText(im0, 'Person Fell down', (11, 100), 0, 1, [0, 0, 2550], thickness=3, lineType=cv2.LINE_AA)
+              print("fallen")
               now = datetime.now()
               timestamp = str(int(now.timestamp()))
               date = now.strftime('%d/%m/%Y')
@@ -102,14 +98,14 @@ while(cap.isOpened):
               'PRIV_KEY': '123456'
               }
 
-              response = requests.post(url, files=files, data=data)
+              response = requests.post(url, data=data)
 
               if response.status_code == 200:
                 res = json.loads(response.text)
                 print(res['dataIPFSid'])
               else:
                 print("Error:", response.status_code, response.text)
-        
+        im0 = cv2.resize(im0, (im0.shape[1] // 2, im0.shape[0] // 2))
         cv2.imshow('image', im0)
         cv2.waitKey(1)
 
