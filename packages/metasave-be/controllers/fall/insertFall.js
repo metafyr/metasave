@@ -13,7 +13,7 @@ const PINATA_API_KEY = process.env.PINATA_API_KEY
 
 const insertFall = async (req, res) => {
   try {
-    let dataIPFSid, imgIPFSid
+    let dataIPFSid, imgIPFSid = ""
 
     const formData = new FormData()
 
@@ -59,16 +59,16 @@ const insertFall = async (req, res) => {
     formData.append("pinataMetadata", pinataMetadata2);
 
     formData.append("pinataOptions", pinataOptions);
-    try {
-      const response = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
-        headers: {
-            'Authorization': `Bearer ${PINATA_API_KEY}`
-        }
-      });
-      imgIPFSid = response.data.IpfsHash
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   const response = await axios.post("https://api.pinata.cloud/pinning/pinFileToIPFS", formData, {
+    //     headers: {
+    //         'Authorization': `Bearer ${PINATA_API_KEY}`
+    //     }
+    //   });
+    //   imgIPFSid = response.data.IpfsHash
+    // } catch (error) {
+    //   console.log(error);
+    // }
     
     // Blockchain part 
     functionName = "setFallData";
@@ -77,7 +77,7 @@ const insertFall = async (req, res) => {
     const txHash = await userOperation(abi.MetaSave, functionName, args, PRIV_KEY);
     res.send({ imgIPFSid, dataIPFSid, txHash })
   } catch (err) {
-    // res.status(500).send({ error: err.message })
+    res.status(500).send({ error: err.message })
   }
 }
 
