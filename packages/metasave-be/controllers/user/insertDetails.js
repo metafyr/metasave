@@ -9,6 +9,10 @@ const PINATA_API_KEY = process.env.PINATA_API_KEY
 const insertDetails = async(req, res) => {
     try{
         const formData = new FormData()
+        // const data = {
+        //     name: 'abhinav',
+        //     age: 20
+        // }
         const data = req.body.data
         const pinataMetadata = JSON.stringify(data)
         
@@ -38,7 +42,5 @@ const insertDetails = async(req, res) => {
         console.log(err)
     }
 }
-
-insertDetails()
 
 export default insertDetails
