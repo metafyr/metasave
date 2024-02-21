@@ -6,7 +6,7 @@ dotenv.config()
 const PINATA_BASE_URL = process.env.PINATA_BASE_URL
 const PINATA_API_KEY = process.env.PINATA_API_KEY
 
-const fetchDetails = async() => {
+const fetchFallData = async() => {
     try {
         const cf = req.body.CF
         try{
@@ -16,16 +16,13 @@ const fetchDetails = async() => {
                 }
             })
             console.log(response.data)
-            imagedata = response.data
-            const base64Image = Buffer.from(imageData).toString('base64')
         }catch(e){
             console.log(e)
         }
-        //res.json(data)
-        console.log("image retrieved successfully")
+        res.json(data)
     } catch (error) {
         console.log(error)
     }
 }
 
-export default fetchDetails
+export default fetchFallData
