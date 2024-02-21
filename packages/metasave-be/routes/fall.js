@@ -1,5 +1,6 @@
 import express from 'express'
-import fall from '../controllers/fall/index.js'
+import insertFall from '../controllers/fall/insertFall.js'
+import fetchFall from '../controllers/fall/fetchFall.js'
 import multer from 'multer'
 import path, { dirname } from 'path'
 import fs from 'fs'
@@ -23,6 +24,7 @@ const upload = multer({ storage: storage });
 
 const router = express.Router()
 
-router.post('/fall', upload.single('file'), fall)
+router.post('/fall', upload.single('file'), insertFall)
+router.get('/fall', fetchFall)
 
 export default router

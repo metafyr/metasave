@@ -6,7 +6,7 @@ dotenv.config()
 
 const PINATA_API_KEY = process.env.PINATA_API_KEY
 
-const insertDetails = async() => {
+const insertDetails = async(req, res) => {
     try{
         const formData = new FormData()
         const data = req.body.data
