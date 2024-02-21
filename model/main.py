@@ -102,7 +102,7 @@ while(cap.isOpened):
 
               if response.status_code == 200:
                 res = json.loads(response.text)
-                print(res['dataIPFSid'])
+                print(res['dataIPFSid'], data['imgIPFSid'])
               else:
                 print("Error:", response.status_code, response.text)
         im0 = cv2.resize(im0, (im0.shape[1] // 2, im0.shape[0] // 2))

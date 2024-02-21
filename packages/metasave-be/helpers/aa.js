@@ -41,17 +41,15 @@ const polygonMumbai = /*#__PURE__*/ defineChain({
 
 const chain = polygonMumbai;
 
-
-const AA = async(req, res) => {
+const AA = async(PRIV_KEY) => {
     try {
-        const PRIV_KEY = req.body.PRIV_KEY
         const PRIVATE_KEY = `0x${PRIV_KEY}`;
 
         console.log(PRIVATE_KEY)
 
         const owner = LocalAccountSigner.privateKeyToAccountSigner(PRIVATE_KEY);
 
-        const AAprovider = new AlchemyProvider({
+        const AAProvider = new AlchemyProvider({
             apiKey: ALCHEMY_API_KEY,
             chain,
             entryPointAddress: ENTRY_POINT_ADDRESS,
@@ -66,20 +64,18 @@ const AA = async(req, res) => {
             })
         )
 
-        const CFaddress = await AAprovider.getAddress()
+        const CFaddress = await AAProvider.getAddress()
 
         console.log(CFaddress)
 
-        AAprovider.withAlchemyGasManager({
+        AAProvider.withAlchemyGasManager({
             policyId: process.env.GAS_MANAGER_POLICY_ID,
         });
 
-        res.status(200).json({ CFaddress, AAprovider })
+        return AAProvider
     } catch (error) {
         console.log(error)
     }
 }
-
-// AA()
 
 export default AA

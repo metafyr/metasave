@@ -5,8 +5,8 @@
   "main": "truffle-config.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "truffle compile",
-    "deploy": "truffle deploy --network maticmumbai"
+    "compile": "npx truffle@5.11.5 compile",
+    "deploy": "npx truffle@5.11.5 deploy --network maticmumbai"
   },
   "author": "",
   "license": "ISC",
