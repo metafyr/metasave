@@ -16,6 +16,7 @@ const RightSide3 = ({ onPrev }) => {
   const handleFinish = async() => {
     const data = {
       CF: CFAddress,
+      name,
       age,
       gender,
       phone,
@@ -25,18 +26,31 @@ const RightSide3 = ({ onPrev }) => {
       disease,
       duration
     }
+    // const data = {
+    //   CF: CFAddress,
+    //   name: 'Abhinav C V',
+    //   age: 20,
+    //   gender: 'Male',
+    //   phone: "+919778393558",
+    //   medications: "none",
+    //   address: "dubai",
+    //   contacts: "none",
+    //   disease: "none",
+    //   duration: "none"
+    // }
     console.log(data)
 
     const res = await axios.post('http://localhost:5000/api/user', {data})
 
     const IPFSid = res.data.CID
 
+    console.log("IPFS ID: ", IPFSid)
+
     const uoCallData = encodeFunctionData({
       abi: abi.MetaSave,
-      functionName: "setIPFSFileName",
+      functionName: "setIPFSFileName", 
       args: [CFAddress, IPFSid],
-    });
-    console.log(uoCallData)
+    })
     const uo = await AAProvider.sendUserOperation({
       target: addresses.MetaSave,
       data: uoCallData,
@@ -44,9 +58,10 @@ const RightSide3 = ({ onPrev }) => {
 
     const txHash = await AAProvider.waitForUserOperationTransaction(uo.hash)
     if(txHash){
+      console.log("TX HASH: ", txHash)
       window.location.replace('/dashboard')
     }
-  };
+  }
   return (
     <div className='glass-effect rounded-tr-[15px] rounded-br-[15px] md:rounded-tl-[0px] md:rounded-bl-[0px] rounded-tl-[15px] rounded-bl-[15px] h-full w-full py-10 px-10 flex flex-col justify-between'>
       <div>

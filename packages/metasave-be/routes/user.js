@@ -5,6 +5,6 @@ import fetchDetails from '../controllers/user/fetchDetails.js'
 const router = express.Router()
 
 router.post('/user', insertDetails)
-router.get('/user', fetchDetails)
+router.get('/user/:cid', fetchDetails)
 
 export default router

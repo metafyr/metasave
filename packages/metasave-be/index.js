@@ -13,7 +13,6 @@ const allowedOrigins = ['http://localhost:5173'];
 
 const corsOptions = {
     origin: function (origin, callback) {
-      // Check if the origin is in the allowedOrigins array or if it's undefined (not set)
       if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
         callback(null, true);
       } else {
