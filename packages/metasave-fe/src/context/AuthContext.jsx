@@ -8,9 +8,6 @@ import axios from 'axios'
 import { getWalletProvider } from "../helpers/walletProvider.js";
 import { addresses } from "../constants/addresses.js";
 import { abi } from "../abi/index.js";
-import { createHelia } from 'helia'
-import { dagJson } from '@helia/dag-json'
-import { CID } from 'multiformats/cid'
 import {
     LightSmartContractAccount,
     getDefaultLightAccountFactoryAddress,
@@ -19,9 +16,6 @@ import { AlchemyProvider } from "@alchemy/aa-alchemy";
 import { LocalAccountSigner } from "@alchemy/aa-core";
 import { defineChain } from 'viem'
 import { useMainContext } from "./MainContext.jsx";
-
-const helia = await createHelia()
-const d = dagJson(helia)
 
 
 const AuthContext = React.createContext()
@@ -37,7 +31,7 @@ export const AuthContextProvider = ({children}) => {
     const [AAProvider, setAAProvider] = React.useState(null)
     const [CFAddress, setCFAddress] = React.useState(null)
     const [privKey, setPrivKey] = React.useState(null)
-    const {setUserDetails, userDetails, serverUrl, fetchUserDetails, IPFSid, setIPFSid} = useMainContext()
+    const { serverUrl } = useMainContext()
     const mumbaiChainConfig = {
         chainNamespace: "eip155",
         chainId: "0x13881",

@@ -17,6 +17,7 @@ const RightSide3 = ({ onPrev }) => {
     const data = {
       CF: CFAddress,
       name,
+      email,
       age,
       gender,
       phone,

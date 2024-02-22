@@ -4,31 +4,22 @@ import DoneIcon from '@mui/icons-material/Done';
 import axios from 'axios'
 import { useMainContext } from '../../../context/MainContext';
 import '../../../styles/Personal.css'
+import { useAuthContext } from '../../../context/AuthContext';
 
 const Personal = () => {
-    const { serverUrl, userDetails, setUserDetails } = useMainContext()
+    const { userDetails, fetchUserDetails } = useMainContext()
+    const { CFAddress, walletProvider } = useAuthContext()
     const [editMode, setEditMode] = React.useState({
         mode: '',
         edit: false
     })
+
     React.useEffect(() => {
-        const fetchUserDetails = async () => {
-          try {
-            const username = userDetails?.username || localStorage.getItem('username');
-            const response = await axios.get(`https://91ln5ijl3i.execute-api.eu-north-1.amazonaws.com/new/getuserdetails?username=${username}`);
-            if (response.data && response.data['status code'] === 200) {
-              const userDetails = JSON.parse(response.data.details);
-              const captures = JSON.parse(response.data.captures)
-              console.log(userDetails, captures)
-              setUserDetails(userDetails);
-            }
-          } catch (error) {
-            console.error('Error fetching user details:', error);
-          }
-        };
-      
-        fetchUserDetails();
-      }, [setUserDetails]);
+        if(CFAddress && walletProvider){
+          console.log(CFAddress)
+          fetchUserDetails(walletProvider, CFAddress)
+        }
+    }, [CFAddress, walletProvider])
       
   return (
     <div className='my-10'>
@@ -37,7 +28,7 @@ const Personal = () => {
                 {editMode.edit && editMode.mode == 'name' ? 
                     <input type="text" name="" className='text-[#3a3a3a] font-semibold poppins text-2xl my-5 bg-transparent focus:!outline-none border-b border-gray-400 border-b-2 pl-3' defaultValue="Abhinav C V" id="" />
                 :
-                    <h1 className='text-[#3a3a3a] font-semibold poppins text-2xl my-5'> {userDetails?.username || 'Username'}</h1>
+                    <h1 className='text-[#3a3a3a] font-semibold poppins text-2xl my-5'> {userDetails?.name || 'Username'}</h1>
                 }
                 {editMode.edit && editMode.mode == 'name' ?
                     <div onClick={() => setEditMode({edit: false})} className='flex items-center text-white bg-green-700 hover:bg-green-600 rounded-[10px] px-3 py-2 cursor-pointer'>

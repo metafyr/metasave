@@ -4,12 +4,21 @@ import Profile from '../components/Dashboard/Profile'
 import Sidebar from '../components/Dashboard/Sidebar'
 import DashboardPage from '../components/Dashboard/Dashboard'
 import { useAuthContext } from '../context/AuthContext'
+import { useMainContext } from '../context/MainContext'
 
 const Dashboard = () => {
-  const { initWeb3Auth } = useAuthContext()
+  const { initWeb3Auth, CFAddress, walletProvider } = useAuthContext()
+  const { fetchUserDetails } = useMainContext()
   React.useEffect(() => {
     initWeb3Auth()
   }, [])
+  
+  React.useEffect(() => {
+    if(CFAddress && walletProvider){
+      console.log(CFAddress)
+      fetchUserDetails(walletProvider, CFAddress)
+    }
+  }, [CFAddress, walletProvider])
   return (
     <>
       <Sidebar />

@@ -1,6 +1,7 @@
 import React from "react";
 import { addresses } from "../constants/addresses";
 import { abi } from "../abi/index.js" 
+import axios from 'axios'
 
 
 const MainContext = React.createContext()
@@ -10,23 +11,7 @@ export const MainContextProvider = ({children}) => {
     const serverUrl = 'http://localhost:5000/api'
     const [userDetails, setUserDetails] = React.useState(
         {
-            CF: null,
-            name: "Abhinav C V",
-            age: "20",
-            gender: "female",
-            phone: "9778393558",
-            medications: [
-                "none"
-            ],
-            address: "Dubai",
-            contacts: [
-                {
-                    name: "brother",
-                    phoneNumber: "00000"
-                }
-            ],
-            disease: "none",
-            duration: "none"
+            
         }
     )
 
@@ -37,6 +22,7 @@ export const MainContextProvider = ({children}) => {
 
         //fetch user details from ipfs id and store it in userDetails
         const res = await axios.get(`${serverUrl}/user/${IPFSid}`)
+        console.log(res.data.data)
         setUserDetails(res.data.data)
     }
     
