@@ -57,20 +57,20 @@ const Personal = () => {
           )}
         </div>
         <div className="flex justify-between items-center">
-          {editMode.edit && editMode.mode == 'email' ? (
+          {editMode.edit && editMode.mode == 'age' ? (
             <input
-              type="email"
+              type="text"
               name=""
               className="text-[#3a3a3a] font-medium min-w-[30%] poppins text-xl my-5 bg-transparent focus:!outline-none border-b border-gray-400 border-b-2 pl-3"
-              defaultValue={userDetails.email || 'N/A'}
+              defaultValue={userDetails.age || 'N/A'}
               id=""
             />
           ) : (
             <h4 className="text-[#3a3a3a] font-medium poppins text-xl my-5">
-              {userDetails?.email || 'N/A'}
+              <strong>Age: </strong> {userDetails?.age || 'N/A'}
             </h4>
           )}
-          {editMode.edit && editMode.mode == 'email' ? (
+          {editMode.edit && editMode.mode == 'age' ? (
             <div
               onClick={() => setEditMode({ edit: false })}
               className="flex items-center text-white bg-green-700 hover:bg-green-600 rounded-[10px] px-3 py-2 cursor-pointer"
@@ -80,7 +80,7 @@ const Personal = () => {
             </div>
           ) : (
             <div
-              onClick={() => setEditMode({ mode: 'email', edit: true })}
+              onClick={() => setEditMode({ mode: 'age', edit: true })}
               className="flex items-center text-[#4A9DFF] cursor-pointer md:flex hidden"
             >
               <EditIcon />
@@ -99,7 +99,7 @@ const Personal = () => {
             />
           ) : (
             <h4 className="text-[#3a3a3a] font-medium poppins text-xl my-5">
-              {userDetails?.phone || 'N/A'}
+              <strong>Mobile no: </strong> {userDetails?.phone || 'N/A'}
             </h4>
           )}
           {editMode.edit && editMode.mode == 'phone' ? (
