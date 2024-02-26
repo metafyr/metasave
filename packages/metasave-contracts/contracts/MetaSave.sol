@@ -12,11 +12,50 @@ contract MetaSave is AccessControl {
 	mapping(address => string) private userIPFSMapping;
 	mapping(address => FallData[]) private fallDataMap;
 
+    mapping(address => address[]) private userHospitalMapping;
+    mapping(address => address[]) private hospitalUserMapping;
+
+    mapping(address => address[]) private userDeviceMapping;
+
     bytes32 public constant USER_ROLE = keccak256("USER_ROLE");
+    bytes32 public constant HOSPITAL_ROLE = keccak256("HOSPITAL_ROLE");
  
     function userSignUp() public returns (bool) {
         grantRole(USER_ROLE, msg.sender);
         return true;
+    }
+
+    function hospitalSignUp() public returns (bool) {
+        grantRole(HOSPITAL_ROLE, msg.sender);
+        return true;
+    }
+
+    function addDevice(address user_addr, address device_addr) public {
+        require(hasRole(USER_ROLE, msg.sender), "Caller is not a user");
+
+        userDeviceMapping[user_addr].push(device_addr);
+    }
+
+    function getDevices(address user_addr) public view returns (address[] memory) {
+        require(hasRole(USER_ROLE, msg.sender));
+        return userDeviceMapping[user_addr];
+    }
+
+    function userSelectHospital(address user_addr, address hospital_addr) public {
+        require(hasRole(USER_ROLE, msg.sender), "Caller is not a user");
+
+        userHospitalMapping[user_addr].push(hospital_addr);
+        hospitalUserMapping[hospital_addr].push(user_addr);
+    }
+
+    function getUserHospitals(address user_addr) public view returns (address[] memory) {
+        require(hasRole(USER_ROLE, msg.sender));
+        return userHospitalMapping[user_addr];
+    }
+
+    function getHospitalUsers(address hospital_addr) public view returns (address[] memory) {
+        require(hasRole(HOSPITAL_ROLE, msg.sender));
+        return hospitalUserMapping[hospital_addr];
     }
 
     function setIPFSFileName(address user_addr, string memory ipfsFileName) public {

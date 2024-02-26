@@ -107,7 +107,7 @@ export const AuthContextProvider = ({children}) => {
                 console.log(res.data)
                 const root = res.data.root
                 const ZKProof = await walletProvider.getContract(addresses.ZKProof, abi.ZKProof)
-                const verify = await ZKProof.verify(root, proof, walletAddress, msg)
+                const verify = await ZKProof.verify(root, proof, walletAddress, `0x${msg}`)
                 if(verify == true || verify == 'true'){
                     status = {
                         status: "verified",
@@ -147,14 +147,13 @@ export const AuthContextProvider = ({children}) => {
         if(verify.proceed == true){
             if(verify.newUser == true){
                 const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
-                // const grantRole = await MetaSave.userSignUp()
-                // if(grantRole){
-                //     window.location.replace('/register')
-                // }else{
-                //     window.alert('Some error occured')
-                //     await web3auth.logout()
-                // }
-                window.location.replace('/register')
+                const grantRole = await MetaSave.userSignUp()
+                if(grantRole){
+                    window.location.replace('/register')
+                }else{
+                    window.alert('Some error occured')
+                    await web3auth.logout()
+                }
             }else{
                 setLoggedIn(web3auth?.status === "connected" ? true : false)
                 const CF = getCFAddress(walletProvider, priv_key)
@@ -231,8 +230,6 @@ export const AuthContextProvider = ({children}) => {
 
         const CFAddress = await AAProvider.getAddress()
 
-        
-        
         console.log(CFAddress, AAProvider)
 
         setCFAddress(CFAddress)
