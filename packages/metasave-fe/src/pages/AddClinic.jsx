@@ -71,12 +71,10 @@ const AddClinic = () => {
             )}
           </div>
           {selectedClinic && (
-            <div className="mt-4 p-4 rounded-lg shadow-lg bg-pink-100 max-w-6xl h-40 mx-auto">
+            <div className="mt-4 p-4 rounded-lg shadow-lg bg-[#FFEBFC] max-w-6xl h-40 mx-auto">
               <div className="flex justify-between items-center">
-                <h2 className="text-2xl font-semibold">
-                  {selectedClinic.name}
-                </h2>
-                <button className="bg-[#FFBD03] hover:bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg">
+                <h2 className="text-3xl">{selectedClinic.name}</h2>
+                <button className="bg-[#FFBD03] bg-opacity-75 hover:bg-yellow-200 text-white font-bold py-2 px-4 rounded-lg">
                   Connect
                 </button>
               </div>
