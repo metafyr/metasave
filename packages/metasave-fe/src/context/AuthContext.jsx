@@ -143,17 +143,22 @@ export const AuthContextProvider = ({children}) => {
 
         if(verify.proceed == true){
             if(verify.newUser == true){
-                window.location.replace('/register')
+                const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
+                const grantRole = await MetaSave.userSignUp(CF)
+                if(grantRole){
+                    window.location.replace('/register')
+                }else{
+                    window.alert('Some error occured')
+                    await web3auth.logout()
+                }
             }else{
                 setLoggedIn(web3auth?.status === "connected" ? true : false)
                 const CF = getCFAddress(walletProvider, priv_key)
                 const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
-                const IPFSid = await MetaSave.getIPFSFileName(CF)
-                console.log('ipfs iddd worksssss', IPFSid)
-                if(!IPFSid){
+                const userExists = await MetaSave.userExists(CF)
+                if(!userExists){
                     window.location.replace('/register')
                 }else{
-                    console.log(IPFSid)
                     window.location.replace('/dashboard')
                 }
             }
@@ -164,19 +169,6 @@ export const AuthContextProvider = ({children}) => {
     }
 
     const getCFAddress = async(walletProvider, PRIV_KEY) => {
-        // const res = await axios.post('http://localhost:5000/api/aa', {PRIV_KEY}, {
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     }
-        // })
-        // if(res.data){
-        //     console.log(res.data)
-        //     const cfAddress = res.data.CFaddress
-        //     const aaProvider = res.data.AAprovider
-
-        //     setCFAddress(cfAddress)
-        //     setAAProvider(aaProvider)
-        // }
         const ALCHEMY_API_KEY = import.meta.env.VITE_ALCHEMY_API_KEY
         const GAS_MANAGER_POLICY_ID = import.meta.env.VITE_GAS_MANAGER_POLICY_ID
         console.log(ALCHEMY_API_KEY, GAS_MANAGER_POLICY_ID, PRIV_KEY)
