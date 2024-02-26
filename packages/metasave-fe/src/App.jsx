@@ -7,6 +7,7 @@ import Signup from './pages/Signup'
 import React from 'react'
 import { useAuthContext } from './context/AuthContext.jsx'
 import PleaseLogin from './pages/PleaseLogin.jsx'
+import AddClinic from './pages/AddClinic.jsx'
 
 function App() {
   const { loggedIn, web3auth, initWeb3Auth } = useAuthContext()
@@ -35,6 +36,10 @@ function App() {
             <Route
               path="/dashboard/*"
               element={loggedIn ? <Dashboard /> : <PleaseLogin />}
+            />
+            <Route
+              path="/newclinic/"
+              element={loggedIn ? <AddClinic /> : <PleaseLogin />}
             />
           </Routes>
         </BrowserRouter>
