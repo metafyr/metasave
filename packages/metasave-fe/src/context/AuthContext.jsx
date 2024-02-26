@@ -16,6 +16,7 @@ import { AlchemyProvider } from "@alchemy/aa-alchemy";
 import { LocalAccountSigner } from "@alchemy/aa-core";
 import { defineChain } from 'viem'
 import { useMainContext } from "./MainContext.jsx";
+import keccak256 from 'keccak256'
 
 
 const AuthContext = React.createContext()
@@ -82,9 +83,12 @@ export const AuthContextProvider = ({children}) => {
                 proceed: false,
                 newUser: false
             }
+
+            const privateKey = await walletProvider.getPrivateKey()
+            const msg = keccak256(privateKey).toString('hex')
             const res = await axios.post(`${serverUrl}/merkletree`, {
                 walletAddress,
-                msg: 5000
+                msg
             },
             {
                 headers: {
@@ -102,7 +106,6 @@ export const AuthContextProvider = ({children}) => {
                 const proof = res.data.proof
                 console.log(res.data)
                 const root = res.data.root
-                const msg = 5000
                 const ZKProof = await walletProvider.getContract(addresses.ZKProof, abi.ZKProof)
                 const verify = await ZKProof.verify(root, proof, walletAddress, msg)
                 if(verify == true || verify == 'true'){
@@ -144,13 +147,14 @@ export const AuthContextProvider = ({children}) => {
         if(verify.proceed == true){
             if(verify.newUser == true){
                 const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
-                const grantRole = await MetaSave.userSignUp(CF)
-                if(grantRole){
-                    window.location.replace('/register')
-                }else{
-                    window.alert('Some error occured')
-                    await web3auth.logout()
-                }
+                // const grantRole = await MetaSave.userSignUp()
+                // if(grantRole){
+                //     window.location.replace('/register')
+                // }else{
+                //     window.alert('Some error occured')
+                //     await web3auth.logout()
+                // }
+                window.location.replace('/register')
             }else{
                 setLoggedIn(web3auth?.status === "connected" ? true : false)
                 const CF = getCFAddress(walletProvider, priv_key)

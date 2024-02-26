@@ -5,7 +5,10 @@ const merkleTree = async(req, res) => {
     try {
 
         let present = false, proof = '', newUser = false, root = ''
-        const value = [req.body.walletAddress, req.body.msg]
+        console.log(req.body.msg)
+        const walletAddress = req.body.walletAddress
+        const msg = `0x${req.body.msg}`
+        const value = [walletAddress, msg]
         const values = [
             value
         ];
@@ -29,7 +32,7 @@ const merkleTree = async(req, res) => {
                 values.push(v)
             }
     
-            tree = StandardMerkleTree.of(values, ["address", "uint256"]);
+            tree = StandardMerkleTree.of(values, ["address", "bytes32"]);
             fs.writeFileSync("./controllers/merkleTree/tree.json", JSON.stringify(tree.dump()));
         }
 
@@ -37,7 +40,8 @@ const merkleTree = async(req, res) => {
             success: true,
             proof,
             newUser,
-            root
+            root,
+            msg
         })
 
     } catch (error) {

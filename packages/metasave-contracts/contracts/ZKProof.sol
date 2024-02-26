@@ -9,7 +9,7 @@ contract ZKProof {
         bytes32 root,
         bytes32[] memory proof,
         address hxsh,
-        uint256 message
+        bytes32 message
     ) public view returns (bool) {
         bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(hxsh, message))));
         return MerkleProof.verify(proof, root, leaf);

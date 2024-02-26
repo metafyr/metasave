@@ -13,6 +13,10 @@ const RightSide3 = ({ onPrev }) => {
   const { CFAddress, AAProvider } = useAuthContext()
   const [loading, setLoading] = useState(false);
 
+  React.useEffect(() => {
+    console.log(AAProvider)
+  }, [])
+
   const handleFinish = async() => {
     const data = {
       CF: CFAddress,
@@ -46,6 +50,7 @@ const RightSide3 = ({ onPrev }) => {
     const IPFSid = res.data.CID
 
     console.log("IPFS ID: ", IPFSid)
+    console.log("CFAddress: ", CFAddress)
 
     const uoCallData = encodeFunctionData({
       abi: abi.MetaSave,
