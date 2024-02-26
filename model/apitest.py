@@ -11,7 +11,7 @@ prediction_data = {
 }
 prediction_data_json = json.dumps(prediction_data)
 
-file_name = 'model/fall.jpg'
+file_name = './fall.jpg'
 with open(file_name, 'rb') as f:
     files = {'file': (file_name, f.read())}
 
@@ -26,6 +26,7 @@ response = requests.post(url, files=files, data=data)
 if response.status_code == 200:
     print("Request sent successfully.")
     res = json.loads(response.text)
-    print(res['dataIPFSid'], res['imgIPFSid'])
+    print(f"Data IPFS ID: {res['dataIPFSid']}")
+    print(f"Image IPFS ID: {res['imgIPFSid']}")
 else:
     print("Error:", response.status_code)
