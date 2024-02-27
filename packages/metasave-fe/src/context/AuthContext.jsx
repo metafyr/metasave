@@ -147,7 +147,9 @@ export const AuthContextProvider = ({children}) => {
         if(verify.proceed == true){
             if(verify.newUser == true){
                 const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
-                const grantRole = await MetaSave.userSignUp()
+                console.log('granting role')
+                const grantRole = true
+                // const grantRole = await MetaSave.userSignUp()
                 if(grantRole){
                     window.location.replace('/register')
                 }else{
@@ -158,8 +160,8 @@ export const AuthContextProvider = ({children}) => {
                 setLoggedIn(web3auth?.status === "connected" ? true : false)
                 const CF = getCFAddress(walletProvider, priv_key)
                 const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
-                const userExists = await MetaSave.userExists(CF)
-                if(!userExists){
+                const IPFSid = await MetaSave.getIPFSFileName(CF)
+                if(!IPFSid){
                     window.location.replace('/register')
                 }else{
                     window.location.replace('/dashboard')
