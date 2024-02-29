@@ -27,8 +27,8 @@ const insertFall = async (req, res) => {
     } else {
       console.log('Image file does not exist:', imagePath)
     }
-
-    dataIPFSid = await uploadToIPFS(req.body.prediction_data, 'json')
+    
+    dataIPFSid = await uploadToIPFS(JSON.parse(req.body.prediction_data), 'json')
     console.log('Data IPFS ID:', dataIPFSid)
 
     // Store fall data on blockchain
