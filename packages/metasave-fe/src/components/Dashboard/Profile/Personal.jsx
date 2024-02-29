@@ -3,22 +3,13 @@ import EditIcon from '@mui/icons-material/Edit'
 import DoneIcon from '@mui/icons-material/Done'
 import { useMainContext } from '../../../context/MainContext'
 import '../../../styles/Personal.css'
-import { useAuthContext } from '../../../context/AuthContext'
 
 const Personal = () => {
-  const { userDetails, fetchUserDetails } = useMainContext()
-  const { CFAddress, walletProvider } = useAuthContext()
+  const { userDetails } = useMainContext()
   const [editMode, setEditMode] = React.useState({
     mode: '',
     edit: false,
   })
-
-  React.useEffect(() => {
-    if (CFAddress && walletProvider) {
-      console.log(CFAddress)
-      fetchUserDetails(walletProvider, CFAddress)
-    }
-  }, [CFAddress, walletProvider])
 
   return (
     <div className="my-10">

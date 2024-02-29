@@ -8,15 +8,15 @@ import { useMainContext } from '../context/MainContext'
 
 const Dashboard = () => {
   const { initWeb3Auth, CFAddress, walletProvider } = useAuthContext()
-  const { fetchUserDetails } = useMainContext()
+  const { fetchUserDetails, fetchFallDetails } = useMainContext()
   React.useEffect(() => {
     initWeb3Auth()
   }, [])
   
   React.useEffect(() => {
     if(CFAddress && walletProvider){
-      console.log(CFAddress)
       fetchUserDetails(walletProvider, CFAddress)
+      fetchFallDetails(walletProvider, CFAddress)
     }
   }, [CFAddress, walletProvider])
   return (

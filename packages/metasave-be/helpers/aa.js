@@ -45,8 +45,6 @@ const AA = async(PRIV_KEY) => {
     try {
         const PRIVATE_KEY = `0x${PRIV_KEY}`;
 
-        console.log(PRIVATE_KEY)
-
         const owner = LocalAccountSigner.privateKeyToAccountSigner(PRIVATE_KEY);
 
         const AAProvider = new AlchemyProvider({
@@ -65,8 +63,6 @@ const AA = async(PRIV_KEY) => {
         )
 
         const CFaddress = await AAProvider.getAddress()
-
-        console.log(CFaddress)
 
         AAProvider.withAlchemyGasManager({
             policyId: process.env.GAS_MANAGER_POLICY_ID,

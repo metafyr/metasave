@@ -5,6 +5,7 @@ import Vitals from './Profile/Vitals';
 
 const Profile = () => {
   const [slide, setSlide] = React.useState('personal');
+  
 
   return (
     <div className='px-5 py-5'>

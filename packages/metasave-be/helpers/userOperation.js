@@ -1,7 +1,7 @@
 import AA from './aa.js';
 import {encodeFunctionData} from 'viem'
 
-async function userOperation(abi, functionName, args, PRIV_KEY) {
+async function userOperation(abi, functionName, args, address, PRIV_KEY) {
   try {
     const callData = encodeFunctionData({
       abi,
@@ -12,7 +12,7 @@ async function userOperation(abi, functionName, args, PRIV_KEY) {
     const AAProvider = await AA(PRIV_KEY)
 
     const userOperation = await AAProvider.sendUserOperation({
-      target: abi.address, 
+      target: address, 
       data: callData,
     });
 

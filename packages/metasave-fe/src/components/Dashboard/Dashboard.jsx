@@ -3,17 +3,14 @@ import axios from 'axios'
 import dashImg from '../../assets/dashboardRight.svg'
 import ImagePopup from './ImagePopup'
 import { Link } from 'react-router-dom'
+import { useMainContext } from '../../context/MainContext'
 
 const Dashboard = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState('')
-  const [fallData, setFallData] = useState({})
+  const { userDetails, fallData, setFallData } = useMainContext()
   const [selectedDate, setSelectedDate] = useState(Date)
-
-  useEffect(() => {
-    const fetchFallData = async () => {}
-    fetchFallData()
-  }, [])
+  const [fallsForSelectedDate, setFallsForSelectedDate] = useState([])
 
   const openPopup = (imageSrc) => {
     setCurrentImage(imageSrc)
@@ -24,13 +21,18 @@ const Dashboard = () => {
     setIsPopupOpen(false)
   }
 
-  const getFallsForDate = (date) => {
-    if (fallData[date]) {
-      return [fallData[date]] // Return an array of falls for that date
-    }
-    return []
-  }
-  const fallsForSelectedDate = getFallsForDate(selectedDate)
+  // const getFallsForDate = (date) => {
+  //   if (fallData[date]) {
+  //     return [fallData[date]] // Return an array of falls for that date
+  //   }
+  //   return []
+  // }
+
+  // useContext(() => {
+  //   if(fallData.length > 0){
+  //     setFallsForSelectedDate(getFallsForDate(selectedDate))
+  //   }
+  // }, [fallData])
 
   return (
     <div className="px-5 py-5">

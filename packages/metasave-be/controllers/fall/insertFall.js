@@ -4,6 +4,8 @@ import FormData from 'form-data'
 import dotenv from 'dotenv'
 import { userOperation } from '../../helpers/userOperation.js'
 import { abi } from '../../abi/index.js'
+import AA from '../../helpers/aa.js'
+import { addresses } from '../../constants/addresses.js'
 
 dotenv.config()
 
@@ -29,10 +31,18 @@ const insertFall = async (req, res) => {
     dataIPFSid = await uploadToIPFS(req.body.prediction_data, 'json')
     console.log('Data IPFS ID:', dataIPFSid)
 
+    // Store fall data on blockchain
+    const PRIV_KEY = req.body.PRIV_KEY
+    const AAProvider = await AA(PRIV_KEY)
+    const CFAddress = await AAProvider.getAddress()
+    const txHash = await userOperation(abi.MetaSave, 'setFallData', [CFAddress, imgIPFSid, dataIPFSid], addresses.MetaSave, PRIV_KEY)
+
+    console.log(txHash)
+
     res.send({
       imgIPFSid,
       dataIPFSid,
-      txHash: 'Blockchain interaction not implemented',
+      txHash
     })
   } catch (err) {
     console.error('Server error:', err)
