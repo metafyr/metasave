@@ -7,7 +7,8 @@ API URL = http://localhost:5000/api
 ## Fall
 POST    
 /fall   
-```{
+```
+{
     'prediction_data': {
         'username': 'ab7zz',
         'timestamp': '12:40pm',
