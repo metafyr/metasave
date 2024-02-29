@@ -8,7 +8,7 @@ API URL = http://localhost:5000/api
 POST    
 /fall   
 ```
-{
+body: {
     'prediction_data': {
         'username': 'ab7zz',
         'timestamp': '12:40pm',
@@ -18,6 +18,7 @@ POST
     'username': 'ab7zz',
     'PRIV_KEY': PRIV_KEY
 }
+file: attach_file
 ```
 
 GET
