@@ -158,7 +158,7 @@ export const AuthContextProvider = ({children}) => {
                 window.location.replace('/register')
             }else{
                 setLoggedIn(web3auth?.status === "connected" ? true : false)
-                const CF = getCFAddress(walletProvider, priv_key)
+                const CF = getCFAddress(priv_key)
                 const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
                 const IPFSid = await MetaSave.getIPFSFileName(CF)
                 if(!IPFSid){
@@ -173,10 +173,9 @@ export const AuthContextProvider = ({children}) => {
         }
     }
 
-    const getCFAddress = async(walletProvider, PRIV_KEY) => {
+    const getCFAddress = async(PRIV_KEY) => {
         const ALCHEMY_API_KEY = import.meta.env.VITE_ALCHEMY_API_KEY
         const GAS_MANAGER_POLICY_ID = import.meta.env.VITE_GAS_MANAGER_POLICY_ID
-        console.log(ALCHEMY_API_KEY, GAS_MANAGER_POLICY_ID, PRIV_KEY)
         const ENTRY_POINT_ADDRESS = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
         const PRIVATE_KEY = `0x${PRIV_KEY}`
         const polygonMumbai = /*#__PURE__*/ defineChain({
@@ -270,7 +269,7 @@ export const AuthContextProvider = ({children}) => {
             setWalletAddress(walletAddress)
             setWeb3AuthProvider(web3AuthProvider)
 
-            getCFAddress(walletProvider, priv_key)
+            getCFAddress(priv_key)
 
             setLoggedIn(true)
         }

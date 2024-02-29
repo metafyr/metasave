@@ -8,7 +8,7 @@ import { useMainContext } from '../../context/MainContext'
 const Dashboard = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState('')
-  const { userDetails, fallData, setFallData } = useMainContext()
+  const { userDetails, fallDetails, setFallDetails } = useMainContext()
   const [selectedDate, setSelectedDate] = useState(Date)
   const [fallsForSelectedDate, setFallsForSelectedDate] = useState([])
 
@@ -21,18 +21,31 @@ const Dashboard = () => {
     setIsPopupOpen(false)
   }
 
-  // const getFallsForDate = (date) => {
-  //   if (fallData[date]) {
-  //     return [fallData[date]] // Return an array of falls for that date
-  //   }
-  //   return []
-  // }
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    
+    const year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    
+    month = month < 10 ? '0' + month : month;
+    day = day < 10 ? '0' + day : day;
+    
+    return `${day}-${month}-${year}`;
+  }
 
-  // useContext(() => {
-  //   if(fallData.length > 0){
-  //     setFallsForSelectedDate(getFallsForDate(selectedDate))
-  //   }
-  // }, [fallData])
+  const getFallsForDate = (date) => {
+    return fallDetails.filter(detail => detail.date == date) || []
+  }
+
+  React.useEffect(() => {
+    const date = formatDate(selectedDate)
+    if(fallDetails.length > 0){
+      const falls = getFallsForDate(date)
+      console.log(falls)
+      setFallsForSelectedDate(falls)
+    }
+  }, [selectedDate])
 
   return (
     <div className="px-5 py-5">
@@ -66,7 +79,10 @@ const Dashboard = () => {
           <input
             type="date"
             value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
+            onChange={(e) => {
+              setSelectedDate(e.target.value)
+              console.log(e.target.value)
+            }}
             className="poppins text-base md:text-2xl font-bold text-[#3a3a3a] focus:outline-none"
           />
         </div>
