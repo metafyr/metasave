@@ -5,8 +5,8 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 contract ZKProof {
 
-    bytes32 private root = 0x0;
-    string private mtIPFSid = "";
+    bytes32 private root;
+    string private mtIPFSid;
 
     function setRootAndIPFS(bytes32 _root, string memory _mtIPFSid) public {
         root = _root;
