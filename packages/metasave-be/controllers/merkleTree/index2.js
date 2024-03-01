@@ -4,6 +4,7 @@ import { abi } from "../../abi";
 import dotenv from 'dotenv'
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
 import insertMT from "../../helpers/merkleTree/insertMT.js";
+import fetchMT from "../../helpers/merkleTree/fetchMT.js";
 
 dotenv.config()
 
@@ -15,12 +16,23 @@ const merkleTree = async (req, res) => {
         const walletAddress = req.body.walletAddress
         const msg = `0x${req.body.msg}`
         const value = [walletAddress, msg]
-        const treeJSON = req.body.treeJSON
+        let treeCID = req.body.CID
         const values = [
             value
         ];
 
+        if(CID == null){
+            const values = [["0x1111111111111111111111111111111111111111", "0x066ac8fc073612bd0ab02b22c917837f97057aec7fdae5f7cc7694e2ba0edd25"]];
+            const tree = StandardMerkleTree.of(values, ["address", "bytes32"]);
+            treeCID = insertMT(tree.dump())
+
+            await userOperation(abi.ZKProof, 'setRootAndIPFS', [tree.root, treeCID], addresses.ZKProof, ADMIN_PRIV_KEY)
+        }
+
+        const treeJSON = fetchMT(treeCID)
+        
         let tree = StandardMerkleTree.load(treeJSON);
+        
 
         for (const [i, v] of tree.entries()) {
             if (v[0] === values[0][0]) {

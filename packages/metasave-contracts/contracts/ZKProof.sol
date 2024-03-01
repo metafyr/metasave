@@ -13,11 +13,11 @@ contract ZKProof {
         mtIPFSid = _mtIPFSid;
     }
 
-    function getRoot() public view returns (bytes32) {
+    function getMTRoot() public view returns (bytes32) {
         return root;
     }
 
-    function getMtIPFSid() public view returns (string memory) {
+    function getMTIPFSid() public view returns (string memory) {
         return mtIPFSid;
     }
 
