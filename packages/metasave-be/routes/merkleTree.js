@@ -1,5 +1,5 @@
 import express from 'express'
-import merkleTree from '../controllers/merkleTree/index.js'
+import merkleTree from '../controllers/merkleTree/index2.js'
 
 const router = express.Router()
 

@@ -1,4 +1,11 @@
-async function insertMT(data){
+import axios from 'axios'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const PINATA_API_KEY = process.env.PINATA_API_KEY
+
+const insertMT = async(data) => {
     try{
         const response = await axios.post(
             'https://api.pinata.cloud/pinning/pinJSONToIPFS',
@@ -9,8 +16,7 @@ async function insertMT(data){
               },
             }
           )
-        dataIPFSid = response.data.IpfsHash
-        return dataIPFSid
+        return response.data.IpfsHash
     }catch(error){
         console.log(error)
     }

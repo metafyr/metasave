@@ -85,10 +85,15 @@ export const AuthContextProvider = ({children}) => {
             }
 
             const privateKey = await walletProvider.getPrivateKey()
+            const ZKProof = await walletProvider.getContract(addresses.ZKProof, abi.ZKProof)
+            const treeCID = await ZKProof.getMTIPFSid()
+            const treeRoot = await ZKProof.getMTRoot()
+            console.log(treeCID, treeRoot)
             const msg = keccak256(privateKey).toString('hex')
             const res = await axios.post(`${serverUrl}/merkletree`, {
                 walletAddress,
-                msg
+                msg,
+                treeCID
             },
             {
                 headers: {
@@ -106,7 +111,6 @@ export const AuthContextProvider = ({children}) => {
                 const proof = res.data.proof
                 console.log(res.data)
                 const root = res.data.root
-                const ZKProof = await walletProvider.getContract(addresses.ZKProof, abi.ZKProof)
                 const verify = await ZKProof.verify(root, proof, walletAddress, `0x${msg}`)
                 if(verify == true || verify == 'true'){
                     status = {
