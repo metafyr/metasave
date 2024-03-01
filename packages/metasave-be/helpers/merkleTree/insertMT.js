@@ -1,3 +1,10 @@
+import axios from 'axios'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const PINATA_API_KEY = process.env.PINATA_API_KEY
+
 async function insertMT(data){
     try{
         const response = await axios.post(
@@ -9,7 +16,7 @@ async function insertMT(data){
               },
             }
           )
-        dataIPFSid = response.data.IpfsHash
+        const dataIPFSid = response.data.IpfsHash
         return dataIPFSid
     }catch(error){
         console.log(error)

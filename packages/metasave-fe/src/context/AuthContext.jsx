@@ -89,6 +89,9 @@ export const AuthContextProvider = ({children}) => {
             let CID = null
             try{
                 CID = await ZKProof.getMTIPFSid()
+                if(typeof(CID) != 'string'){
+                    CID = null
+                }
             }catch(err){
                 console.log('some error occurred')
                 CID = null

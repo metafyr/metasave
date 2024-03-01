@@ -1,6 +1,6 @@
 import { userOperation } from "../../helpers/userOperation.js";
 import { addresses } from "../../constants/addresses.js";
-import { abi } from "../../abi";
+import { abi } from "../../abi/index.js";
 import dotenv from 'dotenv'
 import { StandardMerkleTree } from "@openzeppelin/merkle-tree";
 import insertMT from "../../helpers/merkleTree/insertMT.js";
@@ -16,20 +16,29 @@ const merkleTree = async (req, res) => {
         const walletAddress = req.body.walletAddress
         const msg = `0x${req.body.msg}`
         const value = [walletAddress, msg]
-        let treeCID = req.body.CID
+        let treeCID = req.body.CID, treeJSON = {}
         const values = [
             value
         ];
 
-        if(CID == null){
+        if(treeCID == null || treeCID == undefined || treeCID == '' || treeCID == 'undefined' || treeCID == 'null'){
+            console.log('here', treeCId)
             const values = [["0x1111111111111111111111111111111111111111", "0x066ac8fc073612bd0ab02b22c917837f97057aec7fdae5f7cc7694e2ba0edd25"]];
             const tree = StandardMerkleTree.of(values, ["address", "bytes32"]);
+            console.log(tree.dump())
+            
             treeCID = insertMT(tree.dump())
 
+            console.log(treeCID)
+            
+            treeJSON = fetchMT(treeCID)
+
             await userOperation(abi.ZKProof, 'setRootAndIPFS', [tree.root, treeCID], addresses.ZKProof, ADMIN_PRIV_KEY)
+        }else{
+            console.log('nope', treeCID)
+            treeJSON = fetchMT(treeCID)
         }
 
-        const treeJSON = fetchMT(treeCID)
         
         let tree = StandardMerkleTree.load(treeJSON);
         
