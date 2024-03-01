@@ -6,9 +6,9 @@ dotenv.config()
 const PINATA_BASE_URL = process.env.PINATA_BASE_URL
 const PINATA_API_KEY = process.env.PINATA_API_KEY
 
-const fetchFall = async(req, res) => {
+const fetchFallData = async(req, res) => {
     try {
-        let dataIPFSdata = '', imgIPFSdata = ""
+        let dataIPFSdata = ''
 
         const dataIPFSid = req.query.dataIPFSid
         if(dataIPFSid.length > 0){
@@ -25,22 +25,10 @@ const fetchFall = async(req, res) => {
                 console.log(e)
             }
         }
-
-        // const imgIPFSid = req.query.imgIPFSid
-        // try{
-        //     const response2 = await axios.get(`${PINATA_BASE_URL}/ipfs/${imgIPFSid}`, {
-        //         headers: {
-        //             'x-pinata-gateway-token': PINATA_API_KEY
-        //         }
-        //     })
-        //     imgIPFSdata = response2.data
-        // }catch(e){
-        //     console.log(e)
-        // }
-        res.json({dataIPFSdata, imgIPFSdata})
+        res.json({dataIPFSdata})
     } catch (error) {
         console.log(error)
     }
 }
 
-export default fetchFall
+export default fetchFallData
