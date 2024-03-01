@@ -5,6 +5,22 @@ import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 contract ZKProof {
 
+    bytes32 private root;
+    string private mtIPFSid;
+
+    function setRootAndIPFS(bytes32 _root, string memory _mtIPFSid) public {
+        root = _root;
+        mtIPFSid = _mtIPFSid;
+    }
+
+    function getRoot() public view returns (bytes32) {
+        return root;
+    }
+
+    function getMtIPFSid() public view returns (string memory) {
+        return mtIPFSid;
+    }
+
     function verify(
         bytes32 root,
         bytes32[] memory proof,

@@ -17,7 +17,7 @@ This project uses a monorepo structure that includes both front-end and back-end
 npm install
 
 # Run the front-end development server
-npm run dev
+npm run dev-fe
 
 # Run the back-end development server
-npm run dev
+npm run dev-be

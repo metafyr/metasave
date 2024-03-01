@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx -p node@18.16.0 nodemon index.js",
-    "start": "npx -p node@18.16.0 node index.js"
+    "start": "npx -p node@18.16.0 node index.js",
+    "deleteallaccounts": "cd controllers/merkleTree && rm tree.json && node initMT.js"
   },
   "author": "",
   "license": "ISC",
