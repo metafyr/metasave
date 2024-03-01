@@ -22,7 +22,41 @@ file: attach_file
 ```
 
 GET
-/fall
+/falldata
 ```
 ?dataIPFSid={cid}&imgIPFSid={cid}
 ```
+
+## UserDetails
+POST
+/user
+```
+body : {
+       CF: CFAddress,
+       name: 'Abhinav C V',
+       age: 20,
+       gender: 'Male',
+       phone: "+91987654321",
+       medications: "none",
+       address: "dubai",
+       contacts: "none",
+       disease: "none",
+       duration: "none"
+}
+```
+
+GET 
+/user/{cid}
+
+## MerkleTree
+POST
+/merkletree
+```
+
+body : {
+    
+    walletAddress 
+    msg 
+}
+```
+
