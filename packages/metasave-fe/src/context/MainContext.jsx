@@ -32,9 +32,9 @@ export const MainContextProvider = ({children}) => {
         setUserDetails(res.data.data)
     }
 
-    async function fetchData(cid) {
+    async function fetchFallData(cid) {
         try {
-            const res = await axios.get(`${serverUrl}/fall?dataIPFSid=${cid}&imgIPFSid=${cid}`);
+            const res = await axios.get(`${serverUrl}/falldata?dataIPFSid=${cid}`);
             if(res){
                 console.log(res.data.dataIPFSdata)
                 return res.data.dataIPFSdata
@@ -69,7 +69,7 @@ export const MainContextProvider = ({children}) => {
             // }
             const dataIPFS = IPFSobj[0][1]
             const imgIPFS = IPFSobj[0][0]
-            const data = await fetchData(dataIPFS);
+            const data = await fetchFallData(dataIPFS);
             if (data) {
                 const jsonMap = {
                     username: data.username,

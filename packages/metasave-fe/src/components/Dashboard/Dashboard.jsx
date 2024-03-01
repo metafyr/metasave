@@ -79,10 +79,7 @@ const Dashboard = () => {
           <input
             type="date"
             value={selectedDate}
-            onChange={(e) => {
-              setSelectedDate(e.target.value)
-              console.log(e.target.value)
-            }}
+            onChange={(e) => setSelectedDate(e.target.value) }
             className="poppins text-base md:text-2xl font-bold text-[#3a3a3a] focus:outline-none"
           />
         </div>
@@ -104,7 +101,7 @@ const Dashboard = () => {
                 </div>
                 <h3
                   className="ml-auto text-[#505050] md:text-xl text-base cursor-pointer"
-                  onClick={() => openPopup(fall.url)}
+                  onClick={() => openPopup(fall.imgIPFS)}
                 >
                   <u>VIEW IMAGE</u>
                 </h3>
