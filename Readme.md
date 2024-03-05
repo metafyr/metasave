@@ -8,15 +8,23 @@ Below is the Data Flow Diagram (DFD) that outlines the flow of data across the s
 
 ![Data Flow Diagram](DFD.png)
 
-## YOLOv7-W6-pose Model
+## YOLOv7-W6-Pose Model
 
 ### Performance: 
 1. Resolution: 1280
 2. Average Precision (AP): 54.9%
-3. AP50: 72.6%
-4. AP75: 60.1%
-5. Average fps: ~10
-6. Latency: ~100 ms
+3. Recall: 25.1%
+4. Train/Box Loss: 1.8%
+5. Train/Class Loss: 0.0%
+6. Train/Object Loss: 0.6%
+7. Val/Box Loss: 2.8%
+8. Val/Class Loss: 0.0%
+9. Val/Object Loss: 1.5%
+10. Learning rate: 0.00447
+11. AP50 (50% IoU): 72.6%
+12. AP75 (75% IoU): 60.1%
+13. Average fps: ~10
+14. Latency: ~100 ms
 
 ## Installation
 
