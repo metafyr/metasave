@@ -10,7 +10,7 @@ Below is the Data Flow Diagram (DFD) that outlines the flow of data across the s
 
 ## YOLOv7-W6-Pose Model
 
-### Performance: 
+### Base Model Performance: 
 1. Resolution: 1280
 2. Average Precision (AP): 54.9%
 3. Recall: 25.1%
@@ -25,6 +25,10 @@ Below is the Data Flow Diagram (DFD) that outlines the flow of data across the s
 12. AP75 (75% IoU): 60.1%
 13. Average fps: ~10
 14. Latency: ~100 ms
+
+### Metrics:
+1. Cohen's Kappa Score: 0.69
+2. Accuracy: 84.5%
 
 ## Installation
 
