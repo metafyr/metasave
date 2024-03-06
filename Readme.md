@@ -30,6 +30,9 @@ Below is the Data Flow Diagram (DFD) that outlines the flow of data across the s
 1. Cohen's Kappa Score: 0.69
 2. Accuracy: 84.5%
 
+![ROC Curve](metrics/roc.png)
+![Confusion Matrix](metrics/confusion_matrix.png)
+
 ## Installation
 
 This project uses a monorepo structure that includes both front-end and back-end components. To get started, run the following commands:
