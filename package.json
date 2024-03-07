@@ -10,5 +10,9 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "requests": "^0.3.0"
+  }
 }
