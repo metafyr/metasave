@@ -10,6 +10,11 @@ from datetime import datetime
 import requests
 import json
 from io import BytesIO
+from dotenv import dotenv_values
+
+env_vars = dotenv_values()
+
+PRIV_KEY = env_vars["PRIV_KEY"]
 
 url = 'http://localhost:5000/api/fall'  
 
@@ -79,7 +84,6 @@ while(cap.isOpened):
             right_foot_y = output[idx][56]
             
             if left_shoulder_y > left_foot_y - len_factor and left_body_y > left_foot_y - (len_factor / 2) and left_shoulder_y > left_body_y - (len_factor / 2):
-              print("fallen")
               fallen = True
               if fallen and not sent:
                 now = datetime.now()
@@ -100,20 +104,22 @@ while(cap.isOpened):
                 data = {
                 'prediction_data': prediction_data_json,
                 'username': 'ab7zz',
-                'PRIV_KEY': '123456'
+                'PRIV_KEY': PRIV_KEY
                 }
 
-                response = requests.post(url, data=data)
+                response = requests.post(url, files=files, data=data)
 
                 if response.status_code == 200:
-                  res = json.loads(response.text)
-                  print(res['dataIPFSid'], data['imgIPFSid'])
+                    print("Request sent successfully.")
+                    res = json.loads(response.text)
+                    print(f"Data IPFS ID: {res['dataIPFSid']}")
+                    print(f"Image IPFS ID: {res['imgIPFSid']}")
+                    print(f"Transaction Hash: {res['txHash']}")
                 else:
-                  print("Error:", response.status_code, response.text)
+                    print("Error:", response.status_code)
 
                 sent = True
             else:
-               print("not fallen")
                sent = False
                fallen = False
         im0 = cv2.resize(im0, (im0.shape[1] // 2, im0.shape[0] // 2))
