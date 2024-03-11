@@ -20,7 +20,7 @@ contract MetaSave is AccessControl {
     bytes32 public constant USER_ROLE = keccak256("USER_ROLE");
     bytes32 public constant HOSPITAL_ROLE = keccak256("HOSPITAL_ROLE");
  
-    function userSignUp() public returns (bool) {
+    function userSignUp() public returns (bool) { 
         // grantRole(USER_ROLE, msg.sender);
         return true;
     }
