@@ -1,0 +1,14 @@
+%%{init: {'themeVariables': {'textColor': '#000000'}}}%%
+sequenceDiagram
+actor Elder
+Elder ->> Wearable: Capture motion data
+Elder ->> Camera: Capture person
+Wearable ->> Edge Computer: AES Encrypted
+Camera ->> Edge Computer: Send images
+Edge Computer ->> Vision Model: Preprocess images
+Vision Model -->> Vision Model: YOLO Fall Detection
+Vision Model ->> Edge Computer: Detect Fall
+Edge Computer -->> Edge Computer: Tokenize metadata
+Edge Computer ->> Helia Node: Fall detected, send metadata
+Helia Node -->> Helia Node: Detokenize
+Helia Node ->> Smart Contract: IPFS Address (Image ID, Metadata ID)
