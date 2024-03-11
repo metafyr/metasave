@@ -18,8 +18,10 @@ const fetchFallData = async(req, res) => {
                         'x-pinata-gateway-token': PINATA_API_KEY
                     }
                 })
-                const key = Object.keys(response1.data)[0];
-                const innerJsonObject = JSON.parse(key);
+                //const key = Object.keys(response1.data)[0];
+                const innerJsonString = JSON.stringify(response1.data)
+                //console.log(innerJsonString)
+                const innerJsonObject = JSON.parse(innerJsonString);                
                 dataIPFSdata = innerJsonObject
             }catch(e){
                 console.log(e)

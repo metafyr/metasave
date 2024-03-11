@@ -10,6 +10,11 @@ from datetime import datetime
 import requests
 import json
 from io import BytesIO
+from dotenv import dotenv_values
+
+env_vars = dotenv_values()
+
+PRIV_KEY = env_vars["PRIV_KEY"]
 
 url = 'http://localhost:5000/api/fall'  
 
@@ -20,7 +25,7 @@ model = weights['model']
 model = model.half().to(device)
 _ = model.eval()
 
-video_path = "fall.mp4"
+video_path = "fall2.mp4"
 cap = cv2.VideoCapture(video_path)
 
 if (cap.isOpened() == False):
@@ -31,6 +36,9 @@ print(frame_width)
 frame_height = int(cap.get(4))
 print(frame_height)
 frame_count = 0
+
+fallen = False
+sent = False
 
 while(cap.isOpened):
     
@@ -76,35 +84,44 @@ while(cap.isOpened):
             right_foot_y = output[idx][56]
             
             if left_shoulder_y > left_foot_y - len_factor and left_body_y > left_foot_y - (len_factor / 2) and left_shoulder_y > left_body_y - (len_factor / 2):
-              print("fallen")
-              now = datetime.now()
-              timestamp = str(int(now.timestamp()))
-              date = now.strftime('%d/%m/%Y')
-              _, buffer = cv2.imencode('.jpg', im0)
-              prediction_data = {
-                'username': 'TERRYMON',
-                'timestamp': timestamp,
-                'date': date,
-                'status': 'fallen'
-              }
-              prediction_data_json = json.dumps(prediction_data)
+              fallen = True
+              if fallen and not sent:
+                now = datetime.now()
+                timestamp = str(int(now.timestamp()))
+                date = now.strftime('%d-%m-%Y')
+                _, buffer = cv2.imencode('.jpg', im0)
+                prediction_data = {
+                  'username': 'TERRYMON',
+                  'timestamp': timestamp,
+                  'date': date,
+                  'status': 'fallen'
+                }
+                prediction_data_json = json.dumps(prediction_data)
 
-              in_memory_file = BytesIO(buffer)
-              
-              files = {'file': ('current_frame.jpg', in_memory_file, 'image/jpeg')}
-              data = {
-              'prediction_data': prediction_data_json,
-              'username': 'ab7zz',
-              'PRIV_KEY': '123456'
-              }
+                in_memory_file = BytesIO(buffer)
+                
+                files = {'file': ('./current_frame.jpg', in_memory_file, 'image/jpeg')}
+                data = {
+                    'prediction_data': prediction_data_json,
+                    'username': 'ab7zz',
+                    'PRIV_KEY': PRIV_KEY
+                }
 
-              response = requests.post(url, data=data)
+                response = requests.post(url, files=files, data=data)
 
-              if response.status_code == 200:
-                res = json.loads(response.text)
-                print(res['dataIPFSid'], data['imgIPFSid'])
-              else:
-                print("Error:", response.status_code, response.text)
+                if response.status_code == 200:
+                    print("Request sent successfully.")
+                    res = json.loads(response.text)
+                    print(f"Data IPFS ID: {res['dataIPFSid']}")
+                    print(f"Image IPFS ID: {res['imgIPFSid']}")
+                    print(f"Transaction Hash: {res['txHash']}")
+                else:
+                    print("Error:", response.status_code)
+
+                sent = True
+            else:
+               sent = False
+               fallen = False
         im0 = cv2.resize(im0, (im0.shape[1] // 2, im0.shape[0] // 2))
         cv2.imshow('image', im0)
         cv2.waitKey(1)

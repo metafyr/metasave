@@ -1,0 +1,22 @@
+%%{init: {'themeVariables': {'textColor': '#000000'}}}%%
+sequenceDiagram
+Client ->> Website: Hey I wanna register!
+Website ->> Web3Auth: Sign up using Google
+Web3Auth ->> Web3Auth: Wallet created
+Web3Auth ->> Smart Contract: Wallet address, Secret text
+Smart Contract ->> Smart Contract: Add to Merkle tree
+Smart Contract ->> Website: 
+Website ->> Helia Node: User Details
+Helia Node ->> Helia Node: 
+Helia Node ->> Smart Contract: Insert Filename
+Web3Auth ->> Smart Contract: CF Address
+Smart Contract ->> Helia Node: IPFS Filename
+Helia Node ->> Website: Data on dashboard
+Client ->> Website: Hey I wanna login!
+Website ->> Web3Auth: Login with Google
+Web3Auth ->> Smart Contract: Smart Wallet Address, Secret text
+Smart Contract ->> Smart Contract: ZK Proof verified
+Smart Contract ->> Web3Auth: 
+Web3Auth ->> Smart Contract: CF Address
+Smart Contract ->> Helia Node: IPFS IDs
+Helia Node ->> Website: Data on dashboard

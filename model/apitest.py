@@ -1,6 +1,7 @@
 import json
 import requests
 from dotenv import dotenv_values
+from datetime import datetime
 
 env_vars = dotenv_values()
 
@@ -8,10 +9,16 @@ PRIV_KEY = env_vars["PRIV_KEY"]
 
 url = 'http://localhost:5000/api/fall'
 
+now = datetime.now()
+timestamp = str(int(now.timestamp()))
+date = now.strftime('%d-%m-%Y')
+
+print(date)
+
 prediction_data = {
     'username': 'TERRYMON',
     'timestamp': '12:40pm',
-    'date': '12-04-2024',
+    'date': date,
     'status': 'fallen'
 }
 prediction_data_json = json.dumps(prediction_data)
