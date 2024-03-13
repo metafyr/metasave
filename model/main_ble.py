@@ -93,6 +93,8 @@ def post_request():
 
         if last_sent_time is None or now - last_sent_time >= timedelta(seconds=30):
             prediction_data, buffer = item
+            timestamp = str(int(now.timestamp()))
+            date = now.strftime('%d-%m-%Y')
             accelerometer_data = accelerometer_queue.get()
             prediction_data['accelerometer_data'] = accelerometer_data
             prediction_data_json = json.dumps(prediction_data)

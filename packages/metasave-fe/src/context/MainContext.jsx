@@ -68,21 +68,25 @@ export const MainContextProvider = ({children}) => {
                     result.push(jsonMap);
                 }
             }
-            // const dataIPFS = IPFSobj[0][1]
-            // const imgIPFS = IPFSobj[0][0]
-            // const data = await fetchFallData(dataIPFS);
-            // if (data) {
-            //     const jsonMap = {
-            //         username: data.username,
-            //         timestamp: data.timestamp,
-            //         date: data.date,
-            //         status: data.status,
-            //         imgIPFS
-            //     };
-            //     result.push(jsonMap);
-            // }
             console.log(result)
-            setFallDetails(result)
+            const uniqueObjects = {};
+
+            // Iterate over the array and store objects with unique timestamps
+            result.forEach(obj => {
+                const timestamp = obj.timestamp;
+                // If timestamp doesn't exist in the uniqueObjects, store the object
+                if (!uniqueObjects[timestamp]) {
+                    uniqueObjects[timestamp] = obj;
+                }
+                // Else, ignore the duplicate timestamp
+            });
+
+            // Extract values (unique objects) from the uniqueObjects object
+            const uniqueArray = Object.values(uniqueObjects);
+
+            // Now uniqueArray contains objects with unique timestamps
+            console.log(uniqueArray);
+            setFallDetails(uniqueArray)
         }catch(err){
             console.log('no fall data for this user')
         }
