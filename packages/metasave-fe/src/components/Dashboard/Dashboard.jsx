@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import dashImg from '../../assets/dashboardRight.svg'
 import ImagePopup from './ImagePopup'
 import DataPopup from './DataPopup'
+import FallPopup from './FallPopup'
 import { Link } from 'react-router-dom'
 import { useMainContext } from '../../context/MainContext'
 
@@ -10,7 +11,7 @@ const Dashboard = () => {
   const [isDataPopupOpen, setIsDataPopupOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState('')
   const [currentData, setCurrentData] = useState('')
-  const { fallDetails } = useMainContext()
+  const { fallDetails, fallPopup, setFallPopup } = useMainContext()
   const [selectedDate, setSelectedDate] = useState(Date)
   const [fallsForSelectedDate, setFallsForSelectedDate] = useState([])
 
@@ -29,6 +30,9 @@ const Dashboard = () => {
   }
   const closeDataPopup = () => {
     setIsDataPopupOpen(false)
+  }
+  const closeFallPopup = () => {
+    setFallPopup(false)
   }
 
   function formatDate(dateString) {
@@ -143,6 +147,11 @@ const Dashboard = () => {
         <DataPopup
           data={currentData}
           onClose={closeDataPopup}
+        />
+      )}
+      {fallPopup && (
+        <FallPopup
+          onClose={closeFallPopup}
         />
       )}
     </div>

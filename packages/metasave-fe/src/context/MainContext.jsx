@@ -4,10 +4,27 @@ import { abi } from "../abi/index.js"
 import axios from 'axios'
 
 
+
 const MainContext = React.createContext()
 
 
 export const MainContextProvider = ({children}) => {
+    const [fallPopup, setFallPopup] = React.useState(false)
+    const [walletProvider, setWalletProvider] = React.useState()
+    const [CFAddress, setCFAddress] = React.useState()
+    React.useEffect(() => {
+        if(walletProvider && CFAddress){
+            const fallRef = ref(database, '/fall');
+            onValue(fallRef, (snapshot) => {
+                if(snapshot.exists()){
+                    console.log('fall detected')
+                    setFallPopup(true)
+                    fetchFallDetails(walletProvider, CFAddress)
+                    remove(fallRef)
+                }
+            });
+        }
+    }, [walletProvider, CFAddress])
     const serverUrl = 'http://localhost:5000/api'
     const [userDetails, setUserDetails] = React.useState(
         {
@@ -47,6 +64,8 @@ export const MainContextProvider = ({children}) => {
 
     const fetchFallDetails = async(walletProvider, CFAddress) => {
         console.log('fetch fall details', CFAddress)
+        setWalletProvider(walletProvider)
+        setCFAddress(CFAddress)
         const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
         try{
             const IPFSobj = await MetaSave.getFallData(CFAddress)
@@ -97,6 +116,8 @@ export const MainContextProvider = ({children}) => {
             serverUrl,
             userDetails,
             fallDetails,
+            fallPopup,
+            setFallPopup,
             setFallDetails,
             setUserDetails,
             fetchUserDetails,
