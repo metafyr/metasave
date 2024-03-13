@@ -49,6 +49,7 @@ void loop() {
     if ((abs(x)>=3.99 and abs(y)>=3.99) || (abs(y)>=3.99 and abs(z)>=3.99) || (abs(z)>=3.99 and abs(x) >=3.99)) {
       Characteristic.writeValue(1);
     } else {
+      Characteristic.writeValue(0);
     }
         
   }
