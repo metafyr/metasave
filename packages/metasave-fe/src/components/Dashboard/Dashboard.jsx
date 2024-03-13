@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import React, { useState } from 'react'
 import dashImg from '../../assets/dashboardRight.svg'
 import ImagePopup from './ImagePopup'
 import DataPopup from './DataPopup'
@@ -11,7 +10,7 @@ const Dashboard = () => {
   const [isDataPopupOpen, setIsDataPopupOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState('')
   const [currentData, setCurrentData] = useState('')
-  const { userDetails, fallDetails, setFallDetails } = useMainContext()
+  const { fallDetails } = useMainContext()
   const [selectedDate, setSelectedDate] = useState(Date)
   const [fallsForSelectedDate, setFallsForSelectedDate] = useState([])
 

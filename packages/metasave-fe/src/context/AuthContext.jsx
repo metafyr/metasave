@@ -3,7 +3,7 @@ import { Web3Auth } from "@web3auth/modal";
 import { WALLET_ADAPTERS } from "@web3auth/base";
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
-import { identityCreation } from "../helpers/PolygonID";
+// import { identityCreation } from "../helpers/PolygonID";
 import axios from 'axios'
 import { getWalletProvider } from "../helpers/walletProvider.js";
 import { addresses } from "../constants/addresses.js";
@@ -26,7 +26,7 @@ export const AuthContextProvider = ({children}) => {
     const [web3auth, setWeb3Auth] = React.useState(null)
     const [loggedIn, setLoggedIn] = React.useState(false)
     const [web3AuthProvider, setWeb3AuthProvider] = React.useState(null)
-    const [pid, setPID] = React.useState(null)
+    // const [pid, setPID] = React.useState(null)
     const [walletAddress, setWalletAddress] = React.useState(null)
     const [walletProvider, setWalletProvider] = React.useState(null)
     const [AAProvider, setAAProvider] = React.useState(null)
@@ -243,13 +243,13 @@ export const AuthContextProvider = ({children}) => {
         return CFAddress
     }
 
-    const getPID = async(web3authProvider) => {
-        if(web3authProvider){
-            const pKey = await walletProvider.getPrivateKey()
-            const res = await identityCreation(pKey);
-            setPID(res.did.string())
-        }
-    }
+    // const getPID = async(web3authProvider) => {
+    //     if(web3authProvider){
+    //         const pKey = await walletProvider.getPrivateKey()
+    //         const res = await identityCreation(pKey);
+    //         setPID(res.did.string())
+    //     }
+    // }
 
     const Logout = async() => {
         if(web3auth){

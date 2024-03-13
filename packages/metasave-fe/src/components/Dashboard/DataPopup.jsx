@@ -1,7 +1,4 @@
-import React from 'react';
 import '../../styles/ImagePopup.css'; // Adjust the path as needed
-
-const PINATA_BASE_URL = import.meta.env.VITE_PINATA_BASE_URL
 
 const DataPopup = ({ data, onClose }) => {
   if (!data) return null;
