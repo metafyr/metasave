@@ -15,16 +15,10 @@ import threading
 import queue
 import asyncio
 from bleak import BleakClient
-import struct
 
 address = "E0:F7:BF:E9:2B:7C"
 SERVICE_UUID = "12345678-1234-5678-9abc-def012345678"
-CHAR_X_UUID = "12345678-1234-5678-9abc-def012345679"
-CHAR_Y_UUID = "12345678-1234-5678-9abc-def01234567a"
-CHAR_Z_UUID = "12345678-1234-5678-9abc-def01234567b"
-
-def convert_bytes_to_int(values):
-    return [struct.unpack('<i', values[0])[0]/100, struct.unpack('<i', values[1])[0]/100, struct.unpack('<i', values[2])[0]/100]
+CHAR_UUID = "12345678-1234-5678-9abc-def012345679"
 
 accelerometer_queue = queue.Queue()
 stop_ble_reading_event = asyncio.Event()
@@ -33,13 +27,10 @@ async def read_characteristics(address, stop_event):
     async with BleakClient(address) as client:
         while not stop_event.is_set():
             try:
-                char_x_value = await client.read_gatt_char(CHAR_X_UUID)
-                char_y_value = await client.read_gatt_char(CHAR_Y_UUID)
-                char_z_value = await client.read_gatt_char(CHAR_Z_UUID)
-                char_values = [char_x_value, char_y_value, char_z_value]
-                accelerometer_data = convert_bytes_to_int(char_values)
-                print(accelerometer_data)
-                accelerometer_queue.put(accelerometer_data)
+                char_values = await client.read_gatt_char(CHAR_UUID)
+                int_value = int(char_values[0])
+                print(int_value)
+                accelerometer_queue.put(int_value)
             except Exception as e:
                 print(f"Error: {e}")
             await asyncio.sleep(0.1)
@@ -93,8 +84,6 @@ def post_request():
 
         if last_sent_time is None or now - last_sent_time >= timedelta(seconds=30):
             prediction_data, buffer = item
-            timestamp = str(int(now.timestamp()))
-            date = now.strftime('%d-%m-%Y')
             accelerometer_data = accelerometer_queue.get()
             prediction_data['accelerometer_data'] = accelerometer_data
             prediction_data_json = json.dumps(prediction_data)
@@ -171,7 +160,7 @@ while(cap.isOpened):
                 date = now.strftime('%d-%m-%Y')
                 _, buffer = cv2.imencode('.jpg', im0)
                 prediction_data = {
-                  'username': 'TERRYMON',
+                  'username': 'SURA',
                   'timestamp': timestamp,
                   'date': date,
                   'status': 'fallen'

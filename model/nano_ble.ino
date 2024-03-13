@@ -3,9 +3,7 @@
 
 BLEService customService("12345678-1234-5678-9abc-def012345678"); 
 
-BLEIntCharacteristic CharacteristicX("12345678-1234-5678-9abc-def012345679", BLERead | BLENotify);
-BLEIntCharacteristic CharacteristicY("12345678-1234-5678-9abc-def01234567a", BLERead | BLENotify);
-BLEIntCharacteristic CharacteristicZ("12345678-1234-5678-9abc-def01234567b", BLERead | BLENotify);
+BLEIntCharacteristic Characteristic("12345678-1234-5678-9abc-def012345679", BLERead | BLENotify);
 
 void setup() {
   Serial.begin(9600);
@@ -16,32 +14,20 @@ void setup() {
     while (1);
   }
 
-  Serial.print("Accelerometer sample rate = ");
-  Serial.print(IMU.accelerationSampleRate());
-  Serial.println(" Hz");
-  Serial.println();
-  Serial.println("Acceleration in G's");
-  Serial.println("X\tY\tZ");
-
   BLE.begin();
 
   BLE.setLocalName("BLE");
   BLE.setAdvertisedService(customService);
 
-  customService.addCharacteristic(CharacteristicX);
-  customService.addCharacteristic(CharacteristicY);
-  customService.addCharacteristic(CharacteristicZ);
-
+  customService.addCharacteristic(Characteristic);
+  
   BLE.addService(customService);
 
-  CharacteristicX.writeValue(0);
-  CharacteristicY.writeValue(0);
-  CharacteristicZ.writeValue(0);
+  Characteristic.writeValue(0);
 
   BLE.advertise();
 
   Serial.println("BLE LED Peripheral");
-
   
 }
 
@@ -60,9 +46,11 @@ void loop() {
     Serial.print('\t');
     Serial.println(z);
 
-    CharacteristicX.writeValue(x*100);
-    CharacteristicY.writeValue(y*100);
-    CharacteristicZ.writeValue(z*100);
+    if ((abs(x)>=3.99 and abs(y)>=3.99) || (abs(y)>=3.99 and abs(z)>=3.99) || (abs(z)>=3.99 and abs(x) >=3.99)) {
+      Characteristic.writeValue(1);
+    } else {
+      Characteristic.writeValue(0);
+    }
         
   }
 }
