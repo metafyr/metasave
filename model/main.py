@@ -6,7 +6,7 @@ import numpy as np
 from yoloutils.datasets import letterbox
 from yoloutils.general import non_max_suppression
 from yoloutils.plots import output_to_target
-from datetime import datetime
+from datetime import datetime, timedelta
 import requests
 import json
 from io import BytesIO
@@ -41,36 +41,41 @@ frame_count = 0
 
 fallen = False
 sent = False
+last_sent_time = None
 
 q = queue.Queue()
 
 def post_request():
+    global last_sent_time
+    now = datetime.now()
     while True:
         item = q.get()
         if item is None:
             break
 
-        prediction_data, buffer = item
-        prediction_data_json = json.dumps(prediction_data)
+        if last_sent_time is None or now - last_sent_time >= timedelta(seconds=30):
+            prediction_data, buffer = item
+            prediction_data_json = json.dumps(prediction_data)
 
-        in_memory_file = BytesIO(buffer)
-        files = {'file': ('current_frame.jpg', in_memory_file, 'image/jpeg')}
-        data = {
-            'prediction_data': prediction_data_json,
-            'username': 'ab7zz',
-            'PRIV_KEY': PRIV_KEY
-        }
+            in_memory_file = BytesIO(buffer)
+            files = {'file': ('current_frame.jpg', in_memory_file, 'image/jpeg')}
+            data = {
+                'prediction_data': prediction_data_json,
+                'username': 'ab7zz',
+                'PRIV_KEY': PRIV_KEY
+            }
 
-        response = requests.post(url, files=files, data=data)
+            response = requests.post(url, files=files, data=data)
 
-        if response.status_code == 200:
-            print("Request sent successfully.")
-            res = json.loads(response.text)
-            print(f"Data IPFS ID: {res['dataIPFSid']}")
-            print(f"Image IPFS ID: {res['imgIPFSid']}")
-            print(f"Transaction Hash: {res['txHash']}")
-        else:
-            print("Error:", response.status_code)
+            if response.status_code == 200:
+                print("Request sent successfully.")
+                res = json.loads(response.text)
+                print(f"Data IPFS ID: {res['dataIPFSid']}")
+                print(f"Image IPFS ID: {res['imgIPFSid']}")
+                print(f"Transaction Hash: {res['txHash']}")
+                last_sent_time = now
+            else:
+                print("Error:", response.status_code)
 
         q.task_done()
 
