@@ -11,7 +11,7 @@ url = 'http://localhost:5000/api/fall'
 prediction_data = {
     'username': 'TERRYMON',
     'timestamp': '12:40pm',
-    'date': '11-03-2024',
+    'date': '12-04-2024',
     'status': 'fallen'
 }
 prediction_data_json = json.dumps(prediction_data)
