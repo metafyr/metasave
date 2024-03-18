@@ -1,24 +1,38 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import React, { useState } from 'react'
 import dashImg from '../../assets/dashboardRight.svg'
 import ImagePopup from './ImagePopup'
+import DataPopup from './DataPopup'
+import FallPopup from './FallPopup'
 import { Link } from 'react-router-dom'
 import { useMainContext } from '../../context/MainContext'
 
 const Dashboard = () => {
-  const [isPopupOpen, setIsPopupOpen] = useState(false)
+  const [isImagePopupOpen, setIsImagePopupOpen] = useState(false)
+  const [isDataPopupOpen, setIsDataPopupOpen] = useState(false)
   const [currentImage, setCurrentImage] = useState('')
-  const { userDetails, fallDetails, setFallDetails } = useMainContext()
+  const [currentData, setCurrentData] = useState('')
+  const { fallDetails, fallPopup, setFallPopup } = useMainContext()
   const [selectedDate, setSelectedDate] = useState(Date)
   const [fallsForSelectedDate, setFallsForSelectedDate] = useState([])
 
-  const openPopup = (imageSrc) => {
+  const openImagePopup = (imageSrc) => {
     setCurrentImage(imageSrc)
-    setIsPopupOpen(true)
+    setIsImagePopupOpen(true)
   }
 
-  const closePopup = () => {
-    setIsPopupOpen(false)
+  const openDataPopup = (data) => {
+    setCurrentData(data)
+    setIsDataPopupOpen(true)
+  }
+
+  const closeImagePopup = () => {
+    setIsImagePopupOpen(false)
+  }
+  const closeDataPopup = () => {
+    setIsDataPopupOpen(false)
+  }
+  const closeFallPopup = () => {
+    setFallPopup(false)
   }
 
   function formatDate(dateString) {
@@ -35,7 +49,7 @@ const Dashboard = () => {
   }
 
   const getFallsForDate = (date) => {
-    return fallDetails.filter(detail => detail.date == date) || []
+    return fallDetails.filter(detail => detail.date == date).sort((a, b) => b.timestamp - a.timestamp) || []
   }
 
   React.useEffect(() => {
@@ -99,12 +113,20 @@ const Dashboard = () => {
                     Severe Fall
                   </h3>
                 </div>
-                <h3
-                  className="ml-auto text-[#505050] md:text-xl text-base cursor-pointer"
-                  onClick={() => openPopup(fall.imgIPFS)}
-                >
-                  <u>VIEW IMAGE</u>
-                </h3>
+                <div className='flex'>
+                  <h3
+                    className="ml-auto text-[#505050] md:text-xl text-base cursor-pointer"
+                    onClick={() => openImagePopup(fall.imgIPFS)}
+                  >
+                    <u>VIEW IMAGE</u>
+                  </h3>
+                  <h3
+                    className="ml-auto text-[#505050] md:text-xl text-base cursor-pointer"
+                    onClick={() => openDataPopup(fall)}
+                  >
+                    <u>VIEW DETAILS</u>
+                  </h3>
+                </div>
               </div>
             ))
           ) : (
@@ -114,11 +136,22 @@ const Dashboard = () => {
           )}
         </div>
       </div>
-      {isPopupOpen && (
+      {isImagePopupOpen && (
         <ImagePopup
           src={currentImage}
           alt="Dashboard Image"
-          onClose={closePopup}
+          onClose={closeImagePopup}
+        />
+      )}
+      {isDataPopupOpen && (
+        <DataPopup
+          data={currentData}
+          onClose={closeDataPopup}
+        />
+      )}
+      {fallPopup && (
+        <FallPopup
+          onClose={closeFallPopup}
         />
       )}
     </div>
