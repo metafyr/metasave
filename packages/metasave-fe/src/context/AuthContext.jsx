@@ -150,15 +150,6 @@ export const AuthContextProvider = ({children}) => {
 
         if(verify.proceed == true){
             if(verify.newUser == true){
-                // const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
-                // console.log('granting role')
-                // const grantRole = await MetaSave.userSignUp()
-                // if(grantRole){
-                //     window.location.replace('/register')
-                // }else{
-                //     window.alert('Some error occured')
-                //     await web3auth.logout()
-                // }
                 window.location.replace('/register')
             }else{
                 setLoggedIn(web3auth?.status === "connected" ? true : false)
