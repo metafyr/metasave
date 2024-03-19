@@ -2,8 +2,22 @@ import React from "react";
 import { addresses } from "../constants/addresses";
 import { abi } from "../abi/index.js" 
 import axios from 'axios'
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, onValue, remove } from "firebase/database";
 
+const firebaseConfig = {
+    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+    authDomain: import.meta.env.VITE_FIREBASE_AUTHDOMAIN,
+    projectId: import.meta.env.VITE_FIREBASE_PROJECTID,
+    storageBucket: import.meta.env.VITE_FIREBASE_STORAGEBUCKET,
+    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGINGSENDERID,
+    appId: import.meta.env.VITE_FIREBASE_APPID,
+    measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENTID
+};
 
+initializeApp(firebaseConfig)
+
+const database = getDatabase()
 
 const MainContext = React.createContext()
 
