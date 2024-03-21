@@ -33,25 +33,25 @@ export const AuthContextProvider = ({children}) => {
     const [CFAddress, setCFAddress] = React.useState(null)
     const [privKey, setPrivKey] = React.useState(null)
     const { serverUrl } = useMainContext()
-    const mumbaiChainConfig = {
+    const amoyChainConfig = {
         chainNamespace: "eip155",
         chainId: "0x13881",
-        rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
-        displayName: "Polygon Mumbai",
-        blockExplorer: "https://mumbai.polygonscan.com",
+        rpcTarget: "https://rpc-amoy.polygon.technology",
+        displayName: "Polygon Amoy",
+        blockExplorer: "https://www.oklink.com/amoy",
         ticker: "MATIC",
         tickerName: "Polygon",
     }
     const initWeb3Auth = async() => {
         const privateKeyProvider = new EthereumPrivateKeyProvider({
             config: {
-                chainConfig: mumbaiChainConfig,
+                chainConfig: amoyChainConfig,
             },
         });
         const web3auth = new Web3Auth({
             clientId: "BJGWO2abSqntJyXgPZwpAZH9-BdnaoY_w6VFpeo-OVzyZaVMIt8F8lxodXXGU0wCmtARzvgsTbP6cdEGOiBznxI",
             web3AuthNetwork: "sapphire_devnet",
-            chainConfig: mumbaiChainConfig,
+            chainConfig: amoyChainConfig,
         });
         const openloginAdapter = new OpenloginAdapter({
             adapterSettings: {
@@ -86,8 +86,12 @@ export const AuthContextProvider = ({children}) => {
 
             const privateKey = await walletProvider.getPrivateKey()
             const ZKProof = await walletProvider.getContract(addresses.ZKProof, abi.ZKProof)
-            const treeCID = await ZKProof.getMTIPFSid()
-            const treeRoot = await ZKProof.getMTRoot()
+            // const treeCID = await ZKProof.getMTIPFSid()
+            // const treeRoot = await ZKProof.getMTRoot()
+
+            const treeCID = ""
+            const treeRoot = ""
+
             console.log(treeCID, treeRoot)
             const msg = keccak256(privateKey).toString('hex')
             const res = await axios.post(`${serverUrl}/merkletree`, {
