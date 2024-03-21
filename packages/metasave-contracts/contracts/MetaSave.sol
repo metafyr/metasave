@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract MetaSave is AccessControl {
     constructor() {
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
     struct FallData {
@@ -25,16 +25,16 @@ contract MetaSave is AccessControl {
     bytes32 public constant HOSPITAL_ROLE = keccak256("HOSPITAL_ROLE");
 
     modifier onlyAdmin() {
-        require(hasRole(ADMIN_ROLE, msg.sender), "Caller is not an admin");
+        require(hasRole(DEFAULT_ADMIN_ROLE, msg.sender), "Caller is not an admin");
         _;
     }
  
-    function grantUserRole(address account) public onlyAdmin returns (bool) { 
+    function grantUserRole(address account) public onlyRole(DEFAULT_ADMIN_ROLE) returns (bool) { 
         grantRole(USER_ROLE, account);
         return true;
     }
 
-    function grantHospitalRole(address account) public onlyAdmin returns (bool) { 
+    function grantHospitalRole(address account) public onlyRole(DEFAULT_ADMIN_ROLE) returns (bool) { 
         grantRole(HOSPITAL_ROLE, account);
         return true;
     }

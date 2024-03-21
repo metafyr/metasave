@@ -111,7 +111,7 @@ export const AuthContextProvider = ({children}) => {
                 const proof = res.data.proof
                 console.log(res.data)
                 const root = res.data.root
-                const verify = await ZKProof.verify(root, proof, walletAddress, `0x${msg}`)
+                const verify = await ZKProof.verify(proof, walletAddress, `0x${msg}`)
                 if(verify == true || verify == 'true'){
                     status = {
                         status: "verified",

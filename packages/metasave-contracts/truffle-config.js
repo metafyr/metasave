@@ -3,6 +3,7 @@ const mnemonic = process.env["MNEMONIC"];
 // const infuraProjectId = process.env["INFURA_PROJECT_ID"];
 
 const maticmumbai_rpc_url = "https://rpc-mumbai.maticvigil.com/"
+const amoy_rpc_url = "https://rpc-amoy.polygon.technology/"
 
 const HDWalletProvider = require('@truffle/hdwallet-provider');
 // import HDWalletProvider from '@truffle/hdwallet-provider';
@@ -20,6 +21,15 @@ module.exports = {
 			  return new HDWalletProvider(mnemonic, maticmumbai_rpc_url);
 			},
 			network_id: 80001,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true
+    },
+    amoy: {
+      provider: function() {
+        return new HDWalletProvider(mnemonic, amoy_rpc_url);
+      },
+      network_id: 80002,
       confirmations: 2,
       timeoutBlocks: 200,
       skipDryRun: true
