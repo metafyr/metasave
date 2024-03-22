@@ -9133,10 +9133,16 @@
       "links": {},
       "address": "0x97E226F1732d1e99717d71bC7145ad12a8f5FBB6",
       "transactionHash": "0xf2c6f9a666dbc7d0f765e42052568c840ea24cf741614597f3c050e75f7d87d5"
+    },
+    "11155111": {
+      "events": {},
+      "links": {},
+      "address": "0x29E252B644005D03C8112249dc09dBba37214464",
+      "transactionHash": "0xd0960ad496d130ef044e27142d2a82ae44eceb7c9341852d4f1cebcee34ef999"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2024-03-19T14:26:10.769Z",
+  "updatedAt": "2024-03-22T07:15:23.559Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

@@ -33,25 +33,26 @@ export const AuthContextProvider = ({children}) => {
     const [CFAddress, setCFAddress] = React.useState(null)
     const [privKey, setPrivKey] = React.useState(null)
     const { serverUrl } = useMainContext()
-    const amoyChainConfig = {
+    const sepoliaChainConfig = {
         chainNamespace: "eip155",
-        chainId: "0x13881",
-        rpcTarget: "https://rpc-amoy.polygon.technology",
-        displayName: "Polygon Amoy",
-        blockExplorer: "https://www.oklink.com/amoy",
-        ticker: "MATIC",
-        tickerName: "Polygon",
+        chainId: "0xAA36A7",
+        rpcTarget: "https://sepolia.infura.io/v3",
+        displayName: "Sepolia",
+        blockExplorer: "https://sepolia.etherscan.io",
+        ticker: "SepoliaETH",
+        tickerName: "Ethereum",
     }
+    
     const initWeb3Auth = async() => {
         const privateKeyProvider = new EthereumPrivateKeyProvider({
             config: {
-                chainConfig: amoyChainConfig,
+                chainConfig: sepoliaChainConfig,
             },
         });
         const web3auth = new Web3Auth({
             clientId: "BJGWO2abSqntJyXgPZwpAZH9-BdnaoY_w6VFpeo-OVzyZaVMIt8F8lxodXXGU0wCmtARzvgsTbP6cdEGOiBznxI",
             web3AuthNetwork: "sapphire_devnet",
-            chainConfig: amoyChainConfig,
+            chainConfig: sepoliaChainConfig,
         });
         const openloginAdapter = new OpenloginAdapter({
             adapterSettings: {

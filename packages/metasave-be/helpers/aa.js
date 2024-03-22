@@ -5,41 +5,42 @@ import {
 import { AlchemyProvider } from "@alchemy/aa-alchemy";
 import { LocalAccountSigner } from "@alchemy/aa-core";
 import { defineChain } from 'viem'
+import { sepolia } from 'viem/chains'
 import dotenv from 'dotenv'
 dotenv.config();
 
 const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY
 const ENTRY_POINT_ADDRESS = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
 
-const polygonAmoy = /*#__PURE__*/ defineChain({
-    id: 80_001,
-    name: 'Polygon Amoy',
-    nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
-    rpcUrls: {
-        default: {
-            http: ['https://rpc-amoy.polygon.technology'],
-        },
-        alchemy: {
-            http: ['https://polygon-amoy.g.alchemy.com/v2']
-        }
-    },
-    blockExplorers: {
-        default: {
-          name: 'PolygonScan',
-          url: 'https://www.oklink.com/amoy',
-          apiUrl: 'https://www.oklink.com/amoy',
-        },
-    },
-    contracts: {
-        multicall3: {
-          address: '0xca11bde05977b3631167028862be2a173976ca11',
-          blockCreated: 25770160,
-        },
-    },
-    testnet: true,
-})
+// const polygonAmoy = /*#__PURE__*/ defineChain({
+//     id: 80_001,
+//     name: 'Ethereum Seplolia',
+//     nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+//     rpcUrls: {
+//         default: {
+//             http: ['https://sepolia.infura.io/v3'],
+//         },
+//         alchemy: {
+//             http: ['https://eth-sepolia.g.alchemy.com/v2']
+//         }
+//     },
+//     blockExplorers: {
+//         default: {
+//           name: 'PolygonScan',
+//           url: 'https://sepolia.etherscan.io',
+//           apiUrl: 'https://sepolia.etherscan.io',
+//         },
+//     },
+//     contracts: {
+//         multicall3: {
+//           address: '0xca11bde05977b3631167028862be2a173976ca11',
+//           blockCreated: 25770160,
+//         },
+//     },
+//     testnet: true,
+// })
 
-const chain = polygonMumbai;
+const chain = sepolia;
 
 const AA = async(PRIV_KEY) => {
     try {

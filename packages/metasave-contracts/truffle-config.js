@@ -1,12 +1,13 @@
 require('dotenv').config()
-const mnemonic = process.env["MNEMONIC"];
-// const infuraProjectId = process.env["INFURA_PROJECT_ID"];
+const MNEMONIC = process.env["MNEMONIC"];
+const ADMIN_PRIV_KEY = process.env["ADMIN_PRIV_KEY"];
+const ALCHEMY_PROJECT_ID = process.env["ALCHEMY_PROJECT_ID"];
 
 const maticmumbai_rpc_url = "https://rpc-mumbai.maticvigil.com/"
 const amoy_rpc_url = "https://rpc-amoy.polygon.technology/"
+const sepolia_rpc_url = `https://eth-sepolia.g.alchemy.com/v2/${ALCHEMY_PROJECT_ID}`
 
 const HDWalletProvider = require('@truffle/hdwallet-provider');
-// import HDWalletProvider from '@truffle/hdwallet-provider';
 
 module.exports = {
 
@@ -18,7 +19,7 @@ module.exports = {
     },
     maticmumbai: {
       provider: function() {
-			  return new HDWalletProvider(mnemonic, maticmumbai_rpc_url);
+			  return new HDWalletProvider(MNEMONIC, maticmumbai_rpc_url);
 			},
 			network_id: 80001,
       confirmations: 2,
@@ -27,9 +28,18 @@ module.exports = {
     },
     amoy: {
       provider: function() {
-        return new HDWalletProvider(mnemonic, amoy_rpc_url);
+        return new HDWalletProvider(MNEMONIC, amoy_rpc_url);
       },
       network_id: 80002,
+      confirmations: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true
+    },
+    sepolia: {
+      provider: function() {
+        return new HDWalletProvider(ADMIN_PRIV_KEY, sepolia_rpc_url);
+      },
+      network_id: 11155111,
       confirmations: 2,
       timeoutBlocks: 200,
       skipDryRun: true
