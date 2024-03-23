@@ -15,6 +15,7 @@ import {
 import { AlchemyProvider } from "@alchemy/aa-alchemy";
 import { LocalAccountSigner } from "@alchemy/aa-core";
 import { defineChain } from 'viem'
+import { sepolia } from "viem/chains";
 import { useMainContext } from "./MainContext.jsx";
 import keccak256 from 'keccak256'
 
@@ -35,12 +36,13 @@ export const AuthContextProvider = ({children}) => {
     const { serverUrl } = useMainContext()
     const sepoliaChainConfig = {
         chainNamespace: "eip155",
-        chainId: "0xAA36A7",
-        rpcTarget: "https://sepolia.infura.io/v3",
-        displayName: "Sepolia",
-        blockExplorer: "https://sepolia.etherscan.io",
-        ticker: "SepoliaETH",
+        chainId: "0xaa36a7",
+        rpcTarget: "https://rpc.ankr.com/eth_sepolia",
+        displayName: "Ethereum Sepolia Testnet",
+        blockExplorerUrl: "https://sepolia.etherscan.io",
+        ticker: "ETH",
         tickerName: "Ethereum",
+        logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
     }
     
     const initWeb3Auth = async() => {
@@ -178,35 +180,8 @@ export const AuthContextProvider = ({children}) => {
         const GAS_MANAGER_POLICY_ID = import.meta.env.VITE_GAS_MANAGER_POLICY_ID
         const ENTRY_POINT_ADDRESS = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
         const PRIVATE_KEY = `0x${PRIV_KEY}`
-        const polygonMumbai = /*#__PURE__*/ defineChain({
-            id: 80_001,
-            name: 'Polygon Mumbai',
-            nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
-            rpcUrls: {
-                default: {
-                    http: ['https://rpc.ankr.com/polygon_mumbai'],
-                },
-                alchemy: {
-                    http: ['https://polygon-mumbai.g.alchemy.com/v2']
-                }
-            },
-            blockExplorers: {
-                default: {
-                  name: 'PolygonScan',
-                  url: 'https://mumbai.polygonscan.com',
-                  apiUrl: 'https://mumbai.polygonscan.com/api',
-                },
-            },
-            contracts: {
-                multicall3: {
-                  address: '0xca11bde05977b3631167028862be2a173976ca11',
-                  blockCreated: 25770160,
-                },
-            },
-            testnet: true,
-        })
         
-        const chain = polygonMumbai;
+        const chain = sepolia;
 
         const owner = LocalAccountSigner.privateKeyToAccountSigner(PRIVATE_KEY);
 
