@@ -6,16 +6,24 @@ import { userOperation } from '../../helpers/userOperation.js'
 import { abi } from '../../abi/index.js'
 import AA from '../../helpers/aa.js'
 import { addresses } from '../../constants/addresses.js'
+import sendMessage from '../../helpers/whatsapp/sendMessage.js'
+import { ethers } from 'ethers'
 
 dotenv.config()
 
+const PINATA_BASE_URL = process.env.PINATA_BASE_URL
 const PINATA_API_KEY = process.env.PINATA_API_KEY
+const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY
+const ENTRY_POINT_ADDRESS = '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789'
+const admin_priv_key = process.env.ADMIN_PRIV_KEY
 
 const insertFall = async (req, res) => {
   try {
     let imgIPFSid = ''
     let dataIPFSid = ''
     const imagePath = `./uploads/${req.body.username}/image.jpg`
+    console.log('preduction data:', req.body.prediction_data)
+    const AAProvider = await AA(req.body.PRIV_KEY)
 
     // Upload image to IPFS
     if (fs.existsSync(imagePath)) {
@@ -27,22 +35,40 @@ const insertFall = async (req, res) => {
     } else {
       console.log('Image file does not exist:', imagePath)
     }
-    
-    dataIPFSid = await uploadToIPFS(JSON.parse(req.body.prediction_data), 'json')
+
+    dataIPFSid = await uploadToIPFS(req.body.prediction_data)
+
     console.log('Data IPFS ID:', dataIPFSid)
 
     // Store fall data on blockchain
     const PRIV_KEY = req.body.PRIV_KEY
-    const AAProvider = await AA(PRIV_KEY)
     const CFAddress = await AAProvider.getAddress()
-    const txHash = await userOperation(abi.MetaSave, 'setFallData', [CFAddress, imgIPFSid, dataIPFSid], addresses.MetaSave, PRIV_KEY)
-
-    console.log(txHash)
+    const txHash = await userOperation(
+      abi.MetaSave,
+      'setFallData',
+      [CFAddress, imgIPFSid, dataIPFSid],
+      addresses.MetaSave,
+      PRIV_KEY
+    )
+    // get ipfs id
+    const provider = new ethers.providers.JsonRpcProvider(
+      'https://polygon-mumbai.g.alchemy.com/v2/35QDaNc7wH9sOfTbC79sDDvsK_dmyZPj'
+    )
+    const contractAddress = addresses.MetaSave
+    const privateKey = req.body.PRIV_KEY
+    const wallet = new ethers.Wallet(`0x${privateKey}`, provider)
+    const contract = new ethers.Contract(
+      contractAddress,
+      [abi.MetaSave],
+      wallet
+    )
+    const data = await contract.getIPFSFileName()
+    console.log('Fetched data:', data)
 
     res.send({
       imgIPFSid,
       dataIPFSid,
-      txHash
+      txHash,
     })
   } catch (err) {
     console.error('Server error:', err)
@@ -59,6 +85,7 @@ async function uploadToIPFS(data, type) {
         {
           headers: {
             Authorization: `Bearer ${PINATA_API_KEY}`,
+            'Content-Type': 'application/json',
           },
         }
       )
