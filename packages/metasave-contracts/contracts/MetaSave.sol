@@ -41,44 +41,44 @@ contract MetaSave is AccessControl {
     }
 
     function addDevice(address user_addr, address device_addr) public {
-        require(hasRole(USER_ROLE, msg.sender), "Caller is not a user");
+        require(hasRole(USER_ROLE, user_addr), "Caller is not a user");
 
         userDeviceMapping[user_addr].push(device_addr);
     }
 
     function getDevices(address user_addr) public view returns (address[] memory) {
-        require(hasRole(USER_ROLE, msg.sender));
+        require(hasRole(USER_ROLE, user_addr));
 
         return userDeviceMapping[user_addr];
     }
 
     function userSelectHospital(address user_addr, address hospital_addr) public {
-        require(hasRole(USER_ROLE, msg.sender), "Caller is not a user");
+        require(hasRole(USER_ROLE, user_addr), "Caller is not a user");
 
         userHospitalMapping[user_addr].push(hospital_addr);
         hospitalUserMapping[hospital_addr].push(user_addr);
     }
 
     function getUserHospitals(address user_addr) public view returns (address[] memory) {
-        require(hasRole(USER_ROLE, msg.sender));
+        require(hasRole(USER_ROLE, user_addr));
 
         return userHospitalMapping[user_addr];
     }
 
     function getHospitalUsers(address hospital_addr) public view returns (address[] memory) {
-        require(hasRole(HOSPITAL_ROLE, msg.sender));
+        require(hasRole(HOSPITAL_ROLE, hospital_addr));
 
         return hospitalUserMapping[hospital_addr];
     }
 
     function setIPFSFileName(address user_addr, string memory ipfsFileName) public {
-        require(hasRole(USER_ROLE, msg.sender));
+        require(hasRole(USER_ROLE, user_addr));
 
         userIPFSMapping[user_addr] = ipfsFileName;
     }
 
     function getIPFSFileName(address user_addr) public view returns (string memory) {
-        require(hasRole(USER_ROLE, msg.sender));
+        require(hasRole(USER_ROLE, user_addr));
 
         require(userExists(user_addr), "User not found");
 
@@ -90,14 +90,14 @@ contract MetaSave is AccessControl {
     }
 
     function setFallData(address user_addr, string memory imgIPFSid, string memory dataIPFSid) public {
-        require(hasRole(USER_ROLE, msg.sender));
+        require(hasRole(USER_ROLE, user_addr));
 
         FallData memory newFallData = FallData(imgIPFSid, dataIPFSid);
         fallDataMap[user_addr].push(newFallData);
     }
 
     function getFallData(address user_addr) public view returns (FallData[] memory) {
-        require(hasRole(USER_ROLE, msg.sender));
+        require(hasRole(USER_ROLE, user_addr));
         
         FallData[] storage fallData = fallDataMap[user_addr];
         require(fallData.length > 0, "No fall data found for the given user address");
