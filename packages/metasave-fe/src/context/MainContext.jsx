@@ -54,13 +54,18 @@ export const MainContextProvider = ({children}) => {
 
     const fetchUserDetails = async (walletProvider, CFAddress) => {
         const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
-        const IPFSid = await MetaSave.getIPFSFileName(CFAddress)
-        console.log(IPFSid)
+        console.log('fetchin user details')
+        try{
+            const IPFSid = await MetaSave.getIPFSFileName(CFAddress)
+            console.log(IPFSid)
 
-        //fetch user details from ipfs id and store it in userDetails
-        const res = await axios.get(`${serverUrl}/user/${IPFSid}`)
-        console.log(res.data.data)
-        setUserDetails(res.data.data)
+            //fetch user details from ipfs id and store it in userDetails
+            const res = await axios.get(`${serverUrl}/user/${IPFSid}`)
+            console.log(res.data.data)
+            setUserDetails(res.data.data)
+        }catch(err){
+            console.log('no user data for this user', err)
+        }
     }
 
     async function fetchFallData(cid) {
@@ -82,6 +87,7 @@ export const MainContextProvider = ({children}) => {
         setCFAddress(CFAddress)
         const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
         try{
+            console.log('fetching fall details')
             const IPFSobj = await MetaSave.getFallData(CFAddress)
             console.log('fall details: ', IPFSobj)
             const result = [];
@@ -104,24 +110,19 @@ export const MainContextProvider = ({children}) => {
             console.log(result)
             const uniqueObjects = {};
 
-            // Iterate over the array and store objects with unique timestamps
             result.forEach(obj => {
                 const timestamp = obj.timestamp;
-                // If timestamp doesn't exist in the uniqueObjects, store the object
                 if (!uniqueObjects[timestamp]) {
                     uniqueObjects[timestamp] = obj;
                 }
-                // Else, ignore the duplicate timestamp
             });
 
-            // Extract values (unique objects) from the uniqueObjects object
             const uniqueArray = Object.values(uniqueObjects);
 
-            // Now uniqueArray contains objects with unique timestamps
             console.log(uniqueArray);
             setFallDetails(uniqueArray)
         }catch(err){
-            console.log('no fall data for this user')
+            console.log('no fall data for this user', err)
         }
     }
     

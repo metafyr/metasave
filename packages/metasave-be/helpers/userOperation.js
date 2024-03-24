@@ -11,6 +11,8 @@ async function userOperation(abi, functionName, args, address, PRIV_KEY) {
 
     const AAProvider = await AA(PRIV_KEY)
 
+    console.log(PRIV_KEY, AAProvider.getAddress())
+
     const userOperation = await AAProvider.sendUserOperation({
       target: address, 
       data: callData,

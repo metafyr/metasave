@@ -4,8 +4,9 @@ pragma solidity ^0.8.13;
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract MetaSave is AccessControl {
+    address private admin = 0xcE927753f89b4482CbD56afFEe3bf2931418e471;
     constructor() {
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(DEFAULT_ADMIN_ROLE, admin);
     }
 
     struct FallData {
