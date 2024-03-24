@@ -32,12 +32,12 @@ const merkleTree = async (req, res) => {
 
             treeJSON = tree.dump()
 
+            await userOperation(abi.MetaSave, 'grantUserRole', [walletAddress], addresses.MetaSave, ADMIN_PRIV_KEY)
             await userOperation(abi.ZKProof, 'setRootAndIPFS', [tree.root, treeCID], addresses.ZKProof, ADMIN_PRIV_KEY)
 
             present = false
             newUser = true
 
-            await userOperation(abi.MetaSave, 'grantUserRole', [walletAddress], addresses.MetaSave, ADMIN_PRIV_KEY)
             
         }else{
             treeJSON = await fetchMT(treeCID)
@@ -65,9 +65,9 @@ const merkleTree = async (req, res) => {
 
                 treeCID = await insertMT(tree.dump())
 
+                await userOperation(abi.MetaSave, 'grantUserRole', [walletAddress], addresses.MetaSave, ADMIN_PRIV_KEY)
                 await userOperation(abi.ZKProof, 'setRootAndIPFS', [tree.root, treeCID], addresses.ZKProof, ADMIN_PRIV_KEY)
 
-                await userOperation(abi.MetaSave, 'grantUserRole', [walletAddress], addresses.MetaSave, ADMIN_PRIV_KEY)
             }
         }
 
