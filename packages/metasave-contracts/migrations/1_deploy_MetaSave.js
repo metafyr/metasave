@@ -1,5 +1,5 @@
-const MetaSave = artifacts.require("MetaSave");
+  const MetaSave = artifacts.require("MetaSave");
 
-module.exports = function(deployer) {
-  deployer.deploy(MetaSave);
-};
+  module.exports = function(deployer) {
+    deployer.deploy(MetaSave);
+  };

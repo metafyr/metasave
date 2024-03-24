@@ -28,6 +28,7 @@ contract ZKProof {
         bytes32 message
     ) public view returns (bool) {
         bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(hxsh, message))));
+        // another verify circuit to verify if the user holds the token/message
         return MerkleProof.verify(proof, root, leaf);
     }
 

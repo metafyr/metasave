@@ -22,7 +22,6 @@ const merkleTree = async (req, res) => {
         ];
 
         if(treeCID == null || treeCID == undefined || treeCID == '' || treeCID == 'undefined' || treeCID == 'null'){
-            console.log('here', treeCID)
             const values = [["0x1111111111111111111111111111111111111111", "0x066ac8fc073612bd0ab02b22c917837f97057aec7fdae5f7cc7694e2ba0edd25"]];
             const tree = StandardMerkleTree.of(values, ["address", "bytes32"]);
             console.log(tree.dump())
@@ -38,10 +37,10 @@ const merkleTree = async (req, res) => {
             present = false
             newUser = true
 
+            // await userOperation(abi.MetaSave, 'grantUserRole', [walletAddress], addresses.MetaSave, ADMIN_PRIV_KEY)
+            
         }else{
-            console.log('nope', treeCID)
             treeJSON = await fetchMT(treeCID)
-            console.log(treeJSON)
 
             let tree = StandardMerkleTree.load(treeJSON);
         

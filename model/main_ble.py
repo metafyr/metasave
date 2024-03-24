@@ -15,6 +15,35 @@ import threading
 import queue
 import asyncio
 from bleak import BleakClient
+import firebase_admin
+from firebase_admin import credentials
+from dotenv import dotenv_values
+
+env_vars = dotenv_values()
+
+firebase_vars = {
+    "type": env_vars["TYPE"],
+    "project_id": env_vars["PROJECT_ID"],
+    "private_key_id": env_vars["PRIVATE_KEY_ID"],
+    "private_key": env_vars["PRIVATE_KEY"],
+    "client_email": env_vars["CLIENT_EMAIL"],
+    "client_id": env_vars["CLIENT_ID"],
+    "auth_uri": env_vars["AUTH_URI"],
+    "token_uri": env_vars["TOKEN_URI"],
+    "auth_provider_x509_cert_url": env_vars["AUTH_PROVIDER_X509_CERT_URL"],
+    "client_x509_cert_url": env_vars["CLIENT_X509_CERT_URL"],
+    "universe_domain": env_vars["UNIVERSE_DOMAIN"]
+}
+
+json_str = json.dumps(firebase_vars, indent=4)
+
+with open("firebase_credentials.json", "w") as f:
+    f.write(json_str)
+
+cred = credentials.Certificate('firebase_credentials.json')
+firebase_admin.initialize_app(cred, {
+    'databaseURL': env_vars['DATABASE_URL']
+})
 
 address = "E0:F7:BF:E9:2B:7C"
 SERVICE_UUID = "12345678-1234-5678-9abc-def012345678"
