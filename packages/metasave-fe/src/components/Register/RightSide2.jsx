@@ -67,10 +67,11 @@ const RightSide2 = ({ onNext, onPrev }) => {
               <select
                 onChange={(e) => setGender(e.target.value)}
                 name="gender"
+                defaultValue="male"
                 className='mt-3 bg-[#DEDEDE] rounded-[10px] pl-4 py-2 w-full focus:!outline-none text-[#A7A7A7] focus:!scale-105 transition duration-300 ease-in-out'
                 id="gender"
               >
-                <option value="male" selected>Male</option>
+                <option value="male">Male</option>
                 <option value="female">Female</option>
                 <option value="other">Other</option>
               </select>
