@@ -36,7 +36,10 @@ const insertFall = async (req, res) => {
       console.log('Image file does not exist:', imagePath)
     }
 
-    dataIPFSid = await uploadToIPFS(req.body.prediction_data)
+    dataIPFSid = await uploadToIPFS(
+      JSON.parse(req.body.prediction_data),
+      'json'
+    )
 
     console.log('Data IPFS ID:', dataIPFSid)
 
@@ -50,20 +53,20 @@ const insertFall = async (req, res) => {
       addresses.MetaSave,
       PRIV_KEY
     )
-    // get ipfs id
+
     const provider = new ethers.providers.JsonRpcProvider(
       'https://polygon-mumbai.g.alchemy.com/v2/35QDaNc7wH9sOfTbC79sDDvsK_dmyZPj'
     )
     const contractAddress = addresses.MetaSave
     const privateKey = req.body.PRIV_KEY
     const wallet = new ethers.Wallet(`0x${privateKey}`, provider)
-    const contract = new ethers.Contract(
-      contractAddress,
-      [abi.MetaSave],
-      wallet
-    )
-    const data = await contract.getIPFSFileName()
-    console.log('Fetched data:', data)
+    const contract = new ethers.Contract(contractAddress, abi.MetaSave, wallet)
+    const ipfsid = await contract.getIPFSFileName(CFAddress)
+    console.log('ipfs id:', ipfsid)
+    const details = await axios.get(`${PINATA_BASE_URL}/ipfs/${ipfsid}`)
+    console.log('details:', details.data.name)
+    console.log('details:', details.data.phone)
+    sendMessage(details.data.name)
 
     res.send({
       imgIPFSid,
@@ -85,7 +88,6 @@ async function uploadToIPFS(data, type) {
         {
           headers: {
             Authorization: `Bearer ${PINATA_API_KEY}`,
-            'Content-Type': 'application/json',
           },
         }
       )

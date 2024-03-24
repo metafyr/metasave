@@ -37,7 +37,7 @@ const sendMessage = (name) => {
             parameters: [
               {
                 type: 'text',
-                text: 'hello',
+                text: `${name}`,
               },
               {
                 type: 'text',
