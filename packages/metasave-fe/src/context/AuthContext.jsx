@@ -81,6 +81,11 @@ export const AuthContextProvider = ({children}) => {
 
     const verifyProof = async(walletAddress, walletProvider) => {
         try{
+            const priv_key = await walletProvider.getPrivateKey()
+            const CF = await getCFAddress(priv_key)
+
+            console.log('CFADdresssss', CF)
+
             let status = {
                 status: "not verified",
                 proceed: false,
@@ -100,7 +105,8 @@ export const AuthContextProvider = ({children}) => {
             const res = await axios.post(`${serverUrl}/merkletree`, {
                 walletAddress,
                 msg,
-                treeCID
+                treeCID,
+                CFAddress: CF
             },
             {
                 headers: {
