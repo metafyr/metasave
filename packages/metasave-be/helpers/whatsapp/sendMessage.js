@@ -5,7 +5,7 @@ dotenv.config()
 
 const GRAPH_API_TOKEN = process.env.GRAPH_API_TOKEN
 
-const sendMessage = (name,contact,time,date) => {
+const sendMessage = (img, name, contact, time, date) => {
   var options = {
     method: 'POST',
     url: 'https://graph.facebook.com/v17.0/180851955102577/messages',
@@ -27,7 +27,7 @@ const sendMessage = (name,contact,time,date) => {
               {
                 type: 'image',
                 image: {
-                  link: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfntmfcua0MmAbzlL8XeTZLSg5HGb0SDCzOQ&usqp=CAU',
+                  link: `${img}`,
                 },
               },
             ],

@@ -62,20 +62,38 @@ const insertFall = async (req, res) => {
     const wallet = new ethers.Wallet(`0x${privateKey}`, provider)
     const contract = new ethers.Contract(contractAddress, abi.MetaSave, wallet)
     const ipfsid = await contract.getIPFSFileName(CFAddress)
+    const fallData = await contract.getFallData(CFAddress)
+
     console.log('ipfs id:', ipfsid)
+    console.log('fallData:', fallData)
+    console.log('falllength:', fallData.length)
+    console.log('lastfallData:', fallData[fallData.length - 1])
+    const lastFallData = fallData[fallData.length - 1]
+    const lastimgIPFSid = lastFallData[0]
+    console.log('lastimgIPFSid:', lastimgIPFSid)
+
     const details = await axios.get(`${PINATA_BASE_URL}/ipfs/${ipfsid}`)
+    const img = `${PINATA_BASE_URL}/ipfs/${lastimgIPFSid}`
+    //console.log('img:', img)
     console.log('details:', details.data)
     console.log('phones:', details.phone)
     const falldetails = JSON.parse(req.body.prediction_data)
-    
 
     for (let i = 0; i < details.data.contacts.length; i++) {
-      let ph = details.data.contacts[i].phoneNumber.replace(" ","").replace("+","")
-      const res = sendMessage(details.data.name,ph,falldetails.timestamp,falldetails.date)
-      if(!res){
-          console.log('Error sending message to', details.data.phone[i])
+      let ph = details.data.contacts[i].phoneNumber
+        .replace(' ', '')
+        .replace('+', '')
+      const res = sendMessage(
+        img,
+        details.data.name,
+        ph,
+        falldetails.timestamp,
+        falldetails.date
+      )
+      if (!res) {
+        console.log('Error sending message to', details.data.phone[i])
       }
-  }
+    }
 
     res.send({
       imgIPFSid,
