@@ -64,9 +64,18 @@ const insertFall = async (req, res) => {
     const ipfsid = await contract.getIPFSFileName(CFAddress)
     console.log('ipfs id:', ipfsid)
     const details = await axios.get(`${PINATA_BASE_URL}/ipfs/${ipfsid}`)
-    console.log('details:', details.data.name)
-    console.log('details:', details.data.phone)
-    sendMessage(details.data.name)
+    console.log('details:', details.data)
+    console.log('phones:', details.phone)
+    const falldetails = JSON.parse(req.body.prediction_data)
+    
+
+    for (let i = 0; i < details.data.contacts.length; i++) {
+      let ph = details.data.contacts[i].phoneNumber.replace(" ","").replace("+","")
+      const res = sendMessage(details.data.name,ph,falldetails.timestamp,falldetails.date)
+      if(!res){
+          console.log('Error sending message to', details.data.phone[i])
+      }
+  }
 
     res.send({
       imgIPFSid,

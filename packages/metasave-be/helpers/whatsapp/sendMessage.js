@@ -5,7 +5,7 @@ dotenv.config()
 
 const GRAPH_API_TOKEN = process.env.GRAPH_API_TOKEN
 
-const sendMessage = (name) => {
+const sendMessage = (name,contact,time,date) => {
   var options = {
     method: 'POST',
     url: 'https://graph.facebook.com/v17.0/180851955102577/messages',
@@ -15,7 +15,7 @@ const sendMessage = (name) => {
     },
     data: {
       messaging_product: 'whatsapp',
-      to: '919188020170',
+      to: `${contact}`,
       type: 'template',
       template: {
         name: 'alert',
@@ -41,11 +41,11 @@ const sendMessage = (name) => {
               },
               {
                 type: 'text',
-                text: '15:44 AM',
+                text: `${time}`,
               },
               {
                 type: 'text',
-                text: '2023-12-20',
+                text: `${date}`,
               },
             ],
           },
