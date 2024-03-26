@@ -93,11 +93,22 @@ export const AuthContextProvider = ({children}) => {
 
             const privateKey = await walletProvider.getPrivateKey()
             const ZKProof = await walletProvider.getContract(addresses.ZKProof, abi.ZKProof)
+
+            let treeCID, treeRoot
+
+            try {
+              treeCID = await ZKProof.getMTIPFSid()
+            } catch (error) {
+              treeCID = ""
+            }
+
+            try {
+              treeRoot = await ZKProof.getMTRoot()
+            } catch (error) {
+              treeRoot = ""
+            }
             // const treeCID = await ZKProof.getMTIPFSid()
             // const treeRoot = await ZKProof.getMTRoot()
-
-            const treeCID = ""
-            const treeRoot = ""
 
             console.log(treeCID, treeRoot)
             const msg = keccak256(privateKey).toString('hex')
