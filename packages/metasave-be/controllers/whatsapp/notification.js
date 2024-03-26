@@ -23,12 +23,12 @@ const whatsappNotification = async(req, res) => {
 
 
         //loop through phone numbers and send message
-        // for (let i = 0; i < data.contacts.length; i++) {
-        //     const res = sendMessage(data.contacts[i])
-        //     if(!res){
-        //         console.log('Error sending message to', data.contacts[i])
-        //     }
-        // }
+        //  for (let i = 0; i < data.contacts.length; i++) {
+        //      const res = sendMessage(data.contacts[i])
+        //      if(!res){
+        //          console.log('Error sending message to', data.contacts[i])
+        //      }
+        //  }
     } catch (error) {
         console.log(error)
     }

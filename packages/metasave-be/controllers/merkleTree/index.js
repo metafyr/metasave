@@ -38,7 +38,6 @@ const merkleTree = async (req, res) => {
 
             present = false
             newUser = true
-
             
         }else{
             treeJSON = await fetchMT(treeCID)

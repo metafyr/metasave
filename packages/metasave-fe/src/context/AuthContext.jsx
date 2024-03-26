@@ -1,24 +1,23 @@
-import React from "react";
-import { Web3Auth } from "@web3auth/modal";
-import { WALLET_ADAPTERS } from "@web3auth/base";
-import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+import React from 'react'
+import { Web3Auth } from '@web3auth/modal'
+import { WALLET_ADAPTERS } from '@web3auth/base'
+import { OpenloginAdapter } from '@web3auth/openlogin-adapter'
+import { EthereumPrivateKeyProvider } from '@web3auth/ethereum-provider'
 // import { identityCreation } from "../helpers/PolygonID";
 import axios from 'axios'
-import { getWalletProvider } from "../helpers/walletProvider.js";
-import { addresses } from "../constants/addresses.js";
-import { abi } from "../abi/index.js";
+import { getWalletProvider } from '../helpers/walletProvider.js'
+import { addresses } from '../constants/addresses.js'
+import { abi } from '../abi/index.js'
 import {
-    LightSmartContractAccount,
-    getDefaultLightAccountFactoryAddress,
-  } from "@alchemy/aa-accounts";
-import { AlchemyProvider } from "@alchemy/aa-alchemy";
-import { LocalAccountSigner } from "@alchemy/aa-core";
+  LightSmartContractAccount,
+  getDefaultLightAccountFactoryAddress,
+} from '@alchemy/aa-accounts'
+import { AlchemyProvider } from '@alchemy/aa-alchemy'
+import { LocalAccountSigner } from '@alchemy/aa-core'
 import { defineChain } from 'viem'
 import { sepolia } from "viem/chains";
 import { useMainContext } from "./MainContext.jsx";
 import keccak256 from 'keccak256'
-
 
 const AuthContext = React.createContext()
 
@@ -70,14 +69,14 @@ export const AuthContextProvider = ({children}) => {
             privateKeyProvider
         });
 
-        web3auth.configureAdapter(openloginAdapter);
-        
-        await web3auth.initModal();
+    web3auth.configureAdapter(openloginAdapter)
 
-        setWeb3Auth(web3auth)
+    await web3auth.initModal()
 
-        await checkLoggedIn(web3auth)
-    }
+    setWeb3Auth(web3auth)
+
+    await checkLoggedIn(web3auth)
+  }
 
     const verifyProof = async(walletAddress, walletProvider) => {
         try{
@@ -145,41 +144,47 @@ export const AuthContextProvider = ({children}) => {
         }
     }
 
-    const login = async() => {
-        const web3authProvider = await web3auth?.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
-            loginProvider: "google",
-        });
-        console.log('web3authprovider', web3authProvider)
-        const walletProvider = getWalletProvider(web3authProvider)
-        const walletAddress = await walletProvider.getAddress()
-        const priv_key = await walletProvider.getPrivateKey()
-        console.log('priv_key', priv_key)
-        setWalletProvider(walletProvider)
-        setWalletAddress(walletAddress)
-        setWeb3AuthProvider(web3authProvider)
-        setPrivKey(priv_key)
+  const login = async () => {
+    const web3authProvider = await web3auth?.connectTo(
+      WALLET_ADAPTERS.OPENLOGIN,
+      {
+        loginProvider: 'google',
+      }
+    )
+    console.log('web3authprovider: ', web3authProvider)
+    const walletProvider = getWalletProvider(web3authProvider)
+    const walletAddress = await walletProvider.getAddress()
+    const priv_key = await walletProvider.getPrivateKey()
+    console.log('priv_key', priv_key)
+    setWalletProvider(walletProvider)
+    setWalletAddress(walletAddress)
+    setWeb3AuthProvider(web3authProvider)
+    setPrivKey(priv_key)
 
-        const verify = await verifyProof(walletAddress, walletProvider)
+    const verify = await verifyProof(walletAddress, walletProvider)
 
-        if(verify.proceed == true){
-            if(verify.newUser == true){
-                window.location.replace('/register')
-            }else{
-                setLoggedIn(web3auth?.status === "connected" ? true : false)
-                const CF = getCFAddress(priv_key)
-                const MetaSave = await walletProvider.getContract(addresses.MetaSave, abi.MetaSave)
-                const IPFSid = await MetaSave.getIPFSFileName(CF)
-                if(!IPFSid){
-                    window.location.replace('/register')
-                }else{
-                    window.location.replace('/dashboard')
-                }
-            }
-        }else if (verify.proceed == false){
-            console.log('verification failed')
-            await web3auth.logout()
+    if (verify.proceed == true) {
+      if (verify.newUser == true) {
+        window.location.replace('/register')
+      } else {
+        setLoggedIn(web3auth?.status === 'connected' ? true : false)
+        const CF = getCFAddress(priv_key)
+        const MetaSave = await walletProvider.getContract(
+          addresses.MetaSave,
+          abi.MetaSave
+        )
+        const IPFSid = await MetaSave.getIPFSFileName(CF)
+        if (!IPFSid) {
+          window.location.replace('/register')
+        } else {
+          window.location.replace('/dashboard')
         }
+      }
+    } else if (verify.proceed == false) {
+      console.log('verification failed')
+      await web3auth.logout()
     }
+  }
 
     const getCFAddress = async(PRIV_KEY) => {
         const ALCHEMY_API_KEY = import.meta.env.VITE_ALCHEMY_API_KEY
@@ -189,93 +194,95 @@ export const AuthContextProvider = ({children}) => {
         
         const chain = sepolia;
 
-        const owner = LocalAccountSigner.privateKeyToAccountSigner(PRIVATE_KEY);
+    const owner = LocalAccountSigner.privateKeyToAccountSigner(PRIVATE_KEY)
 
-        const AAProvider = new AlchemyProvider({
-            apiKey: ALCHEMY_API_KEY,
-            chain,
-            entryPointAddress: ENTRY_POINT_ADDRESS,
-        }).connect(
-        (rpcClient) =>
-            new LightSmartContractAccount({
-                rpcClient,
-                owner,
-                chain,
-                entryPointAddress: ENTRY_POINT_ADDRESS,
-                factoryAddress: getDefaultLightAccountFactoryAddress(chain),
-            })
-        )
-
-        AAProvider.withAlchemyGasManager({
-            policyId: GAS_MANAGER_POLICY_ID
-        });
-
-        const CFAddress = await AAProvider.getAddress()
-
-        console.log(CFAddress, AAProvider)
-
-        setCFAddress(CFAddress)
-        setAAProvider(AAProvider)
-
-        return CFAddress
-    }
-
-    // const getPID = async(web3authProvider) => {
-    //     if(web3authProvider){
-    //         const pKey = await walletProvider.getPrivateKey()
-    //         const res = await identityCreation(pKey);
-    //         setPID(res.did.string())
-    //     }
-    // }
-
-    const Logout = async() => {
-        if(web3auth){
-            await web3auth.logout()
-            setLoggedIn(false)
-            window.location.replace('/login')
-        }
-    }
-
-    const checkLoggedIn = async(web3auth) => {
-        console.log('checking logged in')
-        if(web3auth?.status === "connected"){
-            const web3AuthProvider = web3auth.provider
-            const walletProvider = getWalletProvider(web3AuthProvider)
-            const walletAddress = await walletProvider.getAddress()
-            const priv_key = await walletProvider.getPrivateKey()
-            console.log('priv_key', priv_key)
-
-            setPrivKey(priv_key)
-            setWalletProvider(walletProvider)
-            setWalletAddress(walletAddress)
-            setWeb3AuthProvider(web3AuthProvider)
-
-            getCFAddress(priv_key)
-
-            setLoggedIn(true)
-        }
-    }
-
-    return(
-        <AuthContext.Provider value={{
-            web3auth,
-            loggedIn,
-            web3AuthProvider,
-            walletAddress,
-            walletProvider,
-            AAProvider,
-            CFAddress,
-            Logout,
-            checkLoggedIn,
-            setWeb3AuthProvider,
-            setLoggedIn,
-            login,
-            initWeb3Auth,
-            setWeb3Auth,
-        }}>
-            {children}
-        </AuthContext.Provider>
+    const AAProvider = new AlchemyProvider({
+      apiKey: ALCHEMY_API_KEY,
+      chain,
+      entryPointAddress: ENTRY_POINT_ADDRESS,
+    }).connect(
+      (rpcClient) =>
+        new LightSmartContractAccount({
+          rpcClient,
+          owner,
+          chain,
+          entryPointAddress: ENTRY_POINT_ADDRESS,
+          factoryAddress: getDefaultLightAccountFactoryAddress(chain),
+        })
     )
+
+    AAProvider.withAlchemyGasManager({
+      policyId: GAS_MANAGER_POLICY_ID,
+    })
+
+    const CFAddress = await AAProvider.getAddress()
+
+    console.log(CFAddress, AAProvider)
+
+    setCFAddress(CFAddress)
+    setAAProvider(AAProvider)
+
+    return CFAddress
+  }
+
+  // const getPID = async(web3authProvider) => {
+  //     if(web3authProvider){
+  //         const pKey = await walletProvider.getPrivateKey()
+  //         const res = await identityCreation(pKey);
+  //         setPID(res.did.string())
+  //     }
+  // }
+
+  const Logout = async () => {
+    if (web3auth) {
+      await web3auth.logout()
+      setLoggedIn(false)
+      window.location.replace('/login')
+    }
+  }
+
+  const checkLoggedIn = async (web3auth) => {
+    console.log('checking logged in')
+    if (web3auth?.status === 'connected') {
+      const web3AuthProvider = web3auth.provider
+      const walletProvider = getWalletProvider(web3AuthProvider)
+      const walletAddress = await walletProvider.getAddress()
+      const priv_key = await walletProvider.getPrivateKey()
+      console.log('priv_key', priv_key)
+
+      setPrivKey(priv_key)
+      setWalletProvider(walletProvider)
+      setWalletAddress(walletAddress)
+      setWeb3AuthProvider(web3AuthProvider)
+
+      getCFAddress(priv_key)
+
+      setLoggedIn(true)
+    }
+  }
+
+  return (
+    <AuthContext.Provider
+      value={{
+        web3auth,
+        loggedIn,
+        web3AuthProvider,
+        walletAddress,
+        walletProvider,
+        AAProvider,
+        CFAddress,
+        Logout,
+        checkLoggedIn,
+        setWeb3AuthProvider,
+        setLoggedIn,
+        login,
+        initWeb3Auth,
+        setWeb3Auth,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 export const useAuthContext = () => React.useContext(AuthContext)
