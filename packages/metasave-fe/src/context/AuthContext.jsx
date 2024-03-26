@@ -15,57 +15,59 @@ import {
 import { AlchemyProvider } from '@alchemy/aa-alchemy'
 import { LocalAccountSigner } from '@alchemy/aa-core'
 import { defineChain } from 'viem'
-import { useMainContext } from './MainContext.jsx'
+import { sepolia } from "viem/chains";
+import { useMainContext } from "./MainContext.jsx";
 import keccak256 from 'keccak256'
 
 const AuthContext = React.createContext()
 
-export const AuthContextProvider = ({ children }) => {
-  const [web3auth, setWeb3Auth] = React.useState(null)
-  const [loggedIn, setLoggedIn] = React.useState(false)
-  const [web3AuthProvider, setWeb3AuthProvider] = React.useState(null)
-  // const [pid, setPID] = React.useState(null)
-  const [walletAddress, setWalletAddress] = React.useState(null)
-  const [walletProvider, setWalletProvider] = React.useState(null)
-  const [AAProvider, setAAProvider] = React.useState(null)
-  const [CFAddress, setCFAddress] = React.useState(null)
-  const [privKey, setPrivKey] = React.useState(null)
-  const { serverUrl } = useMainContext()
-  const mumbaiChainConfig = {
-    chainNamespace: 'eip155',
-    chainId: '0x13881',
-    rpcTarget: 'https://rpc.ankr.com/polygon_mumbai',
-    displayName: 'Polygon Mumbai',
-    blockExplorer: 'https://mumbai.polygonscan.com',
-    ticker: 'MATIC',
-    tickerName: 'Polygon',
-  }
-  const initWeb3Auth = async () => {
-    const privateKeyProvider = new EthereumPrivateKeyProvider({
-      config: {
-        chainConfig: mumbaiChainConfig,
-      },
-    })
-    const web3auth = new Web3Auth({
-      clientId:
-        'BJGWO2abSqntJyXgPZwpAZH9-BdnaoY_w6VFpeo-OVzyZaVMIt8F8lxodXXGU0wCmtARzvgsTbP6cdEGOiBznxI',
-      web3AuthNetwork: 'sapphire_devnet',
-      chainConfig: mumbaiChainConfig,
-    })
-    const openloginAdapter = new OpenloginAdapter({
-      adapterSettings: {
-        loginConfig: {
-          google: {
-            name: 'Google Login',
-            verifier: 'metasave-google',
-            typeOfLogin: 'google',
-            clientId:
-              '812141797831-m3vq0ll82e23vsgu0ns700l1b2etoagf.apps.googleusercontent.com',
-          },
-        },
-      },
-      privateKeyProvider,
-    })
+
+export const AuthContextProvider = ({children}) => {
+    const [web3auth, setWeb3Auth] = React.useState(null)
+    const [loggedIn, setLoggedIn] = React.useState(false)
+    const [web3AuthProvider, setWeb3AuthProvider] = React.useState(null)
+    // const [pid, setPID] = React.useState(null)
+    const [walletAddress, setWalletAddress] = React.useState(null)
+    const [walletProvider, setWalletProvider] = React.useState(null)
+    const [AAProvider, setAAProvider] = React.useState(null)
+    const [CFAddress, setCFAddress] = React.useState(null)
+    const [privKey, setPrivKey] = React.useState(null)
+    const { serverUrl } = useMainContext()
+    const sepoliaChainConfig = {
+        chainNamespace: "eip155",
+        chainId: "0xaa36a7",
+        rpcTarget: "https://rpc.ankr.com/eth_sepolia",
+        displayName: "Ethereum Sepolia Testnet",
+        blockExplorerUrl: "https://sepolia.etherscan.io",
+        ticker: "ETH",
+        tickerName: "Ethereum",
+        logo: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+    }
+    
+    const initWeb3Auth = async() => {
+        const privateKeyProvider = new EthereumPrivateKeyProvider({
+            config: {
+                chainConfig: sepoliaChainConfig,
+            },
+        });
+        const web3auth = new Web3Auth({
+            clientId: "BJGWO2abSqntJyXgPZwpAZH9-BdnaoY_w6VFpeo-OVzyZaVMIt8F8lxodXXGU0wCmtARzvgsTbP6cdEGOiBznxI",
+            web3AuthNetwork: "sapphire_devnet",
+            chainConfig: sepoliaChainConfig,
+        });
+        const openloginAdapter = new OpenloginAdapter({
+            adapterSettings: {
+              loginConfig: {
+                google: {
+                  name: "Google Login",
+                  verifier: "metasave-google",
+                  typeOfLogin: "google",
+                  clientId: '812141797831-m3vq0ll82e23vsgu0ns700l1b2etoagf.apps.googleusercontent.com'
+                },
+              },
+            },
+            privateKeyProvider
+        });
 
     web3auth.configureAdapter(openloginAdapter)
 
@@ -76,72 +78,71 @@ export const AuthContextProvider = ({ children }) => {
     await checkLoggedIn(web3auth)
   }
 
-  const verifyProof = async (walletAddress, walletProvider) => {
-    try {
-      let status = {
-        status: 'not verified',
-        proceed: false,
-        newUser: false,
-      }
+    const verifyProof = async(walletAddress, walletProvider) => {
+        try{
+            const priv_key = await walletProvider.getPrivateKey()
+            const CF = await getCFAddress(priv_key)
 
-      const privateKey = await walletProvider.getPrivateKey()
-      const ZKProof = await walletProvider.getContract(
-        addresses.ZKProof,
-        abi.ZKProof
-      )
-      const treeCID = await ZKProof.getMTIPFSid()
-      const treeRoot = await ZKProof.getMTRoot()
-      console.log(treeCID, treeRoot)
-      const msg = keccak256(privateKey).toString('hex')
-      const res = await axios.post(
-        `${serverUrl}/merkletree`,
-        {
-          walletAddress,
-          msg,
-          treeCID,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+            console.log('CFADdresssss', CF)
+
+            let status = {
+                status: "not verified",
+                proceed: false,
+                newUser: false
+            }
+
+            const privateKey = await walletProvider.getPrivateKey()
+            const ZKProof = await walletProvider.getContract(addresses.ZKProof, abi.ZKProof)
+            // const treeCID = await ZKProof.getMTIPFSid()
+            // const treeRoot = await ZKProof.getMTRoot()
+
+            const treeCID = ""
+            const treeRoot = ""
+
+            console.log(treeCID, treeRoot)
+            const msg = keccak256(privateKey).toString('hex')
+            const res = await axios.post(`${serverUrl}/merkletree`, {
+                walletAddress,
+                msg,
+                treeCID,
+                CFAddress: CF
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            if(res.data.newUser){
+                status = {
+                    status: "new user",
+                    proceed: true,
+                    newUser: true
+                }
+                return status
+            }else{
+                const proof = res.data.proof
+                console.log(res.data)
+                const root = res.data.root
+                const verify = await ZKProof.verify(proof, walletAddress, `0x${msg}`)
+                if(verify == true || verify == 'true'){
+                    status = {
+                        status: "verified",
+                        proceed: true,
+                        newUser: false
+                    }
+                }else{
+                    status = {
+                        status: "not verified",
+                        proceed: false,
+                        newUser: false
+                    }
+                }
+                return status
+            }
+        }catch(err){
+            console.log(err)
         }
-      )
-      if (res.data.newUser) {
-        status = {
-          status: 'new user',
-          proceed: true,
-          newUser: true,
-        }
-        return status
-      } else {
-        const proof = res.data.proof
-        console.log(res.data)
-        const root = res.data.root
-        const verify = await ZKProof.verify(
-          root,
-          proof,
-          walletAddress,
-          `0x${msg}`
-        )
-        if (verify == true || verify == 'true') {
-          status = {
-            status: 'verified',
-            proceed: true,
-            newUser: false,
-          }
-        } else {
-          status = {
-            status: 'not verified',
-            proceed: false,
-            newUser: false,
-          }
-        }
-        return status
-      }
-    } catch (err) {
-      console.log(err)
     }
-  }
 
   const login = async () => {
     const web3authProvider = await web3auth?.connectTo(
@@ -185,40 +186,13 @@ export const AuthContextProvider = ({ children }) => {
     }
   }
 
-  const getCFAddress = async (PRIV_KEY) => {
-    const ALCHEMY_API_KEY = import.meta.env.VITE_ALCHEMY_API_KEY
-    const GAS_MANAGER_POLICY_ID = import.meta.env.VITE_GAS_MANAGER_POLICY_ID
-    const ENTRY_POINT_ADDRESS = '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789'
-    const PRIVATE_KEY = `0x${PRIV_KEY}`
-    const polygonMumbai = /*#__PURE__*/ defineChain({
-      id: 80_001,
-      name: 'Polygon Mumbai',
-      nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
-      rpcUrls: {
-        default: {
-          http: ['https://rpc.ankr.com/polygon_mumbai'],
-        },
-        alchemy: {
-          http: ['https://polygon-mumbai.g.alchemy.com/v2'],
-        },
-      },
-      blockExplorers: {
-        default: {
-          name: 'PolygonScan',
-          url: 'https://mumbai.polygonscan.com',
-          apiUrl: 'https://mumbai.polygonscan.com/api',
-        },
-      },
-      contracts: {
-        multicall3: {
-          address: '0xca11bde05977b3631167028862be2a173976ca11',
-          blockCreated: 25770160,
-        },
-      },
-      testnet: true,
-    })
-
-    const chain = polygonMumbai
+    const getCFAddress = async(PRIV_KEY) => {
+        const ALCHEMY_API_KEY = import.meta.env.VITE_ALCHEMY_API_KEY
+        const GAS_MANAGER_POLICY_ID = import.meta.env.VITE_GAS_MANAGER_POLICY_ID
+        const ENTRY_POINT_ADDRESS = "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789"
+        const PRIVATE_KEY = `0x${PRIV_KEY}`
+        
+        const chain = sepolia;
 
     const owner = LocalAccountSigner.privateKeyToAccountSigner(PRIVATE_KEY)
 

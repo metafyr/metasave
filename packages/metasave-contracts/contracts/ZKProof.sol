@@ -22,7 +22,6 @@ contract ZKProof {
     }
 
     function verify(
-        bytes32 root,
         bytes32[] memory proof,
         address hxsh,
         bytes32 message

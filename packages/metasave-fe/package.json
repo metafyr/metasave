@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@0xpolygonid/js-sdk": "^1.6.0",
-    "@alchemy/aa-accounts": "^2.4.0",
+    "@alchemy/aa-accounts": "^3.6.1",
     "@alchemy/aa-alchemy": "^2.4.0",
     "@alchemy/aa-core": "^2.3.1",
     "@emotion/react": "^11.11.1",
@@ -32,7 +32,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.20.0",
-    "viem": "^1.21.4",
+    "viem": "^2.8.16",
     "vite": "^5.0.12"
   },
   "devDependencies": {

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "npx truffle@5.11.5 compile",
-    "deploy": "npx truffle@5.11.5 deploy --network maticmumbai"
+    "deploy": "npx truffle@5.11.5 deploy --network sepolia"
   },
   "author": "",
   "license": "ISC",
