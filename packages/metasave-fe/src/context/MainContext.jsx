@@ -26,6 +26,10 @@ export const MainContextProvider = ({children}) => {
     const [fallPopup, setFallPopup] = React.useState(false)
     const [walletProvider, setWalletProvider] = React.useState()
     const [CFAddress, setCFAddress] = React.useState()
+    const [devices, setDevices] = React.useState([
+        { name: 'Fitbit Sense 2', id: '432534:34z:312', date: '12/02/2024' },
+        // ...additional devices
+    ])
     React.useEffect(() => {
         if(walletProvider && CFAddress){
             const fallRef = ref(database, '/fall');
@@ -125,6 +129,14 @@ export const MainContextProvider = ({children}) => {
             console.log('no fall data for this user', err)
         }
     }
+
+    const fetchDevices = async(walletProvider, CFAddress) => {
+        try {
+            // call the SC function that fetches all devices connected to the user
+        } catch (error) {
+            console.log('No devices found', error)
+        }
+    }
     
     return(
         <MainContext.Provider value={{
@@ -132,11 +144,14 @@ export const MainContextProvider = ({children}) => {
             userDetails,
             fallDetails,
             fallPopup,
+            devices,
+            setDevices,
             setFallPopup,
             setFallDetails,
             setUserDetails,
             fetchUserDetails,
-            fetchFallDetails
+            fetchFallDetails,
+            fetchDevices
         }}>
             {children}
         </MainContext.Provider>

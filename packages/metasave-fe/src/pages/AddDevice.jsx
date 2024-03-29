@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import Sidebar from '../components/Dashboard/Sidebar'
 import Modal from './Modal' // Make sure this path is correct
+import { useMainContext } from '../context/MainContext'
 
 const AddDevice = () => {
-  const [devices, setDevices] = useState([
-    { name: 'Fitbit Sense 2', id: '432534:34z:312', date: '12/02/2024' },
-    // ...additional devices
-  ])
+  const { devices, setDevices } = useMainContext()
 
   const [modalOpen, setModalOpen] = useState(false)
   const [newDevice, setNewDevice] = useState({ name: '', id: '', date: '' })
