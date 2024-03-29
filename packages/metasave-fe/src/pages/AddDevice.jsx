@@ -12,9 +12,14 @@ const AddDevice = () => {
   const [newDevice, setNewDevice] = useState({ name: '', id: '', date: '' })
 
   const handleAddDevice = () => {
+    newDevice.date = new Date().toLocaleDateString()
     setDevices([...devices, newDevice])
-    setNewDevice({ name: '', id: '', date: '' }) // Reset the form
-    setModalOpen(false) // Close modal
+    setNewDevice({ name: '', id: '', date: '' })
+    setModalOpen(false)
+
+    // send PRIV_KEY to https://IP_ADDRESS:PORT/add-device
+
+    // call the SC function that maps device to user in blockchain
   }
   return (
     <div className="flex w-full">
@@ -38,6 +43,7 @@ const AddDevice = () => {
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Add new device
             </h3>
+            <p className='text-red-500 text-sm'>*Both the device to be added and the current device should be connected to the same WiFi network.</p>
             <div className="mt-2">
               <input
                 type="text"
@@ -57,14 +63,14 @@ const AddDevice = () => {
                 }
                 className="mt-2 px-4 py-2 bg-white text-sm w-full border rounded-md"
               />
-              <input
+              {/* <input
                 type="date"
                 value={newDevice.date}
                 onChange={(e) =>
                   setNewDevice({ ...newDevice, date: e.target.value })
                 }
                 className="mt-2 px-4 py-2 bg-white text-sm w-full border rounded-md"
-              />
+              /> */}
             </div>
           </Modal>
           <div className="px-8 pt-6 pb-8 mb-4">

@@ -47,9 +47,23 @@ contract MetaSave is AccessControl {
     }
 
     function getDevices(address user_addr) public view returns (address[] memory) {
-        require(hasRole(USER_ROLE, user_addr));
+        require(hasRole(USER_ROLE, user_addr), "Caller is not a user");
 
         return userDeviceMapping[user_addr];
+    }
+
+    function removeDevice(address owner, address _device) external returns (bool) {
+        require(hasRole(USER_ROLE, owner), "Caller is not a user");
+
+        uint256 len = userDeviceMapping[owner].length;
+        for (uint256 i = 0; i < len; i++) {
+            if (userDeviceMapping[owner][i] == _device) {
+                userDeviceMapping[owner][i] = userDeviceMapping[owner][len - 1];
+                userDeviceMapping[owner].pop();
+                break;
+            }
+        }
+        return true;
     }
 
     function userSelectHospital(address user_addr, address hospital_addr) public {
