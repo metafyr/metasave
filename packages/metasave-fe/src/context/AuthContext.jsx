@@ -282,6 +282,7 @@ export const AuthContextProvider = ({children}) => {
         walletProvider,
         AAProvider,
         CFAddress,
+        privKey,
         Logout,
         checkLoggedIn,
         setWeb3AuthProvider,

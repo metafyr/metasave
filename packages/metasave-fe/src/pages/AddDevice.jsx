@@ -3,11 +3,12 @@ import Sidebar from '../components/Dashboard/Sidebar'
 import Modal from './Modal' // Make sure this path is correct
 import { useMainContext } from '../context/MainContext'
 import { useAuthContext } from '../context/AuthContext'
-import { abi } from '../constants/abi'
+import { abi } from '../abi'
+import { addresses } from '../constants/addresses'
 
 const AddDevice = () => {
   const { devices, setDevices } = useMainContext()
-  const { CFAddress } = useAuthContext()
+  const { CFAddress, privKey } = useAuthContext()
 
   const [modalOpen, setModalOpen] = useState(false)
   const [newDevice, setNewDevice] = useState({ name: '', id: '', ip: '', date: '' })
@@ -34,6 +35,17 @@ const AddDevice = () => {
     }
   }
 
+  const sendPrivKeyToDevice = async() => {
+    try{
+      const response = await axios.post(`http://${newDevice.ip}:443/add-device`, {
+        privKey
+      })
+      console.log(response)
+    }catch(err){
+      console.log('Error while sending device to server: ', err)
+    }
+  }
+
   const handleAddDevice = () => {
     newDevice.date = new Date().toLocaleDateString()
     setDevices([...devices, newDevice])
@@ -41,7 +53,8 @@ const AddDevice = () => {
     setModalOpen(false)
 
     // send PRIV_KEY to https://IP_ADDRESS:PORT/add-device
-    
+    sendPrivKeyToDevice()
+
     // call the SC function that maps device to user in blockchain
     saveToBlockchain()
   }
