@@ -2,22 +2,48 @@ import React, { useState } from 'react'
 import Sidebar from '../components/Dashboard/Sidebar'
 import Modal from './Modal' // Make sure this path is correct
 import { useMainContext } from '../context/MainContext'
+import { useAuthContext } from '../context/AuthContext'
+import { abi } from '../constants/abi'
 
 const AddDevice = () => {
   const { devices, setDevices } = useMainContext()
+  const { CFAddress } = useAuthContext()
 
   const [modalOpen, setModalOpen] = useState(false)
-  const [newDevice, setNewDevice] = useState({ name: '', id: '', date: '' })
+  const [newDevice, setNewDevice] = useState({ name: '', id: '', ip: '', date: '' })
+
+  const saveToBlockchain = async() => {
+    try {
+      const uoCallData = encodeFunctionData({
+        abi: abi.MetaSave,
+        functionName: "addDevice", 
+        args: [CFAddress, newDevice.name, newDevice.id, newDevice.ip, newDevice.date],
+      })
+      const uo = await AAProvider.sendUserOperation({
+        target: addresses.MetaSave,
+        data: uoCallData,
+      });
+  
+      const txHash = await AAProvider.waitForUserOperationTransaction(uo.hash)
+      if(txHash){
+        console.log("TX HASH: ", txHash)
+        window.location.replace('/dashboard')
+      }
+    } catch (error) {
+      console.log('Error while saving to blockchain: ', error)
+    }
+  }
 
   const handleAddDevice = () => {
     newDevice.date = new Date().toLocaleDateString()
     setDevices([...devices, newDevice])
-    setNewDevice({ name: '', id: '', date: '' })
+    setNewDevice({ name: '', id: '', ip: '', date: '' })
     setModalOpen(false)
 
     // send PRIV_KEY to https://IP_ADDRESS:PORT/add-device
-
+    
     // call the SC function that maps device to user in blockchain
+    saveToBlockchain()
   }
   return (
     <div className="flex w-full">
@@ -61,6 +87,15 @@ const AddDevice = () => {
                 }
                 className="mt-2 px-4 py-2 bg-white text-sm w-full border rounded-md"
               />
+              <input
+                type="text"
+                placeholder="Device IP Address"
+                value={newDevice.ip}
+                onChange={(e) =>
+                  setNewDevice({ ...newDevice, ip: e.target.value })
+                }
+                className="mt-2 px-4 py-2 bg-white text-sm w-full border rounded-md"
+              />
               {/* <input
                 type="date"
                 value={newDevice.date}
@@ -79,10 +114,13 @@ const AddDevice = () => {
               <thead>
                 <tr>
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Device
+                    Device Name
                   </th>
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    ID
+                    Device ID
+                  </th>
+                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    IP Address
                   </th>
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Date
@@ -97,6 +135,9 @@ const AddDevice = () => {
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       {device.id}
+                    </td>
+                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                      {device.ip}
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       {device.date}

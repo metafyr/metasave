@@ -14,13 +14,20 @@ contract MetaSave is AccessControl {
         string dataIPFSid;
     }
 
+    struct Device {
+        string name;
+        string id;
+        string ip;
+        string date;
+    }
+
 	mapping(address => string) private userIPFSMapping;
 	mapping(address => FallData[]) private fallDataMap;
 
     mapping(address => address[]) private userHospitalMapping;
     mapping(address => address[]) private hospitalUserMapping;
 
-    mapping(address => address[]) private userDeviceMapping;
+    mapping(address => Device[]) private userDeviceMapping;
 
     bytes32 public constant USER_ROLE = keccak256("USER_ROLE");
     bytes32 public constant HOSPITAL_ROLE = keccak256("HOSPITAL_ROLE");
@@ -40,30 +47,37 @@ contract MetaSave is AccessControl {
         return true;
     }
 
-    function addDevice(address user_addr, address device_addr) public {
+    function addDevice(address user_addr, string name, string id, string ip, string date) public {
         require(hasRole(USER_ROLE, user_addr), "Caller is not a user");
 
-        userDeviceMapping[user_addr].push(device_addr);
+        Device memory newDevice = Device({
+            name: name,
+            id: id,
+            ip: ip,
+            date: date
+        });
+
+        userDeviceMapping[user_addr].push(newDevice);
     }
 
-    function getDevices(address user_addr) public view returns (address[] memory) {
+    function getDevices(address user_addr) public view returns (Device[] memory) {
         require(hasRole(USER_ROLE, user_addr), "Caller is not a user");
 
         return userDeviceMapping[user_addr];
     }
 
-    function removeDevice(address owner, address _device) external returns (bool) {
+    function removeDevice(address owner, string memory deviceId) external returns (bool) {
         require(hasRole(USER_ROLE, owner), "Caller is not a user");
 
-        uint256 len = userDeviceMapping[owner].length;
-        for (uint256 i = 0; i < len; i++) {
-            if (userDeviceMapping[owner][i] == _device) {
-                userDeviceMapping[owner][i] = userDeviceMapping[owner][len - 1];
-                userDeviceMapping[owner].pop();
-                break;
+        Device[] storage devices = userDeviceMapping[owner];
+        for (uint256 i = 0; i < devices.length; i++) {
+            if (keccak256(bytes(devices[i].id)) == keccak256(bytes(deviceId))) {
+                devices[i] = devices[devices.length - 1];
+                devices.pop();
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     function userSelectHospital(address user_addr, address hospital_addr) public {
