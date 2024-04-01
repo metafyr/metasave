@@ -47,7 +47,7 @@ contract MetaSave is AccessControl {
         return true;
     }
 
-    function addDevice(address user_addr, string name, string id, string ip, string date) public {
+    function addDevice(address user_addr, string memory name, string memory id, string memory ip, string memory date) public {
         require(hasRole(USER_ROLE, user_addr), "Caller is not a user");
 
         Device memory newDevice = Device({
