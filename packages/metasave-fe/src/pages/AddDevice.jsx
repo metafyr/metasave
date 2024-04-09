@@ -37,10 +37,20 @@ const AddDevice = () => {
 
   const sendPrivKeyToDevice = async() => {
     try{
-      const response = await axios.post(`http://${newDevice.ip}:443/add-device`, {
-        privKey
-      })
-      console.log(response)
+      const device = await navigator.bluetooth.requestDevice({
+        acceptAllDevices: true
+      });
+      console.log('BLE Device:', device);
+
+      const server = await device.gatt.connect();
+      const service = await server.getPrimaryService(import.meta.env.VITE_DEVICE_UUID);
+      const characteristic = await service.getCharacteristic(import.meta.env.VITE_DEVICE_CHARACTERISTIC_ID);
+
+      const dataArrayBuffer = new TextEncoder().encode(data);
+
+      await characteristic.writeValue(dataArrayBuffer);
+
+      console.log('Data sent successfully');
     }catch(err){
       console.log('Error while sending device to server: ', err)
     }
@@ -56,7 +66,7 @@ const AddDevice = () => {
     sendPrivKeyToDevice()
 
     // call the SC function that maps device to user in blockchain
-    saveToBlockchain()
+    // saveToBlockchain()
   }
   return (
     <div className="flex w-full">
