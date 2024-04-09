@@ -38,7 +38,7 @@ const AddDevice = () => {
   const sendPrivKeyToDevice = async() => {
     try{
       const device = await navigator.bluetooth.requestDevice({
-        acceptAllDevices: true
+        filters: [{ name: 'BLE' }]
       });
       console.log('BLE Device:', device);
 
