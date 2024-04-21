@@ -13,6 +13,10 @@ import CheckUser from './pages/CheckUser.jsx'
 import NewIdentity from './pages/NewIdentity.jsx'
 import ClinicLogin from './pages/clinic/ClinicLogin.jsx'
 import ClinicRegister from './pages/clinic/ClinicRegister.jsx'
+import CDash from './pages/clinic/CDash.jsx'
+
+import ClinicDash from './pages/clinic/ClinicDash.jsx'
+import ClinicProfile from './pages/clinic/ClinicProfile.jsx'
 function App() {
   const { loggedIn, web3auth, initWeb3Auth } = useAuthContext()
   React.useEffect(() => {
@@ -57,10 +61,22 @@ function App() {
               path="/newidentity/"
               element={loggedIn ? <NewIdentity /> : <PleaseLogin />}
             />
+
+            <Route
+              path="/clinic//*"
+              element={loggedIn ? <CDash /> : <PleaseLogin />}
+            />
+
+            <Route
+              path="/clinic/profile/"
+              element={loggedIn ? <ClinicProfile /> : <PleaseLogin />}
+            />
+
             <Route
               path="/clinic/sigin/"
               element={loggedIn ? <ClinicLogin /> : <PleaseLogin />}
             />
+
             <Route
               path="/clinic/signup/"
               element={loggedIn ? <ClinicRegister /> : <PleaseLogin />}
