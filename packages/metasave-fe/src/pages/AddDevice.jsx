@@ -37,10 +37,14 @@ const AddDevice = () => {
 
   const sendPrivKeyToDevice = async() => {
     try{
-      const response = await axios.post(`http://${newDevice.ip}:443/add-device`, {
-        privKey
-      })
-      console.log(response)
+      // const response = await axios.post(`http://${newDevice.ip}:443/add-device`, {
+      //   privKey
+      // })
+      // console.log(response)
+      navigator.bluetooth.requestDevice({ filters: [{ services: ['battery_service'] }] })
+      .then(device => { console.log(device) })
+      .catch(error => { console.error(error); });
+
     }catch(err){
       console.log('Error while sending device to server: ', err)
     }
@@ -56,7 +60,7 @@ const AddDevice = () => {
     sendPrivKeyToDevice()
 
     // call the SC function that maps device to user in blockchain
-    saveToBlockchain()
+    // saveToBlockchain()
   }
   return (
     <div className="flex w-full">
