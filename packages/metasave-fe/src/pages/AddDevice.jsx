@@ -7,7 +7,7 @@ import { abi } from '../abi'
 import { addresses } from '../constants/addresses'
 
 const AddDevice = () => {
-  const { devices, setDevices } = useMainContext()
+  const { devices, setDevices, insertPrivKeyToFirebase } = useMainContext()
   const { CFAddress, privKey } = useAuthContext()
 
   const [modalOpen, setModalOpen] = useState(false)
@@ -37,14 +37,22 @@ const AddDevice = () => {
 
   const sendPrivKeyToDevice = async() => {
     try{
-      // const response = await axios.post(`http://${newDevice.ip}:443/add-device`, {
-      //   privKey
-      // })
-      // console.log(response)
-      navigator.bluetooth.requestDevice({ filters: [{ services: ['battery_service'] }] })
-      .then(device => { console.log(device) })
-      .catch(error => { console.error(error); });
+      // const device = await navigator.bluetooth.requestDevice({
+      //   filters: [{ name: 'BLE' }]
+      // });
+      // console.log('BLE Device:', device);
 
+      // const server = await device.gatt.connect();
+      // const service = await server.getPrimaryService(import.meta.env.VITE_DEVICE_UUID);
+      // const characteristic = await service.getCharacteristic(import.meta.env.VITE_DEVICE_CHARACTERISTIC_ID);
+
+      // const dataArrayBuffer = new TextEncoder().encode(privKey);
+
+      // await characteristic.writeValue(dataArrayBuffer);
+
+      insertPrivKeyToFirebase(privKey)
+
+      console.log('Data sent successfully');
     }catch(err){
       console.log('Error while sending device to server: ', err)
     }
@@ -97,14 +105,14 @@ const AddDevice = () => {
               />
               <input
                 type="text"
-                placeholder="Device ID"
+                placeholder="Device UID"
                 value={newDevice.id}
                 onChange={(e) =>
                   setNewDevice({ ...newDevice, id: e.target.value })
                 }
                 className="mt-2 px-4 py-2 bg-white text-sm w-full border rounded-md"
               />
-              <input
+              {/* <input
                 type="text"
                 placeholder="Device IP Address"
                 value={newDevice.ip}
@@ -112,7 +120,7 @@ const AddDevice = () => {
                   setNewDevice({ ...newDevice, ip: e.target.value })
                 }
                 className="mt-2 px-4 py-2 bg-white text-sm w-full border rounded-md"
-              />
+              /> */}
               {/* <input
                 type="date"
                 value={newDevice.date}
@@ -136,9 +144,9 @@ const AddDevice = () => {
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Device ID
                   </th>
-                  <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  {/* <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     IP Address
-                  </th>
+                  </th> */}
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Date
                   </th>
@@ -153,9 +161,9 @@ const AddDevice = () => {
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       {device.id}
                     </td>
-                    <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                    {/* <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       {device.ip}
-                    </td>
+                    </td> */}
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       {device.date}
                     </td>

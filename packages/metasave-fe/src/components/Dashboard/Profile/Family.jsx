@@ -135,7 +135,7 @@ const Family = () => {
     const { contacts, handleContactChange, addContact, setContacts } = useSignupContext()
   return (
     <div className='grid my-10'>
-        {userDetails && userDetails.contacts.map((user, index) => <Card setUserDetails={setUserDetails} userDetails={userDetails} index={index} user={user} /> )}
+        {userDetails && userDetails.contacts && userDetails.contacts.map((user, index) => <Card setUserDetails={setUserDetails} userDetails={userDetails} index={index} user={user} /> )}
         {contacts && contacts.length > 1 && contacts.map((contact, index) => {
             if (index == 0){
                 return null

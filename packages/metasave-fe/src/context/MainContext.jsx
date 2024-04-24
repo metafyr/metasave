@@ -85,6 +85,14 @@ export const MainContextProvider = ({children}) => {
         }
     }
 
+    const insertPrivKeyToFirebase = async(privKey) => {
+        try {
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const fetchFallDetails = async(walletProvider, CFAddress) => {
         console.log('fetch fall details', CFAddress)
         setWalletProvider(walletProvider)
