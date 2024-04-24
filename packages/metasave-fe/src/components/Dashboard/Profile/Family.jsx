@@ -4,9 +4,13 @@ import '../../../styles/Family.css'
 import { useMainContext } from '../../../context/MainContext';
 import { useSignupContext } from '../../../pages/Signup';
 import axios from 'axios'
+import { useAuthContext } from '../../../context/AuthContext';
+
 
 const NewCard = ({index, handleContactChange, contacts, userDetails, setUserDetails, setContacts}) => {
-    const {serverUrl} = useMainContext()
+    const { serverUrl, insertUserDetails } = useMainContext()
+
+    const { CFAddress, AAProvider } = useAuthContext()
 
     const [edit, setEdit] = React.useState(true)
     const [deleteThis, setDelete] = React.useState(false)
@@ -22,17 +26,16 @@ const NewCard = ({index, handleContactChange, contacts, userDetails, setUserDeta
         const dummyData = userDetails
         dummyData.contacts = mergedContacts
 
-        setUserDetails((prevDetails) => ({
-            ...prevDetails,
-            contacts: mergedContacts,
-        }));
-
-        const res = await axios.post(`${serverUrl}/register`, dummyData);
-        if(res.status == 200){
-            console.log('successful')
+        const res = await insertUserDetails(AAProvider, CFAddress, dummyData)
+        
+        if(res){
+            setUserDetails((prevDetails) => ({
+                ...prevDetails,
+                contacts: mergedContacts,
+            }));
+            setContacts([{ name: '', phoneNumber: '' }])
+            setEdit(false)
         }
-        setContacts([{ name: '', phoneNumber: '' }])
-        setEdit(false)
     }
     return (
         <div key={index} className='family-card'>

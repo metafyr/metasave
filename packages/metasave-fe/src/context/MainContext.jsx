@@ -4,6 +4,7 @@ import { abi } from "../abi/index.js"
 import axios from 'axios'
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, onValue, remove } from "firebase/database";
+import {encodeFunctionData} from 'viem'
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -145,6 +146,34 @@ export const MainContextProvider = ({children}) => {
             console.log('No devices found', error)
         }
     }
+
+    const insertUserDetails = async(AAProvider, CFAddress, data) => {
+        const res = await axios.post(`${serverUrl}/user`, {data})
+
+        const IPFSid = res.data.CID
+
+        console.log("IPFS ID: ", IPFSid)
+        console.log("CFAddress: ", CFAddress)
+
+        const uoCallData = encodeFunctionData({
+            abi: abi.MetaSave,
+            functionName: "setIPFSFileName", 
+            args: [CFAddress, IPFSid],
+        })
+        const uo = await AAProvider.sendUserOperation({
+            target: addresses.MetaSave,
+            data: uoCallData,
+        });
+
+        const txHash = await AAProvider.waitForUserOperationTransaction(uo.hash)
+        if(txHash){
+            console.log("TX HASH: ", txHash)
+            return true
+        }else{
+            return false
+        }
+    
+    }
     
     return(
         <MainContext.Provider value={{
@@ -159,7 +188,8 @@ export const MainContextProvider = ({children}) => {
             setUserDetails,
             fetchUserDetails,
             fetchFallDetails,
-            fetchDevices
+            fetchDevices,
+            insertUserDetails
         }}>
             {children}
         </MainContext.Provider>

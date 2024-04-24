@@ -4,11 +4,14 @@ import axios from 'axios'
 import { abi } from '../../abi';
 import { addresses } from '../../constants/addresses.js';
 import { useAuthContext } from '../../context/AuthContext.jsx';
+import { useMainContext } from '../../context/MainContext.jsx';
 import {encodeFunctionData} from 'viem'
 
 
 const RightSide3 = ({ onPrev }) => {
-  const {medications, setMedications, disease, setDisease, duration, setDuration, problemsFaced, setProblemsFaced, addProblemFaced, removeProblemFaced, removeMedication, addMedication, name, password, age, email, gender, phone, address, contacts } = useSignupContext()
+  const { medications, setMedications, disease, setDisease, duration, setDuration, problemsFaced, setProblemsFaced, addProblemFaced, removeProblemFaced, removeMedication, addMedication, name, password, age, email, gender, phone, address, contacts } = useSignupContext()
+
+  const { serverUrl, insertUserDetails } = useMainContext()
 
   const { CFAddress, AAProvider } = useAuthContext()
   const [loading, setLoading] = useState(false);
@@ -31,6 +34,7 @@ const RightSide3 = ({ onPrev }) => {
       disease,
       duration
     }
+
     // const data = {
     //   CF: CFAddress,
     //   name: 'Abhinav C V',
@@ -43,28 +47,11 @@ const RightSide3 = ({ onPrev }) => {
     //   disease: "none",
     //   duration: "none"
     // }
+
     console.log(data)
 
-    const res = await axios.post('http://localhost:5000/api/user', {data})
-
-    const IPFSid = res.data.CID
-
-    console.log("IPFS ID: ", IPFSid)
-    console.log("CFAddress: ", CFAddress)
-
-    const uoCallData = encodeFunctionData({
-      abi: abi.MetaSave,
-      functionName: "setIPFSFileName", 
-      args: [CFAddress, IPFSid],
-    })
-    const uo = await AAProvider.sendUserOperation({
-      target: addresses.MetaSave,
-      data: uoCallData,
-    });
-
-    const txHash = await AAProvider.waitForUserOperationTransaction(uo.hash)
-    if(txHash){
-      console.log("TX HASH: ", txHash)
+    const res = await insertUserDetails(AAProvider, CFAddress, data)
+    if(res){
       window.location.replace('/dashboard')
     }
   }
