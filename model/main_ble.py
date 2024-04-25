@@ -58,8 +58,17 @@ async def read_characteristics(address, stop_event):
             try:
                 char_values = await client.read_gatt_char(CHAR_UUID)
                 int_value = int(char_values[0])
-                print(int_value)
+                if (int_value==48):
+                    print("Fallen")
+                    accelerometer_queue.put(int_value)
+                    files = {'file': ('model/fall.jpg')}
+                    data = {
+                        'username': 'ab7zz',
+                        'PRIV_KEY': PRIV_KEY
+                    }
+                    requests.post(url, files=files, data=data)
                 accelerometer_queue.put(int_value)
+                print(int_value)
             except Exception as e:
                 print(f"Error: {e}")
             await asyncio.sleep(0.1)
@@ -192,7 +201,7 @@ while(cap.isOpened):
                   'username': 'SURA',
                   'timestamp': timestamp,
                   'date': date,
-                  'status': 'fallen'
+                  'status': 'fallen',
                 }
 
                 q.put((prediction_data, buffer))
