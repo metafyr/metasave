@@ -5,6 +5,11 @@ import { useMainContext } from '../context/MainContext'
 import { useAuthContext } from '../context/AuthContext'
 import { abi } from '../abi'
 import { addresses } from '../constants/addresses'
+// import { createBluetooth } from 'node-ble'
+import axios from 'axios'
+
+// const { bluetooth, destroy } = createBluetooth()
+// const adapter = await bluetooth.defaultAdapter()
 
 const AddDevice = () => {
   const { devices, setDevices, insertPrivKeyToFirebase } = useMainContext()
@@ -37,20 +42,13 @@ const AddDevice = () => {
 
   const sendPrivKeyToDevice = async() => {
     try{
-      // const device = await navigator.bluetooth.requestDevice({
-      //   filters: [{ name: 'BLE' }]
-      // });
-      // console.log('BLE Device:', device);
+      
+      const res = await axios.post('http://localhost:8000/privkey', {privKey})
+      if(res){
+        console.log('its sent!')
+      }
 
-      // const server = await device.gatt.connect();
-      // const service = await server.getPrimaryService(import.meta.env.VITE_DEVICE_UUID);
-      // const characteristic = await service.getCharacteristic(import.meta.env.VITE_DEVICE_CHARACTERISTIC_ID);
-
-      // const dataArrayBuffer = new TextEncoder().encode(privKey);
-
-      // await characteristic.writeValue(dataArrayBuffer);
-
-      insertPrivKeyToFirebase(privKey)
+      // insertPrivKeyToFirebase(privKey)
 
       console.log('Data sent successfully');
     }catch(err){
@@ -64,7 +62,6 @@ const AddDevice = () => {
     setNewDevice({ name: '', id: '', ip: '', date: '' })
     setModalOpen(false)
 
-    // send PRIV_KEY to https://IP_ADDRESS:PORT/add-device
     sendPrivKeyToDevice()
 
     // call the SC function that maps device to user in blockchain
