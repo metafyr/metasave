@@ -36,7 +36,7 @@ export const MainContextProvider = ({children}) => {
             const fallRef = ref(database, '/fall');
             onValue(fallRef, (snapshot) => {
                 if(snapshot.exists()){
-                    console.log('fall detected')
+                    console.log('fall detected', snapshot.val())
                     setFallPopup(true)
                     fetchFallDetails(walletProvider, CFAddress)
                     remove(fallRef)

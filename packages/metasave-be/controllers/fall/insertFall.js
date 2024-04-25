@@ -19,6 +19,7 @@ const admin_priv_key = process.env.ADMIN_PRIV_KEY
 
 const insertFall = async (req, res) => {
   try {
+    console.log(req)
     let imgIPFSid = ''
     let dataIPFSid = ''
     const imagePath = `./uploads/${req.body.username}/image.jpg`

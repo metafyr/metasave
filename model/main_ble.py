@@ -16,7 +16,7 @@ import queue
 import asyncio
 from bleak import BleakClient
 import firebase_admin
-from firebase_admin import credentials
+from firebase_admin import credentials, db
 from dotenv import dotenv_values
 
 env_vars = dotenv_values()
@@ -44,6 +44,7 @@ cred = credentials.Certificate('firebase_credentials.json')
 firebase_admin.initialize_app(cred, {
     'databaseURL': env_vars['DATABASE_URL']
 })
+fall_ref = db.reference('/fall')
 
 address = "E0:F7:BF:E9:2B:7C"
 SERVICE_UUID = "12345678-1234-5678-9abc-def012345678"
@@ -52,23 +53,32 @@ CHAR_UUID = "12345678-1234-5678-9abc-def012345679"
 accelerometer_queue = queue.Queue()
 stop_ble_reading_event = asyncio.Event()
 
+q = queue.Queue()
+
 async def read_characteristics(address, stop_event):
     async with BleakClient(address) as client:
         while not stop_event.is_set():
             try:
                 char_values = await client.read_gatt_char(CHAR_UUID)
                 int_value = int(char_values[0])
-                if (int_value==48):
+                if (int_value == 49):
                     print("Fallen")
+                    now = datetime.now()
+                    timestamp = str(int(now.timestamp()))
+                    date = now.strftime('%d-%m-%Y')
+
                     accelerometer_queue.put(int_value)
-                    files = {'file': ('model/fall.jpg')}
-                    data = {
-                        'username': 'ab7zz',
-                        'PRIV_KEY': PRIV_KEY
+
+                    prediction_data = {
+                        'username': 'SURA',
+                        'timestamp': timestamp,
+                        'date': date,
+                        'status': 'fallen',
                     }
-                    requests.post(url, files=files, data=data)
-                accelerometer_queue.put(int_value)
-                print(int_value)
+
+                    im0 = cv2.imread("fall.jpg")
+                    _, buffer = cv2.imencode('.jpg', im0)
+                    q.put((prediction_data, buffer))
             except Exception as e:
                 print(f"Error: {e}")
             await asyncio.sleep(0.1)
@@ -110,7 +120,7 @@ fallen = False
 sent = False
 last_sent_time = None
 
-q = queue.Queue()
+
 
 def post_request():
     global last_sent_time
@@ -203,6 +213,8 @@ while(cap.isOpened):
                   'date': date,
                   'status': 'fallen',
                 }
+
+                fall_ref.set(prediction_data)
 
                 q.put((prediction_data, buffer))
 
