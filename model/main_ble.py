@@ -14,10 +14,18 @@ from dotenv import dotenv_values
 import threading
 import queue
 import asyncio
-from bleak import BleakClient
 import firebase_admin
 from firebase_admin import credentials, db
 from dotenv import dotenv_values
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from bleak import BleakClient, BleakError
+
+# Create a Flask application
+app = Flask(__name__)
+
+# Enable CORS for all routes in the application
+CORS(app)
 
 env_vars = dotenv_values()
 
@@ -119,8 +127,6 @@ frame_count = 0
 fallen = False
 sent = False
 last_sent_time = None
-
-
 
 def post_request():
     global last_sent_time
@@ -238,3 +244,56 @@ request_thread.join()
 
 cap.release()
 cv2.destroyAllWindows()
+
+# Function to send the authentication key using BleakClient
+async def send_authentication_key(address, auth_key):
+    try:
+        async with BleakClient(address) as client:
+            if not await client.is_connected():
+                await client.connect()
+                print("Connected to the Arduino Nano BLE Sense Lite.")
+            else:
+                print("Already connected to the Arduino Nano BLE Sense Lite.")
+
+            # Send the authentication key to the characteristic
+            await client.write_gatt_char(CHAR_UUID, auth_key.encode())
+            print(f"Sent authentication key '{auth_key}' to the Arduino Nano BLE Sense Lite.")
+        
+        return True
+    
+    except BleakError as e:
+        print(f"Error during BLE communication: {str(e)}")
+        return False
+
+# Define a POST endpoint at /privkey
+@app.route('/privkey', methods=['POST'])
+async def privkey():
+    try:
+        # Parse the JSON data from the request body
+        data = request.get_json()
+        priv_key = data.get('privKey')
+
+        PRIV_KEY = priv_key
+
+        # Check if privKey is provided
+        if not priv_key:
+            return jsonify({'error': 'Missing privKey in request body'}), 400
+
+        print(f"Received private key '{priv_key}' from the client.")
+        
+        # Send the authentication key using the send_authentication_key function
+        success = await send_authentication_key(address, priv_key)
+
+        if success:
+            return jsonify({'message': f'Successfully sent authentication key to the Arduino Nano BLE Sense Lite'}), 200
+        else:
+            return jsonify({'error': 'Failed to send authentication key to the Arduino Nano BLE Sense Lite'}), 500
+
+    except Exception as e:
+        # Handle any unexpected errors
+        print(f"Unexpected error: {str(e)}")
+        return jsonify({'error': 'Internal server error'}), 500
+
+# Run the Flask application
+if __name__ == '__main__':
+    app.run(debug=True, port=8000)
