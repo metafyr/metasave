@@ -46,3 +46,26 @@ npm run dev-fe
 
 # Run the back-end development server
 npm run dev-be
+
+# Run camera (currently on laptop)
+npm dev-camera
+
+# Run odroid
+npm dev-odroid
+```
+
+
+## Purpose of each module:
+
+# Frontend
+A client side for both user & hospital. 
+User can view their fall details/close contacts/profile/hospital/devices.
+
+# Backend
+This handles all the functionalities like authentication/fall data/whatsapp messages to close contacts/user data/communicating with blockchain & IPFS/etc.
+
+# Camera
+This is the code that's supposed to run inside the camera. It detects a fall and sends the details to the backend.
+
+# Odroid
+This regularly listens for data from the wearable device. If it detects a fall, it also sends the details to the backend.
