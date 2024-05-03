@@ -63,7 +63,11 @@ function App() {
             />
 
             <Route
-              path="/clinic//*"
+              path="/clinic/*"
+              element={loggedIn ? <CDash /> : <PleaseLogin />}
+            />
+            <Route
+              path="/clinic/dashboard"
               element={loggedIn ? <CDash /> : <PleaseLogin />}
             />
 
