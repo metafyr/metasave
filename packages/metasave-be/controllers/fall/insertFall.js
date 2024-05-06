@@ -13,9 +13,6 @@ dotenv.config()
 
 const PINATA_BASE_URL = process.env.PINATA_BASE_URL
 const PINATA_API_KEY = process.env.PINATA_API_KEY
-const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY
-const ENTRY_POINT_ADDRESS = '0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789'
-const admin_priv_key = process.env.ADMIN_PRIV_KEY
 
 const insertFall = async (req, res) => {
   try {

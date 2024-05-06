@@ -12,8 +12,8 @@ import axios from 'axios'
 // const adapter = await bluetooth.defaultAdapter()
 
 const AddDevice = () => {
-  const { devices, setDevices, insertPrivKeyToFirebase } = useMainContext()
-  const { CFAddress, privKey } = useAuthContext()
+  const { devices, setDevices } = useMainContext()
+  const { CFAddress, privKey, walletProvider } = useAuthContext()
 
   const [modalOpen, setModalOpen] = useState(false)
   const [newDevice, setNewDevice] = useState({ name: '', id: '', ip: '', date: '' })
@@ -48,11 +48,50 @@ const AddDevice = () => {
         console.log('its sent!')
       }
 
-      // insertPrivKeyToFirebase(privKey)
 
       console.log('Data sent successfully');
     }catch(err){
       console.log('Error while sending device to server: ', err)
+    }
+  }
+
+  const generateProof = async() => {
+    try{
+      const ZKProof = await walletProvider.getContract(addresses.ZKProof, abi.ZKProof)
+      
+      let treeCID, treeRoot
+      
+      try {
+        treeCID = await ZKProof.getMTIPFSid(0)
+      } catch (error) {
+        treeCID = ""
+      }
+
+      try {
+        treeRoot = await ZKProof.getMTRoot(0)
+      } catch (error) {
+        treeRoot = ""
+      }
+
+      const msg = keccak256(privKey).toString('hex')
+      
+      const res = await axios.post(`${serverUrl}/deviceMerkletree`, {
+        deviceID: newDevice.id,
+        msg,
+        treeCID,
+        CFAddress
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      if(res){
+        console.log('Proof generated and stored in server!')
+      }
+    }catch(err){
+      console.log('Error while generating proof: ', err)
     }
   }
 
@@ -63,6 +102,10 @@ const AddDevice = () => {
     setModalOpen(false)
 
     sendPrivKeyToDevice()
+
+    generateProof()
+
+    
 
     // call the SC function that maps device to user in blockchain
     // saveToBlockchain()

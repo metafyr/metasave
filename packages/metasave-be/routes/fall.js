@@ -5,6 +5,8 @@ import multer from 'multer'
 import path, { dirname } from 'path'
 import fs from 'fs'
 import { fileURLToPath } from 'url'
+import { userOperation } from '../helpers/userOperation.js'
+import { abi } from '../abi/index.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -21,11 +23,22 @@ const storage = multer.diskStorage({
   },
 })
 
+
 const upload = multer({ storage: storage })
+
+const verifyFallTrigger = async(req, res) => {
+  upload.single('file')
+  const filePath = 'constants/deviceproof.txt'
+  const proof = fs.readFileSync(filePath)
+  const privKey = req.body.PRIV_KEY
+  
+  const msg = keccak(privKey)
+  await userOperation(abi.ZKProof, 'verify', [proof, msg])
+}
 
 const router = express.Router()
 
-router.post('/fall', upload.single('file'), insertFall)
+router.post('/fall', verifyFallTrigger, insertFall)
 router.get('/falldata', fetchFallData)
 
 export default router

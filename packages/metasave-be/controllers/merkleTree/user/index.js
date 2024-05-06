@@ -10,7 +10,7 @@ dotenv.config()
 
 const ADMIN_PRIV_KEY = process.env.ADMIN_PRIV_KEY;
 
-const merkleTree = async (req, res) => {
+const userMerkleTree = async (req, res) => {
     try {
         let present = false, proof = '', newUser = false, root = ''
         const walletAddress = req.body.walletAddress
@@ -34,7 +34,7 @@ const merkleTree = async (req, res) => {
             treeJSON = tree.dump()
 
             await userOperation(abi.MetaSave, 'grantUserRole', [CFAddress], addresses.MetaSave, ADMIN_PRIV_KEY)
-            await userOperation(abi.ZKProof, 'setRootAndIPFS', [tree.root, treeCID], addresses.ZKProof, ADMIN_PRIV_KEY)
+            await userOperation(abi.ZKProof, 'setRootAndIPFS', [tree.root, treeCID, 1], addresses.ZKProof, ADMIN_PRIV_KEY)
 
             present = false
             newUser = true
@@ -66,7 +66,7 @@ const merkleTree = async (req, res) => {
                 treeCID = await insertMT(tree.dump())
 
                 await userOperation(abi.MetaSave, 'grantUserRole', [CFAddress], addresses.MetaSave, ADMIN_PRIV_KEY)
-                await userOperation(abi.ZKProof, 'setRootAndIPFS', [tree.root, treeCID], addresses.ZKProof, ADMIN_PRIV_KEY)
+                await userOperation(abi.ZKProof, 'setRootAndIPFS', [tree.root, treeCID, 1], addresses.ZKProof, ADMIN_PRIV_KEY)
 
             }
         }
@@ -87,4 +87,4 @@ const merkleTree = async (req, res) => {
     }
 }
 
-export default merkleTree
+export default userMerkleTree

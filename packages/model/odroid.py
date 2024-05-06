@@ -3,7 +3,7 @@ from flask_cors import CORS
 from bleak import BleakClient, BleakError
 import threading
 import queue
-from datetime import datetime, timedelta
+from datetime import datetime
 import asyncio
 import requests
 import json
@@ -117,8 +117,6 @@ async def privkey():
         # Parse the JSON data from the request body
         data = request.get_json()
         priv_key = data.get('privKey')
-
-        PRIV_KEY = priv_key
 
         # Check if privKey is provided
         if not priv_key:

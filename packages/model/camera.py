@@ -42,11 +42,10 @@ cred = credentials.Certificate('firebase_credentials.json')
 firebase_admin.initialize_app(cred, {
     'databaseURL': env_vars['DATABASE_URL']
 })
+
 fall_ref = db.reference('/fall')
 
 q = queue.Queue()
-
-
 
 env_vars = dotenv_values()
 

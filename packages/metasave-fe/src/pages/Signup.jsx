@@ -19,7 +19,7 @@ export const SignupProvider = ({ children }) => {
   // Step 2 inputs 
   const [name, setName] = useState('')
   const [age, setAge] = useState('')
-  const [gender, setGender] = useState('')
+  const [gender, setGender] = useState('male')
   const [phone, setPhone] = useState('')
   const [address, setAddress] = useState('')
   const [contacts, setContacts] = useState([{ name: '', phoneNumber: '' }]);

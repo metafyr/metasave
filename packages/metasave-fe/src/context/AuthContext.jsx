@@ -130,13 +130,13 @@ export const AuthContextProvider = ({children}) => {
             let treeCID, treeRoot
 
             try {
-              treeCID = await ZKProof.getMTIPFSid()
+              treeCID = await ZKProof.getMTIPFSid(1)
             } catch (error) {
               treeCID = ""
             }
 
             try {
-              treeRoot = await ZKProof.getMTRoot()
+              treeRoot = await ZKProof.getMTRoot(1)
             } catch (error) {
               treeRoot = ""
             }
@@ -145,7 +145,7 @@ export const AuthContextProvider = ({children}) => {
 
             console.log(treeCID, treeRoot)
             const msg = keccak256(privateKey).toString('hex')
-            const res = await axios.post(`${serverUrl}/merkletree`, {
+            const res = await axios.post(`${serverUrl}/userMerkletree`, {
                 walletAddress,
                 msg,
                 treeCID,
