@@ -25,7 +25,6 @@ SERVICE_UUID = "12345678-1234-5678-9abc-def012345678"
 CHAR_UUID = "12345678-1234-5678-9abc-def012345679"
 
 AUTH_KEY_CHAR_UUID = "12345678-1234-5678-9abc-def012345680"
-AUTHENTICATION_KEY = "12343421"
 
 url = 'http://localhost:5000/api/fall'  
 
@@ -49,7 +48,7 @@ async def read_characteristics(address, stop_event):
                     auth_key = auth_values.decode()
 
                     prediction_data = {
-                        'username': 'SURA',
+                        'username': 'ab7zz',
                         'timestamp': timestamp,
                         'date': date,
                         'status': 'fallen'
@@ -64,9 +63,8 @@ async def read_characteristics(address, stop_event):
                     data = {
                         'prediction_data': prediction_data_json,
                         'USERNAME': 'ab7zz',
-                        'PRIV_KEY': PRIV_KEY,
+                        'PRIV_KEY': auth_key,
                         'DEVICE_ID': 1234,
-                        'AUTH_KEY': auth_key
                     }
 
                     response = requests.post(url, files=files, data=data)
