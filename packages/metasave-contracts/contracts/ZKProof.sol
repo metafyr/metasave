@@ -46,5 +46,4 @@ contract ZKProof {
         // another verify circuit to verify if the user holds the token/message
         return MerkleProof.verify(proof, root, leaf);
     }
-
 }

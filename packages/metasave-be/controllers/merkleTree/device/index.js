@@ -75,7 +75,7 @@ const deviceMerkleTree = async (req, res) => {
 
         const proofString = JSON.stringify(proof);
 
-        const filePath = 'constants/deviceproof.txt';
+        const filePath = 'constants/deviceproof';
 
         fs.writeFileSync(filePath, proofString)
 

@@ -140,8 +140,8 @@ export const AuthContextProvider = ({children}) => {
             } catch (error) {
               treeRoot = ""
             }
-            // const treeCID = await ZKProof.getMTIPFSid()
-            // const treeRoot = await ZKProof.getMTRoot()
+            // const treeCID = await ZKProof.getMTIPFSid(1)
+            // const treeRoot = await ZKProof.getMTRoot(1)
 
             console.log(treeCID, treeRoot)
             const msg = keccak256(privateKey).toString('hex')

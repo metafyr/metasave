@@ -13,6 +13,7 @@ dotenv.config()
 
 const PINATA_BASE_URL = process.env.PINATA_BASE_URL
 const PINATA_API_KEY = process.env.PINATA_API_KEY
+const ALCHEMY_API_URL = process.env.ALECHMY_API_URL
 
 const insertFall = async (req, res) => {
   try {
@@ -53,7 +54,7 @@ const insertFall = async (req, res) => {
     )
 
     const provider = new ethers.providers.JsonRpcProvider(
-      'https://polygon-mumbai.g.alchemy.com/v2/35QDaNc7wH9sOfTbC79sDDvsK_dmyZPj'
+      ALCHEMY_API_URL,
     )
     const contractAddress = addresses.MetaSave
     const privateKey = req.body.PRIV_KEY
