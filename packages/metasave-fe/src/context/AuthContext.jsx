@@ -111,82 +111,89 @@ export const AuthContextProvider = ({children}) => {
     await checkLoggedIn(web3auth)
   }
 
-    const verifyProof = async(walletAddress, walletProvider) => {
-        try{
-            const priv_key = await walletProvider.getPrivateKey()
-            const CF = await getCFAddress(priv_key)
+  const verifyProof = async(walletAddress, walletProvider) => {
+    try{
+      const priv_key = await walletProvider.getPrivateKey()
+      const CF = await getCFAddress(priv_key)
 
-            console.log('CFADdresssss', CF)
+      console.log('CFADdress: ', CF)
 
-            let status = {
-                status: "not verified",
-                proceed: false,
-                newUser: false
-            }
+      let status = {
+          status: "not verified",
+          proceed: false,
+          newUser: false
+      }
 
-            const privateKey = await walletProvider.getPrivateKey()
-            const ZKProof = await walletProvider.getContract(addresses.ZKProof, abi.ZKProof)
+      const privateKey = await walletProvider.getPrivateKey()
+      const ZKProof = await walletProvider.getContract(addresses.ZKProof, abi.ZKProof)
 
-            let treeCID, treeRoot
+      let treeCID, treeRoot
 
-            try {
-              treeCID = await ZKProof.getMTIPFSid(1)
-            } catch (error) {
-              treeCID = ""
-            }
+      try {
+        treeCID = await ZKProof.getMTIPFSid(1)
+      } catch (error) {
+        treeCID = ""
+      }
 
-            try {
-              treeRoot = await ZKProof.getMTRoot(1)
-            } catch (error) {
-              treeRoot = ""
-            }
-            // const treeCID = await ZKProof.getMTIPFSid(1)
-            // const treeRoot = await ZKProof.getMTRoot(1)
+      try {
+        treeRoot = await ZKProof.getMTRoot(1)
+      } catch (error) {
+        treeRoot = ""
+      }
+      // const treeCID = await ZKProof.getMTIPFSid(1)
+      // const treeRoot = await ZKProof.getMTRoot(1)
 
-            console.log(treeCID, treeRoot)
-            const msg = keccak256(privateKey).toString('hex')
-            const res = await axios.post(`${serverUrl}/userMerkletree`, {
-                walletAddress,
-                msg,
-                treeCID,
-                CFAddress: CF
-            },
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            if(res.data.newUser){
-                status = {
-                    status: "new user",
-                    proceed: true,
-                    newUser: true
-                }
-                return status
-            }else{
-                const proof = res.data.proof
-                console.log(res.data)
-                const root = res.data.root
-                const verify = await ZKProof.verify(proof, walletAddress, `0x${msg}`)
-                if(verify == true || verify == 'true'){
-                    status = {
-                        status: "verified",
-                        proceed: true,
-                        newUser: false
-                    }
-                }else{
-                    status = {
-                        status: "not verified",
-                        proceed: false,
-                        newUser: false
-                    }
-                }
-                return status
-            }
-        }catch(err){
-            console.log(err)
+      console.log("User TreeCID: ", treeCID)
+      console.log("User TreeRoot: ", treeRoot)
+
+      const msg = keccak256(privateKey).toString('hex')
+      
+      console.log('Checking Merkle Tree...')
+      const res = await axios.post(`${serverUrl}/userMerkletree`, {
+          walletAddress,
+          msg,
+          treeCID,
+          CFAddress: CF
+      },
+      {
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      })
+      if(res.data.newUser){
+        console.log('New user detected!')
+        status = {
+            status: "new user",
+            proceed: true,
+            newUser: true
         }
+        return status
+      }else{
+        console.log('User already exists! Verifying user...')
+        const proof = res.data.proof
+        console.log(res.data)
+        const verify = await ZKProof.verify(proof, walletAddress, `0x${msg}`, 1)
+        if(verify == true || verify == 'true'){
+          console.log('Verified user!')
+          status = {
+            status: "verified",
+            proceed: true,
+            newUser: false
+          }
+        }else{
+          console.log('Invalid user!')
+          status = {
+            status: "not verified",
+            proceed: false,
+            newUser: false
+          }
+        }
+        return status
+      }
+    }catch(err){
+      console.log(err)
     }
+  }
 
   const login = async () => {
     const web3authProvider = await web3auth?.connectTo(
@@ -287,7 +294,7 @@ export const AuthContextProvider = ({children}) => {
   }
 
   const checkLoggedIn = async (web3auth) => {
-    console.log('checking logged in')
+    console.log('checking if logged in')
     if (web3auth?.status === 'connected') {
       const web3AuthProvider = web3auth.provider
       const walletProvider = getWalletProvider(web3AuthProvider)
@@ -303,6 +310,8 @@ export const AuthContextProvider = ({children}) => {
       getCFAddress(priv_key)
 
       setLoggedIn(true)
+    }else{
+      console.log(web3auth?.status)
     }
   }
 

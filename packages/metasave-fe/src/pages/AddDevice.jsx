@@ -12,11 +12,11 @@ import axios from 'axios'
 // const adapter = await bluetooth.defaultAdapter()
 
 const AddDevice = () => {
-  const { devices, setDevices } = useMainContext()
+  const { devices, setDevices, serverUrl } = useMainContext()
   const { CFAddress, privKey, walletProvider } = useAuthContext()
 
   const [modalOpen, setModalOpen] = useState(false)
-  const [newDevice, setNewDevice] = useState({ name: '', id: '', ip: '', date: '' })
+  const [newDevice, setNewDevice] = useState({ name: '', date: '', type: '' })
 
   const saveToBlockchain = async() => {
     try {
@@ -40,22 +40,25 @@ const AddDevice = () => {
     }
   }
 
-  const sendPrivKeyToDevice = async() => {
+  const sendPrivKeyToDevice = async(type) => {
     try{
       
-      const res = await axios.post('http://localhost:8000/privkey', {privKey})
+      const res = await axios.post('http://localhost:8000/privkey', {
+        privKey,
+        type
+      })
       if(res){
-        console.log('its sent!')
+        console.log(res.data.message)
+        console.log('Device ID Received!', res.data.deviceId)
+        return res.data.deviceId
       }
-
-
-      console.log('Data sent successfully');
     }catch(err){
       console.log('Error while sending device to server: ', err)
+      return 0
     }
   }
 
-  const generateProof = async() => {
+  const generateProof = async(deviceId) => {
     try{
       const ZKProof = await walletProvider.getContract(addresses.ZKProof, abi.ZKProof)
       
@@ -73,11 +76,12 @@ const AddDevice = () => {
         treeRoot = ""
       }
 
-      const msg = keccak256(privKey).toString('hex')
+      console.log("Device TreeCID: ", treeCID)
+      console.log("Device TreeRoot: ", treeRoot)
       
+      console.log('Checking Merkle Tree...')
       const res = await axios.post(`${serverUrl}/deviceMerkletree`, {
-        deviceID: newDevice.id,
-        msg,
+        deviceId,
         treeCID,
         CFAddress
       },
@@ -95,19 +99,16 @@ const AddDevice = () => {
     }
   }
 
-  const handleAddDevice = () => {
+  const handleAddDevice = async() => {
     newDevice.date = new Date().toLocaleDateString()
     setDevices([...devices, newDevice])
     setNewDevice({ name: '', id: '', ip: '', date: '' })
     setModalOpen(false)
 
-    sendPrivKeyToDevice()
+    const deviceId = await sendPrivKeyToDevice(newDevice.type)
 
-    generateProof()
+    generateProof(deviceId)
 
-    
-
-    // call the SC function that maps device to user in blockchain
     // saveToBlockchain()
   }
   return (
@@ -143,7 +144,7 @@ const AddDevice = () => {
                 }
                 className="mt-2 px-4 py-2 bg-white text-sm w-full border rounded-md"
               />
-              <input
+              {/* <input
                 type="text"
                 placeholder="Device UID"
                 value={newDevice.id}
@@ -151,24 +152,19 @@ const AddDevice = () => {
                   setNewDevice({ ...newDevice, id: e.target.value })
                 }
                 className="mt-2 px-4 py-2 bg-white text-sm w-full border rounded-md"
-              />
-              {/* <input
-                type="text"
-                placeholder="Device IP Address"
-                value={newDevice.ip}
-                onChange={(e) =>
-                  setNewDevice({ ...newDevice, ip: e.target.value })
-                }
-                className="mt-2 px-4 py-2 bg-white text-sm w-full border rounded-md"
               /> */}
-              {/* <input
-                type="date"
-                value={newDevice.date}
-                onChange={(e) =>
-                  setNewDevice({ ...newDevice, date: e.target.value })
-                }
+              <select 
+                name="" 
+                id=""
                 className="mt-2 px-4 py-2 bg-white text-sm w-full border rounded-md"
-              /> */}
+                onChange={(e) => 
+                  setNewDevice({ ...newDevice, type: e.target.value })
+                }
+              >
+                <option value="0">Select Device Type</option>
+                <option value="1">Camera</option>
+                <option value="2">Wearable</option>
+              </select>
             </div>
           </Modal>
           <div className="px-8 pt-6 pb-8 mb-4">
@@ -182,11 +178,8 @@ const AddDevice = () => {
                     Device Name
                   </th>
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    Device ID
+                    Device Type
                   </th>
-                  {/* <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    IP Address
-                  </th> */}
                   <th className="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Date
                   </th>
@@ -199,7 +192,7 @@ const AddDevice = () => {
                       {device.name}
                     </td>
                     <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                      {device.id}
+                      {device.type}
                     </td>
                     {/* <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                       {device.ip}

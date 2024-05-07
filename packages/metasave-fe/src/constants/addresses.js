@@ -1,4 +1,4 @@
 export const addresses = {
-    ZKProof: "0xD08964Be7dBF38BC029222aFC36cbf378bcd2D2A",
-    MetaSave: "0xd3B7b0815Af3abd0C03F539584a1424cB44cCB1f"
+    ZKProof: "0x07a640910acBb86D313d27A7B00F2BCc1b92863f",
+    MetaSave: "0x454116cCe3ba8EBDE5fB84826Fe5d8fD40E53846"
 }

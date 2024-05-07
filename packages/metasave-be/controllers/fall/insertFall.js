@@ -13,16 +13,15 @@ dotenv.config()
 
 const PINATA_BASE_URL = process.env.PINATA_BASE_URL
 const PINATA_API_KEY = process.env.PINATA_API_KEY
-const ALCHEMY_API_URL = process.env.ALECHMY_API_URL
+const ALCHEMY_API_URL = process.env.ALCHEMY_API_URL
 
 const insertFall = async (req, res) => {
   try {
-    console.log(req)
+    const imagePath = `./uploads/${req.body.USERNAME}/image.jpg`
+    const AAProvider = await AA(req.body.PRIV_KEY)
+    
     let imgIPFSid = ''
     let dataIPFSid = ''
-    const imagePath = `./uploads/${req.body.username}/image.jpg`
-    console.log('preduction data:', req.body.prediction_data)
-    const AAProvider = await AA(req.body.PRIV_KEY)
 
     // Upload image to IPFS
     if (fs.existsSync(imagePath)) {
@@ -36,7 +35,7 @@ const insertFall = async (req, res) => {
     }
 
     dataIPFSid = await uploadToIPFS(
-      JSON.parse(req.body.prediction_data),
+      JSON.parse(req.body.PREDICTION_DATA),
       'json'
     )
 
@@ -76,7 +75,7 @@ const insertFall = async (req, res) => {
     //console.log('img:', img)
     console.log('details:', details.data)
     console.log('phones:', details.phone)
-    const falldetails = JSON.parse(req.body.prediction_data)
+    const falldetails = JSON.parse(req.body.PREDICTION_DATA)
 
     for (let i = 0; i < details.data.contacts.length; i++) {
       let ph = details.data.contacts[i].phoneNumber

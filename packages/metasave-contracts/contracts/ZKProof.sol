@@ -40,10 +40,15 @@ contract ZKProof {
     function verify(
         bytes32[] memory proof,
         address hxsh,
-        bytes32 message
+        bytes32 message,
+        uint32 user
     ) public view returns (bool) {
         bytes32 leaf = keccak256(bytes.concat(keccak256(abi.encode(hxsh, message))));
         // another verify circuit to verify if the user holds the token/message
-        return MerkleProof.verify(proof, root, leaf);
+        if(user == 1){
+            return MerkleProof.verify(proof, u_root, leaf);
+        }else if(user == 0){
+            return MerkleProof.verify(proof, d_root, leaf);
+        }
     }
 }

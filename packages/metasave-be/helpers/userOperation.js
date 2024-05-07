@@ -19,7 +19,6 @@ async function userOperation(abi, functionName, args, address, PRIV_KEY) {
     });
 
     const txHash = await AAProvider.waitForUserOperationTransaction(userOperation.hash);
-    console.log(`Transaction successful with hash: ${txHash}`);
 
     return txHash;
   } catch (error) {

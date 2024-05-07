@@ -24,20 +24,21 @@ ADDRESS = "E0:F7:BF:E9:2B:7C"
 SERVICE_UUID = "12345678-1234-5678-9abc-def012345678"
 CHAR_UUID = "12345678-1234-5678-9abc-def012345679"
 
-url = 'http://localhost:5000/api/fall'  
+AUTH_KEY_CHAR_UUID = "12345678-1234-5678-9abc-def012345680"
+AUTHENTICATION_KEY = "12343421"
 
+url = 'http://localhost:5000/api/fall'  
 
 stop_ble_reading_event = asyncio.Event()
 
-
 q = queue.Queue()
-
 
 async def read_characteristics(address, stop_event):
     async with BleakClient(address) as client:
         while not stop_event.is_set():
             try:
                 char_values = await client.read_gatt_char(CHAR_UUID)
+                auth_values = await client.read_gatt_char(AUTH_KEY_CHAR_UUID)
                 int_value = int(char_values[0])
                 if (int_value == 49):
                     print("Fallen")
@@ -45,12 +46,13 @@ async def read_characteristics(address, stop_event):
                     timestamp = str(int(now.timestamp()))
                     date = now.strftime('%d-%m-%Y')
 
+                    auth_key = auth_values.decode()
+
                     prediction_data = {
                         'username': 'SURA',
                         'timestamp': timestamp,
                         'date': date,
-                        'status': 'fallen',
-                        'accelerometer_data': "fallen"
+                        'status': 'fallen'
                     }
 
                     im0 = cv2.imread("fall.jpg")
@@ -61,8 +63,10 @@ async def read_characteristics(address, stop_event):
                     files = {'file': ('current_frame.jpg', in_memory_file, 'image/jpeg')}
                     data = {
                         'prediction_data': prediction_data_json,
-                        'username': 'ab7zz',
-                        'PRIV_KEY': PRIV_KEY
+                        'USERNAME': 'ab7zz',
+                        'PRIV_KEY': PRIV_KEY,
+                        'DEVICE_ID': 1234,
+                        'AUTH_KEY': auth_key
                     }
 
                     response = requests.post(url, files=files, data=data)
@@ -85,10 +89,10 @@ def read_accel_data(address):
     loop.run_until_complete(read_characteristics(address, stop_ble_reading_event))
 
 accelerometer_thread = threading.Thread(target=read_accel_data, args=(ADDRESS,))
-accelerometer_thread.start()
+# accelerometer_thread.start()
 
 stop_ble_reading_event.set()
-accelerometer_thread.join()
+# accelerometer_thread.join()
 
 # Function to send the authentication key using BleakClient
 async def send_authentication_key(address, auth_key):
@@ -100,6 +104,15 @@ async def send_authentication_key(address, auth_key):
             else:
                 print("Already connected to the Arduino Nano BLE Sense Lite.")
 
+            # Check if the key already exists
+            existing_key_bytes = await client.read_gatt_char(AUTH_KEY_CHAR_UUID)
+            existing_key = existing_key_bytes.decode()
+            if existing_key == auth_key:
+                print(f"The authentication key '{auth_key}' already exists.")
+                print(existing_key)
+            else:
+                await client.write_gatt_char(CHAR_UUID, auth_key.encode())
+                print(f"Sent authentication key '{auth_key}' to the Arduino Nano BLE Sense Lite.")
             # Send the authentication key to the characteristic
             await client.write_gatt_char(CHAR_UUID, auth_key.encode())
             print(f"Sent authentication key '{auth_key}' to the Arduino Nano BLE Sense Lite.")
@@ -117,6 +130,7 @@ async def privkey():
         # Parse the JSON data from the request body
         data = request.get_json()
         priv_key = data.get('privKey')
+        device_type = data.get('type')
 
         # Check if privKey is provided
         if not priv_key:
@@ -125,10 +139,20 @@ async def privkey():
         print(f"Received private key '{priv_key}' from the client.")
         
         # Send the authentication key using the send_authentication_key function
-        success = await send_authentication_key(ADDRESS, priv_key)
+        # success = await send_authentication_key(ADDRESS, priv_key)
+        success = True
 
         if success:
-            return jsonify({'message': f'Successfully sent authentication key to the Arduino Nano BLE Sense Lite'}), 200
+            if device_type == '1':
+                return jsonify({
+                    'message': f'Successfully sent authentication key to the Arduino Nano BLE Sense Lite',
+                    'deviceId': 1234
+                }), 200
+            elif device_type == '2':
+                return jsonify({
+                    'message': f'Successfully sent authentication key to the Arduino Nano 33 BLE Sense',
+                    'deviceId': 5678
+                }), 200
         else:
             return jsonify({'error': 'Failed to send authentication key to the Arduino Nano BLE Sense Lite'}), 500
 

@@ -69,7 +69,7 @@ export const MainContextProvider = ({children}) => {
             console.log(res.data.data)
             setUserDetails(res.data.data)
         }catch(err){
-            console.log('no user data for this user', err)
+            console.log('No user data for this user')
         }
     }
 
@@ -127,7 +127,7 @@ export const MainContextProvider = ({children}) => {
             console.log(uniqueArray);
             setFallDetails(uniqueArray)
         }catch(err){
-            console.log('no fall data for this user', err)
+            console.log('No fall data for this user')
         }
     }
 
@@ -149,7 +149,7 @@ export const MainContextProvider = ({children}) => {
 
         const uoCallData = encodeFunctionData({
             abi: abi.MetaSave,
-            functionName: "setIPFSFileName", 
+            functionName: "setIPFSFileName",
             args: [CFAddress, IPFSid],
         })
         const uo = await AAProvider.sendUserOperation({
@@ -180,6 +180,7 @@ export const MainContextProvider = ({children}) => {
             setUserDetails,
             fetchUserDetails,
             fetchFallDetails,
+            insertUserDetails,
             fetchDevices
         }}>
             {children}

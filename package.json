@@ -6,8 +6,8 @@
     "dev": "concurrently \"npm run dev-fe\" \"npm run dev-be\" \"npm run run-camera\" \"npm run run-odroid\"",
     "dev-fe": "npm --prefix packages/metasave-fe run dev",
     "dev-be": "npm --prefix packages/metasave-be run dev",
-    "dev-camera": "python model/camera.py",
-    "dev-odroid": "python model/odroid.py",
+    "dev-camera": "python packages/model/camera.py",
+    "dev-odroid": "python packages/model/odroid.py",
     "compile-contract": "",
     "deploy-contract": ""
   },

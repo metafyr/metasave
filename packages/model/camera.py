@@ -91,9 +91,10 @@ def post_request():
             in_memory_file = BytesIO(buffer)
             files = {'file': ('current_frame.jpg', in_memory_file, 'image/jpeg')}
             data = {
-                'prediction_data': prediction_data_json,
-                'username': 'ab7zz',
-                'PRIV_KEY': PRIV_KEY
+                'PREDICTION_DATA': prediction_data_json,
+                'USERNAME': 'ab7zz',
+                'PRIV_KEY': PRIV_KEY,
+                'DEVICE_ID': 1234
             }
 
             response = requests.post(url, files=files, data=data)

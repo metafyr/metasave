@@ -39,51 +39,51 @@ function App() {
             <Route path="/register" element={<Signup />} />
             <Route
               path="/dashboard"
-              element={loggedIn ? <Dashboard /> : <PleaseLogin />}
+              element={loggedIn ? <Dashboard /> : <Login />}
             />
             <Route
               path="/dashboard/*"
-              element={loggedIn ? <Dashboard /> : <PleaseLogin />}
+              element={loggedIn ? <Dashboard /> : <Login />}
             />
             <Route
               path="/newclinic/"
-              element={loggedIn ? <AddClinic /> : <PleaseLogin />}
+              element={loggedIn ? <AddClinic /> : <Login />}
             />
             <Route
               path="/newdevice/"
-              element={loggedIn ? <AddDevice /> : <PleaseLogin />}
+              element={loggedIn ? <AddDevice /> : <Login />}
             />
             <Route
               path="/identity/"
-              element={loggedIn ? <CheckUser /> : <PleaseLogin />}
+              element={loggedIn ? <CheckUser /> : <Login />}
             />
             <Route
               path="/newidentity/"
-              element={loggedIn ? <NewIdentity /> : <PleaseLogin />}
+              element={loggedIn ? <NewIdentity /> : <Login />}
             />
 
             <Route
               path="/clinic/*"
-              element={loggedIn ? <CDash /> : <PleaseLogin />}
+              element={loggedIn ? <CDash /> : <Login />}
             />
             <Route
               path="/clinic/dashboard"
-              element={loggedIn ? <CDash /> : <PleaseLogin />}
+              element={loggedIn ? <CDash /> : <Login />}
             />
 
             <Route
               path="/clinic/profile/"
-              element={loggedIn ? <ClinicProfile /> : <PleaseLogin />}
+              element={loggedIn ? <ClinicProfile /> : <Login />}
             />
 
             <Route
               path="/clinic/sigin/"
-              element={loggedIn ? <ClinicLogin /> : <PleaseLogin />}
+              element={loggedIn ? <ClinicLogin /> : <Login />}
             />
 
             <Route
               path="/clinic/signup/"
-              element={loggedIn ? <ClinicRegister /> : <PleaseLogin />}
+              element={loggedIn ? <ClinicRegister /> : <Login />}
             />
           </Routes>
         </BrowserRouter>
